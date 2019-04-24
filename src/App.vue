@@ -1,25 +1,78 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <NavMenu></NavMenu>
+    <div class="app-main">
+      <router-view></router-view>
     </div>
-    <router-view/>
+    <Footer></Footer>
   </div>
 </template>
-<style lang="stylus">
-#app
-  font-family 'Avenir', Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
 
-#nav
-  padding 30px
-  a
-    font-weight bold
-    color #2c3e50
-    &.router-link-exact-active
-      color #42b983
+<script>
+import Footer from '@/components/Footer.vue'
+import NavMenu from '@/components/NavMenu.vue'
+import ScatterJS from 'scatterjs-core'
+import ScatterEOS from 'scatterjs-plugin-eosjs'
+import { API_URL } from '@/assets/constants.js'
+// import { connect } from 'http2'
+
+ScatterJS.plugins(new ScatterEOS())
+export default {
+  name: 'app',
+  components: {
+    Footer,
+    NavMenu
+  },
+  created () {
+    this.$store.dispatch('getProposals')
+    ScatterJS.scatter.connect('My-App').then(connected => {
+      if (!connected) return false
+      // 有scatter
+      this.$store.dispatch('setScatter', { scatter: ScatterJS.scatter })
+    })
+    this.getVotes()
+  },
+  methods: {
+    getVotes () {
+      this.$axios.get(API_URL.API_GET_ALL_VOTES).then(res => {
+        if (res.status === 200) {
+          res.data.forEach(vote => {
+            if (vote.vote_json) {
+              try {
+                vote.vote_json = JSON.parse(vote.vote_json)
+              } catch (e) {
+                console.log('invalid vote_json')
+              }
+            } else {
+              vote.vote_json = null
+            }
+          })
+          localStorage.setItem('votes', JSON.stringify(res.data))
+        }
+      })
+    }
+  }
+}
+</script>
+
+<style scope>
+body {
+  margin: 0;
+  background-color: rgb(232,236,255);
+}
+
+.app-main {
+  min-height: calc(100vh - 160px - 60px);
+  background-color: rgb(232,236,255);
+  max-width: 1420px;
+  margin: auto
+}
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 </style>

@@ -1,0 +1,378 @@
+<template>
+  <div class="poll-detail">
+    <el-container>
+      <el-main class="header">
+        <div id="back-button" @click="$router.push({path: '/'})">
+          <i class="el-icon-arrow-left"></i>View All Polls
+        </div>
+        <h1>{{proposal.proposal.title}}</h1>
+        <p>
+          <span>{{`${proposal.proposal.proposal_name} by ${proposal.proposal.proposer} `}}</span>
+          <span style="margin: 0 5px">{{proposal.proposal.expires_at}} </span>
+          <span>{{proposal.proposal.proposal_json.type || 'unknown'}}</span>
+        </p>
+        <div style="margin-bottom:30px">
+          <div
+            class="radio-button"
+            @click="turnTo('desc')"
+            :class="{'radio-button-active': activeButton === 'desc'}">
+            Description
+          </div>
+          <div
+            class="radio-button"
+            @click="turnTo('stats')"
+            :class="{'radio-button-active': activeButton === 'stats'}">
+            Stats
+          </div>
+          <div
+            class="radio-button"
+            @click="turnTo('voters')"
+            :class="{'radio-button-active': activeButton === 'voters'}">
+            Voters
+          </div>
+          <div
+            class="radio-button"
+            @click="turnTo('comments')"
+            :class="{'radio-button-active': activeButton === 'comments'}">
+            Comments
+          </div>
+        </div>
+      <el-container>
+        <el-main class="main" style="padding-top: 0;padding-left:0">
+          <div v-html="content" ref="desc" class="card prop-content">
+          </div>
+          <!-- <div class="card">
+            <div class="radio-button" :class="{'radio-button-active': true}">English</div>
+            <div class="radio-button" :class="{'radio-button-active': false}">中文</div>
+          </div> -->
+          <div class="card" ref="stats">Stats</div>
+          <div class="card" ref="voters">voters</div>
+          <div class="card" ref="comments">
+            <h2>Comments {{comments.length}}</h2>
+            <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
+          </div>
+        </el-main>
+        <el-aside width="350px">
+          <div class="card" id="poll-status">
+            <h2>Poll Status</h2>
+            <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
+            <el-progress  :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
+            <p>{{(this.proposal.stats.staked.total / 10000).toFixed(0)}} BOS voted</p>
+            <div class="scatter-panel">
+              <div v-if="scatter">
+                <div v-if="!scatter.identity" @click="getIdentity" class="button">
+                  Link Scatter to vote
+                </div>
+                <div v-else>
+                  <el-radio-group v-model="voteActionParams.vote">
+                    <el-radio :label="1">YES</el-radio>
+                    <el-radio :label="0">NO</el-radio>
+                  </el-radio-group>
+                  <div @click="sendVote" class="button">
+                    Vote
+                  </div>
+                  <div>
+                    <el-checkbox v-model="writeComment">
+                      Post a public comment (optional)
+                    </el-checkbox>
+                    <div v-if="writeComment">
+                      <el-input
+                        type="textarea"
+                        :rows="4"
+                        v-model="myComment"
+                      ></el-input>
+                      <p>Select Yes/No to cast your vote and make your comment public on the EOS blockchain. Your comment and vote will be recorded on-chain for ever, if you want to change your comment please vote again and our algorithm will attempt to just show your latest comment.</p>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="button" style="background: red">Unvote</div>
+                  </div>
+                </div>
+              </div>
+              <a v-else target="blank" href="https://get-scatter.com/">
+                <div class="button">
+                  Get Scatter to vote
+                </div>
+              </a>
+            </div>
+            <hr style="border: none; border-bottom:1px solid #D8D8D8;" />
+            <div>
+              <p>{{this.proposal ? this.proposal.stats.votes.accounts : 0}} accounts</p>
+              <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at,new Date().toString()) : 0}} days since poll started</p>
+              <p>{{this.proposal ? (this.proposal.stats.staked.total / 1e+11).toFixed(2) : 0}}% participation</p>
+              <p>{{this.proposal ? this.yesLeadPercent : 0}}% YES lead over NO</p>
+            </div>
+          </div>
+          <h2>
+            Related Polls
+          </h2>
+          <PropCard v-for="(poll, index) in relatedPolls" :key="index" v-bind="poll" :style="{'margin-bottom': '30px'}"></PropCard>
+        </el-aside>
+      </el-container>
+      </el-main>
+    </el-container>
+  </div>
+</template>
+
+<script>
+import marked from 'marked'
+import { MessageBox } from 'element-ui'
+import { NETWORK } from '@/assets/constants.js'
+import PropCard from '@/components/PropCard.vue'
+import Comment from '@/components/Comment.vue'
+export default {
+  name: 'PollDetail',
+  components: {
+    PropCard,
+    Comment
+  },
+  computed: {
+    votes () {
+      let allVotes = localStorage.getItem('votes')
+      if (allVotes) {
+        allVotes = JSON.parse(allVotes)
+        let votes = []
+        allVotes.forEach(vote => {
+          if (vote.proposal_name === this.proposalName) {
+            votes.push(vote)
+          }
+        })
+        return votes
+      } else {
+        return []
+      }
+    },
+    comments () {
+      let comments = []
+      this.votes.forEach(vote => {
+        if (vote.vote_json && vote.vote_json.comment) {
+          comments.push({
+            avatar: '',
+            name: vote.voter,
+            time: vote.updated_at,
+            comment: vote.vote_json.comment
+          })
+        }
+      })
+      return comments
+    },
+    proposalName () {
+      return this.$route.query.proposal || localStorage.getItem('proposalName')
+    },
+    proposal () {
+      if (!this.$store.state.currentProposal) {
+        this.$store.dispatch('getProposals', {
+          proposalName: this.proposalName
+        })
+      }
+      const defaultProp = {
+        id: '',
+        proposal: {
+          expires_at: '',
+          created_at: '',
+          proposal_json: {
+            type: '',
+            content: ''
+          },
+          title: '',
+          proposer: '',
+          proposal_name: ''
+        },
+        stats: {
+          votes: {},
+          accounts: {},
+          staked: {
+            total: 0
+          }
+        }
+      }
+      return this.$store.state.currentProposal || defaultProp
+    },
+    content () {
+      if (this.proposal) {
+        return marked(this.proposal.proposal.proposal_json.content, { sanitize: true })
+      } else {
+        return 'no content'
+      }
+    },
+    agreePercent () {
+      if (!this.proposal || this.proposal.stats.votes.total === 0 || !this.proposal.stats.votes[1]) {
+        return 0
+      } else {
+        return Number((100 * this.proposal.stats.votes[1] / this.proposal.stats.votes.total).toFixed(1))
+      }
+    },
+    rejectPercent () {
+      if (!this.proposal || this.proposal.stats.votes.total === 0 || !this.proposal.stats.votes[0]) {
+        return 0
+      } else {
+        return Number((100 * this.proposal.stats.votes[0] / this.proposal.stats.votes.total).toFixed(1))
+      }
+    },
+    yesLeadPercent () {
+      if (!this.proposal.stats.votes[0]) {
+        return 100
+      } else if (!this.proposal.stats.votes[1]) {
+        return 0
+      } else {
+        return this.calcPercent(this.proposal.stats.votes[1] - this.proposal.stats.votes[0], this.proposal.stats.votes[1]).toFixed(0)
+      }
+    },
+    scatter () {
+      return this.$store.state.scatter
+    }
+  },
+  data () {
+    return {
+      title: 'Should EOS tokens sent to eosio.ramfee and eosio.names accounts in the future be allocated to REX?',
+      relatedPolls: [],
+      activeButton: 'desc',
+      voteActionParams: {
+        voter: '',
+        proposal_name: '',
+        vote: -1,
+        vote_json: ''
+      },
+      myComment: '',
+      writeComment: false
+    }
+  },
+  mounted () {
+  },
+  methods: {
+    getIdentity () {
+      const requiredFields = {
+        accounts: [ NETWORK ]
+      }
+      this.scatter.getIdentity(requiredFields).then(() => {
+        // console.log(this.scatter.identity)
+        this.$store.dispatch('setScatter', { scatter: this.scatter })
+      })
+    },
+    calcDays (start, end) {
+      let startDay = new Date(start)
+      let endDay = new Date(end)
+      return ((endDay.getTime() - startDay.getTime()) / 1000 / 3600 / 24).toFixed(0)
+    },
+    calcPercent (numerator, denominator) {
+      if (!denominator === 0) {
+        return 0
+      } else {
+        return Number((numerator * 100 / denominator).toFixed(2))
+      }
+    },
+    sendVote () {
+      if (this.voteActionParams.vote === -1) {
+        MessageBox.alert('Please choose your vote', '', {
+          confirmButtonText: 'OK'
+        })
+        return
+      }
+      this.voteActionParams.voter = this.scatter.identity.accounts[0].name
+      this.voteActionParams.proposal_name = this.proposalName
+      if (this.myComment !== '' && this.writeComment) {
+        this.voteActionParams.vote_json = JSON.stringify({ comment: this.myComment })
+      }
+    },
+    turnTo (target) {
+      this.activeButton = target
+      this.$refs[target].scrollIntoView()
+    }
+  }
+}
+</script>
+
+<style lang="stylus">
+#poll-status
+  .pass-percent
+    .el-progress__text
+      font-family Roboto-Bold
+      font-size 11px
+      color #30D094
+      letter-spacing 0
+      text-align center
+    .el-progress-bar__inner
+      background-image linear-gradient(270deg, #41B976 0%, #2CD69B 100%)
+  .dissent-percent
+    .el-progress__text
+      font-family Roboto-Bold
+      font-size 11px
+      color #F46666
+      letter-spacing 0
+      text-align center
+    .el-progress-bar__inner
+      background-image linear-gradient(269deg, #F06262 0%, #FF7171 100%)
+</style>
+
+<style lang="stylus" scoped>
+.poll-detail
+  background-color rgb(232,236,255)
+  padding 20px 0
+  text-align left
+  color: #507DFE;
+.header
+  h1
+    font-family: Roboto-Medium;
+    font-size: 30px;
+    letter-spacing: 0;
+  h2
+    font-family: Roboto-Medium;
+    font-size: 26px;
+  p
+    font-family: Roboto-Regular;
+    font-size: 18px;
+    color: #8A8A8A;
+    letter-spacing: 0;
+.main
+  font-family: Roboto-Regular;
+  font-size: 18px;
+  color: #8A8A8A;
+  letter-spacing: 0;
+  h1, h2, h3, h4, h5
+    font-family: Roboto-Medium;
+    color: #507DFE;
+.prop-content
+  overflow-wrap break-word
+  >>> h2
+    color: #507DFE;
+  >>> p
+    font-family: Roboto-Regular;
+    font-size: 18px;
+    color: #8A8A8A;
+    letter-spacing: 0;
+#back-button
+  cursor pointer
+  width 160px
+  height 32px
+  line-height 32px
+  background: #507DFE;
+  border-radius: 15.5px;
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+.card
+  padding 22px 34px
+  background: #FCFDFF;
+  box-shadow: 0 2px 4px 0 #B0D9FF;
+  border-radius: 8px;
+  margin-bottom 22px
+.radio-button
+  height 24px
+  min-width 103px
+  line-height 24px
+  margin-right 10px
+  display inline-block
+  cursor pointer
+  opacity: 0.5;
+  background: #7599FF;
+  border-radius: 13.29px;
+  font-family: PingFangSC-Medium;
+  font-size: 13.71px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
+.radio-button-active
+  opacity 1
+</style>
