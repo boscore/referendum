@@ -10,19 +10,19 @@ variables:
   ZONE: ${GKE_ZONE}
   PROJECT: ${GKE_PROJECT_ID}
   # CONTAINER INFO
-  CHART_PATH: k8s-eoseeking
+  CHART_PATH: k8s-bospull
   CONTAINER_IMAGE: registry.gitlab.com/${CI_PROJECT_PATH}
   CONTAINER_IMAGE_BUILT: ${CONTAINER_IMAGE}
   CONTAINER_IMAGE_LATEST: ${CONTAINER_IMAGE}:latest
   # DEPLOY
-  DOMAIN_NAME_STAGING: stage.eoseeking.io
-  DOMAIN_NAME_PROD: eoseeking.io
-  STAGE_NAMESPACE: eoseeking-stage
-  PROD_NAMESPACE: eoseeking-prod
-  STAGE_RELEASE_NAME: eoseeking-stage
-  PROD_RELEASE_NAME: eoseeking-prod
-  STAGE_BUCKET_NAME: gs://staging.eoseeking.io
-  PROD_BUCKET_NAME: gs://eoseeking.io
+  DOMAIN_NAME_STAGING: staging-bos-pull.keosd.io
+  DOMAIN_NAME_PROD: bos-pull.keosd.io
+  STAGE_NAMESPACE: bos-pull-stage
+  PROD_NAMESPACE: bos-pull-prod
+  STAGE_RELEASE_NAME: bos-pull-stage
+  PROD_RELEASE_NAME: bos-pull-prod
+  STAGE_BUCKET_NAME: gs://staging-bos-pull.keosd.io
+  PROD_BUCKET_NAME: gs://bos-pull.keosd.io
 
 stages:
   - build
@@ -43,20 +43,20 @@ node-build:
     paths:
       - $CI_PROJECT_DIR/dist
 
-docker-build:
-  stage: package
-  script:
-    - docker build -t registry.gitlab.com/${CI_PROJECT_PATH}:$(echo ${CI_COMMIT_SHA:0-8:8}) .
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
-    - docker push registry.gitlab.com/${CI_PROJECT_PATH}:$(echo ${CI_COMMIT_SHA:0-8:8})
-  after_script:
-    - docker images|grep none|awk '{print $3}'|xargs docker rmi
-    - echo "commit:${CI_COMMIT_SHA:0-8:8}"
-  dependencies:
-    - node-build
-  only:
-    - master
-    - develop
+# docker-build:
+#   stage: package
+#   script:
+#     - docker build -t registry.gitlab.com/${CI_PROJECT_PATH}:$(echo ${CI_COMMIT_SHA:0-8:8}) .
+#     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+#     - docker push registry.gitlab.com/${CI_PROJECT_PATH}:$(echo ${CI_COMMIT_SHA:0-8:8})
+#   after_script:
+#     - docker images|grep none|awk '{print $3}'|xargs docker rmi
+#     - echo "commit:${CI_COMMIT_SHA:0-8:8}"
+#   dependencies:
+#     - node-build
+#   only:
+#     - master
+#     - develop
 
 # k8s-staging-deploy:
 #   image: noprom/gcloud-k8s-helm:2.8.1
@@ -111,35 +111,35 @@ docker-build:
 #       --values ~/${CHART_PATH}/values.yaml
 #       ~/${CHART_PATH}
 
-# gs-staging-deploy:
-#   image: noprom/gcloud-k8s-helm:v2.9.2
-#   stage: deploy
-#   environment:
-#     name: staging
-#     url: https://${DOMAIN_NAME_STAGING}
-#   dependencies:
-#     - node-build
-#   only:
-#     - prd/v0.1.0
-#   before_script:
-#     - echo "$GOOGLE_GS_KEY" > key.json
-#     - gcloud auth activate-service-account --key-file key.json
-#   script:
-#     - gsutil -m rsync -r -d dist ${STAGE_BUCKET_NAME}
+gs-staging-deploy:
+  image: noprom/gcloud-k8s-helm:v2.9.2
+  stage: deploy
+  environment:
+    name: staging
+    url: https://${DOMAIN_NAME_STAGING}
+  dependencies:
+    - node-build
+  only:
+    - master
+  before_script:
+    - echo "$GOOGLE_GS_KEY" > key.json
+    - gcloud auth activate-service-account --key-file key.json
+  script:
+    - gsutil -m rsync -r -d dist ${STAGE_BUCKET_NAME}
 
-# gs-prod-deploy:
-#   image: noprom/gcloud-k8s-helm:v2.9.2
-#   stage: deploy
-#   when: manual
-#   environment:
-#     name: production
-#     url: https://${DOMAIN_NAME_PROD}
-#   dependencies:
-#     - node-build
-#   only:
-#     - prd/v0.1.0
-#   before_script:
-#     - echo "$GOOGLE_GS_KEY" > key.json
-#     - gcloud auth activate-service-account --key-file key.json
-#   script:
-#     - gsutil -m rsync -r -d dist ${PROD_BUCKET_NAME}
+gs-prod-deploy:
+  image: noprom/gcloud-k8s-helm:v2.9.2
+  stage: deploy
+  when: manual
+  environment:
+    name: production
+    url: https://${DOMAIN_NAME_PROD}
+  dependencies:
+    - node-build
+  only:
+    - master
+  before_script:
+    - echo "$GOOGLE_GS_KEY" > key.json
+    - gcloud auth activate-service-account --key-file key.json
+  script:
+    - gsutil -m rsync -r -d dist ${PROD_BUCKET_NAME}
