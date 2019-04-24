@@ -126,6 +126,7 @@ gs-staging-deploy:
     - gcloud auth activate-service-account --key-file key.json
   script:
     - gsutil -m rsync -r -d dist ${STAGE_BUCKET_NAME}
+    - gsutil web set -m index.html -e index.html ${STAGE_BUCKET_NAME}
 
 gs-prod-deploy:
   image: noprom/gcloud-k8s-helm:v2.9.2
@@ -143,3 +144,4 @@ gs-prod-deploy:
     - gcloud auth activate-service-account --key-file key.json
   script:
     - gsutil -m rsync -r -d dist ${PROD_BUCKET_NAME}
+    - gsutil web set -m index.html -e index.html ${PROD_BUCKET_NAME}
