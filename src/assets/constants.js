@@ -8,7 +8,10 @@ export const NETWORK = {
 }
 
 export const API_URL = {
-  API_POLL_TALLY: 'https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json',
-  API_GET_ALL_VOTES: 'https://s3.amazonaws.com/bostest.referendum/bosforumapp/vote/latest.json',
-  API_GET_ALL_VOTERS: 'https://s3.amazonaws.com/bostest.referendum/eosio/voters/latest.json'
+  API_POLL_TALLY: 'https://s3.amazonaws.com/api.eosvotes.io/eosvotes/tallies/latest.json',
+  // 'https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json',
+  API_GET_ALL_VOTES: 'https://s3.amazonaws.com/api.eosvotes.io/eosio.forum/vote/latest.json',
+  // 'https://s3.amazonaws.com/bostest.referendum/bosforumapp/vote/latest.json',
+  API_GET_ALL_VOTERS: 'https://s3.amazonaws.com/api.eosvotes.io/eosio/voters/latest.json'
+  // 'https://s3.amazonaws.com/bostest.referendum/eosio/voters/latest.json'
 }
