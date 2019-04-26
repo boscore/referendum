@@ -1,5 +1,5 @@
 <template>
-  <div class="poll-detail">
+  <div v-loading="!proposal" class="poll-detail">
     <el-container>
       <el-main class="header">
         <div id="back-button" @click="$router.push({path: '/'})">
@@ -14,7 +14,7 @@
         <div style="margin-bottom:30px">
           <div
             class="radio-button"
-            @click="turnTo('desc')"
+            @click="activeButton = 'desc'"
             :class="{'radio-button-active': activeButton === 'desc'}">
             Description
           </div>
@@ -26,7 +26,7 @@
           </div>
           <div
             class="radio-button"
-            @click="turnTo('voters')"
+            @click="activeButton = 'voters'"
             :class="{'radio-button-active': activeButton === 'voters'}">
             Voters
           </div>
@@ -39,14 +39,26 @@
         </div>
       <el-container>
         <el-main class="main" style="padding-top: 0;padding-left:0">
-          <div v-html="content" ref="desc" class="card prop-content">
+          <div v-if="activeButton !=='voters'" v-html="content" ref="desc" class="card prop-content">
           </div>
           <!-- <div class="card">
             <div class="radio-button" :class="{'radio-button-active': true}">English</div>
             <div class="radio-button" :class="{'radio-button-active': false}">中文</div>
           </div> -->
+          <div v-else class="card" ref="voters">
+            <h2>Voters</h2>
+            <el-table :data="showVoters" :default-sort="{prop: 'staked', order: 'descending'}">
+              <el-table-column sortable label="Name" prop="voter"></el-table-column>
+              <el-table-column sortable label="Votes" prop="staked"></el-table-column>
+              <el-table-column sortable label="Type" prop="type"></el-table-column>
+              <el-table-column sortable label="Vote" prop="result"></el-table-column>
+            </el-table>
+            <div>
+              <div class="button" style="margin: 20px auto;padding: 5px 20px" @click="showMoreVoters">Load more voters</div>
+            </div>
+          </div>
           <div class="card" ref="stats">Stats</div>
-          <div class="card" ref="voters">voters</div>
+
           <div class="card" ref="comments">
             <h2>Comments {{comments.length}}</h2>
             <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
@@ -64,14 +76,15 @@
                   Link Scatter to vote
                 </div>
                 <div v-else>
+                  <div @click="sendVote" class="button" style="margin-right: 20px">
+                    Vote
+                  </div>
                   <el-radio-group v-model="voteActionParams.vote">
                     <el-radio :label="1">YES</el-radio>
                     <el-radio :label="0">NO</el-radio>
+                    <el-radio :label="255">ABSTAIN</el-radio>
                   </el-radio-group>
-                  <div @click="sendVote" class="button">
-                    Vote
-                  </div>
-                  <div>
+                  <div style="margin:5px 0">
                     <el-checkbox v-model="writeComment">
                       Post a public comment (optional)
                     </el-checkbox>
@@ -84,8 +97,9 @@
                       <p>Select Yes/No to cast your vote and make your comment public on the EOS blockchain. Your comment and vote will be recorded on-chain for ever, if you want to change your comment please vote again and our algorithm will attempt to just show your latest comment.</p>
                     </div>
                   </div>
-                  <div>
-                    <div class="button" style="background: red">Unvote</div>
+                  <div v-if="myVote">
+                    <div class="button" @click="sendUnvote" style="background: red;margin-right: 20px">Unvote</div>
+                    <span>You voted {{myVote.result}}</span>
                   </div>
                 </div>
               </div>
@@ -116,6 +130,7 @@
 
 <script>
 import marked from 'marked'
+import Eos from 'eosjs'
 import { MessageBox } from 'element-ui'
 import { NETWORK } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
@@ -127,13 +142,32 @@ export default {
     Comment
   },
   computed: {
-    votes () {
-      let allVotes = localStorage.getItem('votes')
-      if (allVotes) {
-        allVotes = JSON.parse(allVotes)
+    votes () { // votes for this proposal
+      let allVotes = this.$store.state.votes || localStorage.getItem('votes')
+      let allAccounts = this.$store.state.accounts || localStorage.getItem('accounts')
+      let allProxies = this.$store.state.proxies || localStorage.getItem('proxies')
+      if (allVotes && allAccounts && allProxies) {
+        if (typeof allVotes === 'string') {
+          allVotes = JSON.parse(allVotes)
+        }
         let votes = []
         allVotes.forEach(vote => {
           if (vote.proposal_name === this.proposalName) {
+            if (vote.vote === 1) {
+              vote.result = 'YES'
+            } else if (vote.vote === 0) {
+              vote.result = 'NO'
+            } else {
+              vote.result = 'ABSTAIN'
+            }
+            if (allAccounts[vote.voter]) {
+              vote.type = 'Voter'
+              vote.staked = Number((allAccounts[vote.voter].staked / 10000).toFixed(0))
+            }
+            if (allProxies[vote.voter]) {
+              vote.type = 'Proxy'
+              vote.staked = Number((allProxies[vote.voter].votes[this.proposalName].staked_proxy / 10000).toFixed(0))
+            }
             votes.push(vote)
           }
         })
@@ -141,6 +175,27 @@ export default {
       } else {
         return []
       }
+    },
+    showVoters () {
+      return this.votes.slice(0, this.showVotersNum)
+    },
+    myVote () {
+      let myVotes = null
+      if (this.$store.state.accounts && this.scatter && this.scatter.identity) {
+        myVotes = this.$store.state.accounts[this.scatter.identity.accounts[0].name]
+        if (myVotes && myVotes.votes[this.proposalName]) {
+          let vote = { ...myVotes.votes[this.proposalName] }
+          if (vote.vote === 1) {
+            vote.result = 'YES'
+          } else if (vote.vote === 0) {
+            vote.result = 'NO'
+          } else {
+            vote.result = 'ABSTAIN'
+          }
+          return vote
+        }
+      }
+      return null
     },
     comments () {
       let comments = []
@@ -220,6 +275,14 @@ export default {
     },
     scatter () {
       return this.$store.state.scatter
+    },
+    eos () {
+      if (this.scatter && this.scatter.identity) {
+        const eosOptions = { expireInSeconds: 60 }
+        const eos = this.scatter.eos(NETWORK, Eos, eosOptions)
+        return eos
+      }
+      return null
     }
   },
   data () {
@@ -234,7 +297,8 @@ export default {
         vote_json: ''
       },
       myComment: '',
-      writeComment: false
+      writeComment: false,
+      showVotersNum: 30
     }
   },
   mounted () {
@@ -266,17 +330,80 @@ export default {
         MessageBox.alert('Please choose your vote', '', {
           confirmButtonText: 'OK'
         })
-        return
+      } else {
+        const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+
+        this.voteActionParams.voter = account.name
+        this.voteActionParams.proposal_name = this.proposalName
+        if (this.myComment !== '' && this.writeComment) {
+          this.voteActionParams.vote_json = JSON.stringify({ comment: this.myComment })
+        }
+        const transactionOptions = {
+          actions: [{
+            account: 'bosforumdapp',
+            name: 'vote',
+            authorization: [{
+              actor: account.name,
+              permission: account.authority
+            }],
+            data: { ...this.voteActionParams }
+          }]
+        }
+        this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+          .then(res => {
+            MessageBox.alert(`Your vote has been cast on ${this.proposalName}`, '', {
+              confirmButtonText: 'OK'
+            })
+          }).catch(e => {
+            MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
+              confirmButtonText: 'OK'
+            })
+          })
       }
-      this.voteActionParams.voter = this.scatter.identity.accounts[0].name
-      this.voteActionParams.proposal_name = this.proposalName
-      if (this.myComment !== '' && this.writeComment) {
-        this.voteActionParams.vote_json = JSON.stringify({ comment: this.myComment })
+      // eos.transfer(account.name, 'helloworld', '1.0000 EOS', 'memo', transactionOptions).then(trx => {
+      //   // That's it!
+      //   console.log(`Transaction ID: ${trx.transaction_id}`)
+      // }).catch(error => {
+      //   console.error(error)
+      // })
+    },
+    sendUnvote () {
+      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      const actionParams = {
+        voter: account.name,
+        proposal_name: this.proposalName
       }
+      const transactionOptions = {
+        actions: [{
+          account: 'bosforumdapp',
+          name: 'unvote',
+          authorization: [{
+            actor: account.name,
+            permission: account.authority
+          }],
+          data: { ...actionParams }
+        }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(res => {
+          MessageBox.alert(`Your unvote on ${this.proposalName} was successful`, '', {
+            confirmButtonText: 'OK'
+          })
+        }).catch(e => {
+          MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
     },
     turnTo (target) {
       this.activeButton = target
       this.$refs[target].scrollIntoView()
+    },
+    showMoreVoters () {
+      this.showVotersNum += 30
+      if (this.showVotersNum > this.votes.length) {
+        this.showVotersNum = this.votes.length
+      }
     }
   }
 }
