@@ -57,7 +57,11 @@ export default new Vuex.Store({
               }
             }
           } catch (e) {
-            console.log(e)
+            console.log('invalid proposal_json')
+            res.data[key].proposal.proposal_json = {
+              type: '',
+              content: ''
+            }
           }
         })
         if (payload && payload.hasOwnProperty('proposalName')) {

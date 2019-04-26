@@ -43,10 +43,16 @@
                       <span class="button">Create Proposal</span>
                     </router-link>
                   </p>
-                  <el-table :data="myProposals" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
-                    <el-table-column sortable label="Proposer" prop="proposer"></el-table-column>
+                  <el-table  :data="myProposals" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
                     <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
                     <el-table-column sortable label="Created" prop="created_at"></el-table-column>
+                    <el-table-column sortable label="Expire" prop="expires_at"></el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                        <el-button v-if="!isExpired(scope.row.expires_at)" type="danger" @click="expireProp(scope.row.proposal_name)">Expire</el-button>
+                        <label v-else>Expired</label>
+                      </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -123,6 +129,8 @@
 
 <script>
 // @ is an alias to /src
+import { MessageBox } from 'element-ui'
+import Eos from 'eosjs'
 import { NETWORK } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
 export default {
@@ -189,6 +197,14 @@ export default {
   computed: {
     scatter () {
       return this.$store.state.scatter
+    },
+    eos () {
+      if (this.scatter && this.scatter.identity) {
+        const eosOptions = { expireInSeconds: 60 }
+        const eos = this.scatter.eos(NETWORK, Eos, eosOptions)
+        return eos
+      }
+      return null
     },
     proposals () {
       return this.$store.state.proposals
@@ -293,6 +309,38 @@ export default {
     }
   },
   methods: {
+    expireProp (proposal) {
+      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      const transactionOptions = {
+        actions: [{
+          account: 'bosforumdapp',
+          name: 'expire',
+          authorization: [{
+            actor: account.name,
+            permission: account.authority
+          }],
+          data: { proposal_name: proposal }
+        }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(res => {
+          MessageBox.alert(`Expired ${proposal}`, '', {
+            confirmButtonText: 'OK'
+          })
+        }).catch(e => {
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
+    },
+    isExpired (exporiesAt) {
+      let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
+      let expiry = new Date(exporiesAt).getTime()
+      if (expiry < now) {
+        return true
+      }
+      return false
+    },
     getProposals () {
       this.$store.dispatch('getProposals')
     },

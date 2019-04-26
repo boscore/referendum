@@ -168,6 +168,7 @@ p
   height 100%
   width 84px
   float right
+  text-align center
   // position absolute
   // right 0px
   border-radius 0 12.25px 0 12.25px

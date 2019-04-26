@@ -18,11 +18,11 @@
             <el-input v-model="form.title"></el-input>
           </el-form-item>
           <el-form-item prop="content">
-            <label slot="label">Content</label>
-            <el-input v-model="form.content" type="textarea" :rows="5"></el-input>
+            <label slot="label">Content (support Markdown)</label>
+            <el-input v-model="form.content" type="textarea" :rows="10"></el-input>
           </el-form-item>
           <el-form-item prop="expiry">
-            <label slot="label">Expiry</label>
+            <label slot="label">Expiry(UTC)</label>
             <el-date-picker
               type="datetime"
               value-format="yyyy-MM-ddThh:mm:ss"
@@ -63,10 +63,10 @@ export default {
       if (!value) {
         return callback(new Error('Please choose proposal expiry date'))
       } else {
-        let now = new Date().getTime()
+        let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
         let expiry = new Date(value).getTime()
         if (expiry < now) {
-          return callback(new Error('Expiry date shouldn\'t be earlier than now'))
+          return callback(new Error('Expiry date shouldn\'t be earlier than now(UTC)'))
         } else {
           callback()
         }

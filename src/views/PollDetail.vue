@@ -72,18 +72,23 @@
             <p>{{(this.proposal.stats.staked.total / 10000).toFixed(0)}} BOS voted</p>
             <div class="scatter-panel">
               <div v-if="scatter">
-                <div v-if="!scatter.identity" @click="getIdentity" class="button">
+                <div v-if="isExpired(proposal.proposal.expires_at)">
+                  This proposal is expired
+                </div>
+                <div v-else-if="!scatter.identity" @click="getIdentity" class="button">
                   Link Scatter to vote
                 </div>
                 <div v-else>
-                  <div @click="sendVote" class="button" style="margin-right: 20px">
-                    Vote
-                  </div>
+                  <div style="magin-bottom:10px">
                   <el-radio-group v-model="voteActionParams.vote">
                     <el-radio :label="1">YES</el-radio>
                     <el-radio :label="0">NO</el-radio>
                     <el-radio :label="255">ABSTAIN</el-radio>
                   </el-radio-group>
+                  </div>
+                  <div @click="sendVote" class="button" style="margin-right: 20px">
+                    Vote
+                  </div>
                   <div style="margin:5px 0">
                     <el-checkbox v-model="writeComment">
                       Post a public comment (optional)
@@ -120,7 +125,20 @@
           <h2>
             Related Polls
           </h2>
-          <PropCard v-for="(poll, index) in relatedPolls" :key="index" v-bind="poll" :style="{'margin-bottom': '30px'}"></PropCard>
+          <div
+            v-for="(prop, index) in relatedPolls"
+            @click="turnDetail(prop)"
+            :key="index"
+            :style="{'margin-bottom': '30px', 'cursor': 'pointer'}"
+          >
+          <PropCard
+            :type="prop.proposal.proposal_json.type || 'unknown'"
+            :title="prop.proposal.title"
+            :desc="prop.proposal.proposal_json.content || ''"
+            :votes="prop.stats.votes"
+            :staked="prop.stats.staked.total"
+            ></PropCard>
+          </div>
         </el-aside>
       </el-container>
       </el-main>
@@ -243,6 +261,20 @@ export default {
       }
       return this.$store.state.currentProposal || defaultProp
     },
+    relatedPolls () {
+      let related = []
+      const proposals = this.$store.state.proposals
+      if (proposals && this.proposal) {
+        Object.keys(proposals).forEach(key => {
+          if (proposals[key].proposal.proposer === this.proposal.proposal.proposer) {
+            if (related.length < 2) {
+              related.push(proposals[key])
+            }
+          }
+        })
+      }
+      return related
+    },
     content () {
       if (this.proposal) {
         return marked(this.proposal.proposal.proposal_json.content, { sanitize: true })
@@ -288,7 +320,6 @@ export default {
   data () {
     return {
       title: 'Should EOS tokens sent to eosio.ramfee and eosio.names accounts in the future be allocated to REX?',
-      relatedPolls: [],
       activeButton: 'desc',
       voteActionParams: {
         voter: '',
@@ -304,6 +335,14 @@ export default {
   mounted () {
   },
   methods: {
+    isExpired (exporiesAt) {
+      let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
+      let expiry = new Date(exporiesAt).getTime()
+      if (expiry < now) {
+        return true
+      }
+      return false
+    },
     getIdentity () {
       const requiredFields = {
         accounts: [ NETWORK ]
@@ -398,6 +437,13 @@ export default {
     turnTo (target) {
       this.activeButton = target
       this.$refs[target].scrollIntoView()
+    },
+    turnDetail (prop) {
+      if (window.localStorage) {
+        localStorage.setItem('proposalName', prop.proposal.proposal_name)
+      }
+      this.$store.dispatch('setCurrentProposal', { proposal: prop })
+      this.$router.push({ path: '/poll_detail', query: { proposal: prop.proposal.proposal_name } })
     },
     showMoreVoters () {
       this.showVotersNum += 30
