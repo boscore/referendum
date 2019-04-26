@@ -10,7 +10,10 @@ export default new Vuex.Store({
     language: 'en',
     scatter: null,
     currentProposal: null,
-    proposals: null
+    accounts: null,
+    votes: null,
+    proposals: null,
+    proxies: null
   },
   mutations: {
     setScatter (state, payload) {
@@ -21,6 +24,15 @@ export default new Vuex.Store({
     },
     setProposals (state, payload) {
       state.proposals = payload.proposals
+    },
+    setAccounts (state, payload) {
+      state.accounts = payload.accounts
+    },
+    setProxies (state, payload) {
+      state.proxies = payload.proxies
+    },
+    setVotes (state, payload) {
+      state.votes = payload.votes
     }
   },
   actions: {
@@ -45,13 +57,49 @@ export default new Vuex.Store({
               }
             }
           } catch (e) {
-            console.log(e)
+            console.log('invalid proposal_json')
+            res.data[key].proposal.proposal_json = {
+              type: '',
+              content: ''
+            }
           }
         })
         if (payload && payload.hasOwnProperty('proposalName')) {
           dispatch('setCurrentProposal', { proposal: res.data[payload.proposalName] })
         }
         commit('setProposals', { proposals: res.data })
+      }
+    },
+    async getAccounts ({ commit, dispatch }, payload) {
+      const res = await axios.get(API_URL.API_GET_ALL_ACCOUNTS)
+      if (res.status === 200) {
+        commit('setAccounts', { accounts: res.data })
+        localStorage.setItem('accounts', JSON.stringify(res.data))
+      }
+    },
+    async getProxies ({ commit, dispatch }, payload) {
+      const res = await axios.get(API_URL.API_GET_ALL_PROXIES)
+      if (res.status === 200) {
+        commit('setProxies', { proxies: res.data })
+        localStorage.setItem('proxies', JSON.stringify(res.data))
+      }
+    },
+    async getVotes ({ commit, dispatch }, payload) {
+      const res = await axios.get(API_URL.API_GET_ALL_VOTES)
+      if (res.status === 200) {
+        res.data.forEach(vote => {
+          if (vote.vote_json) {
+            try {
+              vote.vote_json = JSON.parse(vote.vote_json)
+            } catch (e) {
+              console.log('invalid vote_json')
+            }
+          } else {
+            vote.vote_json = null
+          }
+        })
+        localStorage.setItem('votes', JSON.stringify(res.data))
+        commit('setVotes', { votes: res.data })
       }
     }
   }

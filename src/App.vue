@@ -13,7 +13,7 @@ import Footer from '@/components/Footer.vue'
 import NavMenu from '@/components/NavMenu.vue'
 import ScatterJS from 'scatterjs-core'
 import ScatterEOS from 'scatterjs-plugin-eosjs'
-import { API_URL } from '@/assets/constants.js'
+// import { API_URL } from '@/assets/constants.js'
 // import { connect } from 'http2'
 
 ScatterJS.plugins(new ScatterEOS())
@@ -25,32 +25,16 @@ export default {
   },
   created () {
     this.$store.dispatch('getProposals')
+    this.$store.dispatch('getAccounts')
+    this.$store.dispatch('getVotes')
+    this.$store.dispatch('getProxies')
     ScatterJS.scatter.connect('My-App').then(connected => {
       if (!connected) return false
       // 有scatter
       this.$store.dispatch('setScatter', { scatter: ScatterJS.scatter })
     })
-    this.getVotes()
   },
   methods: {
-    getVotes () {
-      this.$axios.get(API_URL.API_GET_ALL_VOTES).then(res => {
-        if (res.status === 200) {
-          res.data.forEach(vote => {
-            if (vote.vote_json) {
-              try {
-                vote.vote_json = JSON.parse(vote.vote_json)
-              } catch (e) {
-                console.log('invalid vote_json')
-              }
-            } else {
-              vote.vote_json = null
-            }
-          })
-          localStorage.setItem('votes', JSON.stringify(res.data))
-        }
-      })
-    }
   }
 }
 </script>

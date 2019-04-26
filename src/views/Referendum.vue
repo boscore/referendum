@@ -37,16 +37,22 @@
                   <div class="button" @click="getIdentity">Pair Scatter</div>
                 </div>
                 <div class="proposal-table" v-else>
-                  <p>Accout: {{scatter.identity.accounts[0].name}}
-                    <span class="button" @click="forgetIdentity">Remove Identity</span>
+                  <p class="account-name">Accout: {{scatter.identity.accounts[0].name}}
+                    <span style="margin: 0 10px" class="button" @click="forgetIdentity">Remove Identity</span>
                     <router-link :to="{path: '/create_proposal'}">
                       <span class="button">Create Proposal</span>
                     </router-link>
                   </p>
-                  <el-table :data="myProposals" empty-text="No records found">
-                    <el-table-column label="Proposer" props="proposer"></el-table-column>
-                    <el-table-column label="Proposal" props="proposal"></el-table-column>
-                    <el-table-column label="Created" props="created"></el-table-column>
+                  <el-table  :data="myProposals" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
+                    <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
+                    <el-table-column sortable label="Created" prop="created_at"></el-table-column>
+                    <el-table-column sortable label="Expire" prop="expires_at"></el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                        <el-button v-if="!isExpired(scope.row.expires_at)" type="danger" @click="expireProp(scope.row.proposal_name)">Expire</el-button>
+                        <label v-else>Expired</label>
+                      </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -67,11 +73,11 @@
                   <div class="button" @click="getIdentity">Pair Scatter</div>
                 </div>
                 <div class="proposal-table" v-else>
-                  <p>Accout: {{scatter.identity.accounts[0].name}} <span class="button" @click="forgetIdentity">Remove Identity</span></p>
-                   <el-table :data="myVotes" empty-text="No records found">
-                    <el-table-column label="Proposer" props="proposer"></el-table-column>
-                    <el-table-column label="Proposal" props="proposal"></el-table-column>
-                    <el-table-column label="Voted" props="voted"></el-table-column>
+                  <p class="account-name">Accout: {{scatter.identity.accounts[0].name}} <span style="margin: 0 10px" class="button" @click="forgetIdentity">Remove Identity</span></p>
+                  <el-table :data="myVotes" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
+                    <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
+                    <el-table-column sortable label="Result" prop="result"></el-table-column>
+                    <el-table-column sortable label="Voted" prop="updated_at"></el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -123,6 +129,8 @@
 
 <script>
 // @ is an alias to /src
+import { MessageBox } from 'element-ui'
+import Eos from 'eosjs'
 import { NETWORK } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
 export default {
@@ -180,9 +188,7 @@ export default {
       filterBy: ['poll', 'referendum', 'approved', 'rejected', 'ongoing'],
       sortBy: 'MostVoted',
       searchText: '',
-      searchBy: '',
-      myProposals: [],
-      myVotes: []
+      searchBy: ''
     }
   },
   async created () {
@@ -191,6 +197,14 @@ export default {
   computed: {
     scatter () {
       return this.$store.state.scatter
+    },
+    eos () {
+      if (this.scatter && this.scatter.identity) {
+        const eosOptions = { expireInSeconds: 60 }
+        const eos = this.scatter.eos(NETWORK, Eos, eosOptions)
+        return eos
+      }
+      return null
     },
     proposals () {
       return this.$store.state.proposals
@@ -201,8 +215,8 @@ export default {
         Object.keys(this.proposals).forEach(key => {
           let flags = Array(5).fill(false)
           this.filterBy.forEach(filter => {
-            if (filter === 'poll') {
-              if (this.proposals[key].proposal.proposal_json.type && this.proposals[key].proposal.proposal_json.type.search('poll') !== -1) {
+            if (filter === 'poll') { // 暂时把不是referendum的认为是poll
+              if (this.proposals[key].proposal.proposal_json.type && this.proposals[key].proposal.proposal_json.type.search('referendum') === -1) {
                 flags[0] = true
               }
             }
@@ -259,9 +273,74 @@ export default {
         })
       }
       return propList
+    },
+    myVotes () {
+      let myVotes = null
+      if (this.$store.state.accounts && this.scatter && this.scatter.identity) {
+        myVotes = this.$store.state.accounts[this.scatter.identity.accounts[0].name]
+        if (myVotes) {
+          let list = []
+          Object.keys(myVotes.votes).forEach(key => {
+            let vote = { ...myVotes.votes[key] }
+            if (vote.vote === 1) {
+              vote.result = 'YES'
+            } else if (vote.vote === 0) {
+              vote.result = 'NO'
+            } else {
+              vote.result = 'ABSTAIN'
+            }
+            list.push(vote)
+          })
+          return list
+        }
+      }
+      return []
+    },
+    myProposals () {
+      let myProposals = []
+      if (this.proposals && this.scatter && this.scatter.identity) {
+        Object.keys(this.proposals).forEach(key => {
+          if (this.proposals[key].proposal.proposer === this.scatter.identity.accounts[0].name) {
+            myProposals.push(this.proposals[key].proposal)
+          }
+        })
+      }
+      return myProposals
     }
   },
   methods: {
+    expireProp (proposal) {
+      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      const transactionOptions = {
+        actions: [{
+          account: 'bosforumdapp',
+          name: 'expire',
+          authorization: [{
+            actor: account.name,
+            permission: account.authority
+          }],
+          data: { proposal_name: proposal }
+        }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(res => {
+          MessageBox.alert(`Expired ${proposal}`, '', {
+            confirmButtonText: 'OK'
+          })
+        }).catch(e => {
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
+    },
+    isExpired (exporiesAt) {
+      let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
+      let expiry = new Date(exporiesAt).getTime()
+      if (expiry < now) {
+        return true
+      }
+      return false
+    },
     getProposals () {
       this.$store.dispatch('getProposals')
     },
@@ -324,4 +403,9 @@ export default {
   color: #FFFFFF;
   letter-spacing: 0;
   text-align: center;
+.account-name
+    font-family Roboto-Bold
+    text-align left
+    font-size 20px
+    color #8290aa
 </style>

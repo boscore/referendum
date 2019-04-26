@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.4.5",
+    "eosjs": "^16.0.9",
     "http2": "^3.3.7",
     "marked": "^0.6.2",
     "scatterjs-core": "^2.7.17",

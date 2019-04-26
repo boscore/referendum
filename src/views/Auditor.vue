@@ -3,7 +3,7 @@
     <el-container>
       <el-main style="padding-top:0">
         <div class="main-panel">
-          <h1>Candidate Board</h1>
+          <h1>Auditor Board</h1>
           <div class="card board">
             <div v-for="cand in candidatesList" :key="cand.id" class="board-item">
               <Avatar :url="cand.url" star></Avatar>
@@ -12,7 +12,7 @@
           </div>
           <div class="candidate-list">
             <h1>Candidate List <span style="color: #91ADFF;">- {{candidatesList.length}}</span></h1>
-            <p>The Custodian Board manages the operations and affairs of the DAC, including but not limited to the governance and administration of the assets and liabilities of the DAC. The following DAC members have vested some of their tokens to submit themselves and candidates for a position on the custodian board which last for 7 days. Every 7 days, your votes are recalculated to select who will be part of the next custodian board. Voting is important! Please vote often and stay engaged within the DAC to know who is providing value</p>
+            <!-- <p>The Custodian Board manages the operations and affairs of the DAC, including but not limited to the governance and administration of the assets and liabilities of the DAC. The following DAC members have vested some of their tokens to submit themselves and candidates for a position on the custodian board which last for 7 days. Every 7 days, your votes are recalculated to select who will be part of the next custodian board. Voting is important! Please vote often and stay engaged within the DAC to know who is providing value</p> -->
             <CandidateCollapse v-for="candidate in candidatesList" :key="candidate.id" @select="handleSelect" v-bind="candidate"></CandidateCollapse>
           </div>
         </div>
@@ -23,7 +23,7 @@
             My Vote <span style="color: #91ADFF;">{{selectedCandidates.length}}/5</span>
           </h1>
           <p>
-            You can vote for up to 5 custodian candidates at a time. Please select candidates who you think will bring value to the DAC.
+            You can vote for up to 5 auditor candidates at a time. Please select candidates who you think will bring value to the BOS.
           </p>
           <div class="selected-candidates card">
             <div class="vote-button" :class="{'vote-button-active': selectedCandidates.length}">
