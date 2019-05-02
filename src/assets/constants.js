@@ -2,7 +2,7 @@ export const COLOR = {}
 export const NETWORK = {
   blockchain: 'eos',
   protocol: 'https',
-  host: 'bos-testnet.eosphere.io',
+  host: 'bostest.api.blockgo.vip',
   port: 443,
   chainId: '33cc2426f1b258ef8c798c34c0360b31732ea27a2d7e35a65797850a86d1ba85'
 }
