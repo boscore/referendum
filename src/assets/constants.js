@@ -16,11 +16,11 @@ export const NETWORK = {
 
 export const API_URL = {
   API_POLL_TALLY: 'https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json',
-  // API_POLL_TALLY: 'https://s3.amazonaws.com/api.eosvotes.io/eosvotes/tallies/latest.json',
   API_GET_ALL_VOTES: 'https://s3.amazonaws.com/bostest.referendum/bosforumdapp/vote/latest.json',
-  // API_GET_ALL_VOTES: 'https://s3.amazonaws.com/api.eosvotes.io/eosio.forum/vote/latest.json',
   API_GET_ALL_ACCOUNTS: 'https://s3.amazonaws.com/bostest.referendum/referendum/accounts/latest.json',
-  // API_GET_ALL_ACCOUNTS: 'https://s3.amazonaws.com/api.eosvotes.io/eosvotes/accounts/latest.json',
   API_GET_ALL_PROXIES: 'https://s3.amazonaws.com/bostest.referendum/referendum/proxies/latest.json'
+  // API_GET_ALL_ACCOUNTS: 'https://s3.amazonaws.com/api.eosvotes.io/eosvotes/accounts/latest.json',
+  // API_GET_ALL_VOTES: 'https://s3.amazonaws.com/api.eosvotes.io/eosio.forum/vote/latest.json',
+  // API_POLL_TALLY: 'https://s3.amazonaws.com/api.eosvotes.io/eosvotes/tallies/latest.json',
   // API_GET_ALL_PROXIES: 'https://s3.amazonaws.com/api.eosvotes.io/eosvotes/proxies/latest.json'
 }

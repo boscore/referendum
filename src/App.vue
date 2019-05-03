@@ -24,8 +24,8 @@ export default {
     NavMenu
   },
   created () {
-    this.$store.dispatch('getProposals')
     this.$store.dispatch('getAccounts')
+    this.$store.dispatch('getProposals')
     this.$store.dispatch('getVotes')
     this.$store.dispatch('getProxies')
     ScatterJS.scatter.connect('My-App').then(connected => {

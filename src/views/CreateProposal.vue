@@ -2,6 +2,9 @@
   <div class="create-proposal">
     <el-container>
       <el-main>
+      <div id="back-button" @click="$router.push({path: '/'})">
+        <i class="el-icon-arrow-left"></i>Back
+      </div>
       <h2>Create Proposal</h2>
       <div class="card">
         <el-form ref="form" :rules="rules" :model="form" label-position="top" label-width="110px">
@@ -147,7 +150,7 @@ export default {
           }
           const transactionOptions = {
             actions: [{
-              account: 'bosforumdapp',
+              account: 'eosio.forum',
               name: 'propose',
               authorization: [{
                 actor: account.name,
@@ -159,7 +162,12 @@ export default {
           this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
             .then(res => {
               MessageBox.alert(`You create a new proposal successfully`, '', {
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                callback: action => {
+                  if (action === 'confirm') {
+                    this.$router.replace('/referendum')
+                  }
+                }
               })
             }).catch(e => {
               // if (typeof e === 'string') {
@@ -196,4 +204,16 @@ export default {
   width 400px
   margin auto
   margin-top 20px
+#back-button
+  cursor pointer
+  width 100px
+  height 32px
+  line-height 32px
+  background: #507DFE;
+  border-radius: 15.5px;
+  font-family: PingFangSC-Medium;
+  font-size: 18px;
+  color: #FFFFFF;
+  letter-spacing: 0;
+  text-align: center;
 </style>

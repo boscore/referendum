@@ -21,6 +21,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Submenu,
   Tabs,
   TabPane,
   Table,
@@ -41,6 +42,7 @@ Vue.use(Progress)
 
 Vue.use(Menu)
 Vue.use(MenuItem)
+Vue.use(Submenu)
 
 Vue.use(Container)
 Vue.use(Footer)
