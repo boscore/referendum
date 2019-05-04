@@ -7,6 +7,7 @@ import {
   Collapse,
   CollapseItem,
   DatePicker,
+  Dialog,
   Footer,
   Form,
   FormItem,
@@ -67,3 +68,5 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 
 Vue.use(Checkbox)
+
+Vue.use(Dialog)

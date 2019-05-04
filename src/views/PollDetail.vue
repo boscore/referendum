@@ -359,7 +359,8 @@ export default {
       const proposals = this.$store.state.proposals
       if (proposals && this.proposal) {
         Object.keys(proposals).forEach(key => {
-          if (proposals[key].proposal.proposer === this.proposal.proposal.proposer) {
+          if (proposals[key].proposal.proposer === this.proposal.proposal.proposer &&
+          proposals[key].proposal.proposal_name !== this.proposal.proposal.proposal_name) {
             if (related.length < 2) {
               related.push(proposals[key])
             }

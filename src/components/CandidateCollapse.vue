@@ -6,7 +6,7 @@
               <i class="el-icon-plus" v-if="!selected"></i>
               <i class="el-icon-check" v-if="selected"></i>
             </div>
-            <Avatar style="margin: 0 18px" :url="image" size="48px"></Avatar>
+            <Avatar style="margin: 0 18px" :url="infrom.avator" size="48px"></Avatar>
             <div class="candidate-info">
               <p class="name">
                 {{id}}
@@ -26,6 +26,7 @@
         <div class="collapse-wrap" :style="{display: isActive ? 'block' : 'none'}">
           <div class="title">
             <h1>BIO</h1>
+            <p v-if="contact" style="float:right">Email: {{contact}}</p>
           </div>
           <div v-html="desc" class="content"></div>
         </div>
@@ -50,10 +51,6 @@ export default {
     },
     staked: {
       type: [String, Number],
-      default: ''
-    },
-    image: {
-      type: String,
       default: ''
     },
     familyName: {
@@ -83,6 +80,12 @@ export default {
     Avatar
   },
   computed: {
+    contact () {
+      if (this.inform) {
+        return this.inform.contact
+      }
+      return null
+    },
     formVotes () {
       if (this.votes) {
         return (this.votes / 10000).toFixed(4)
