@@ -313,7 +313,7 @@ export default {
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
       const transactionOptions = {
         actions: [{
-          account: 'bosforumdapp',
+          account: 'eosio.forum',
           name: 'expire',
           authorization: [{
             actor: account.name,

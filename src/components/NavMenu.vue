@@ -6,11 +6,17 @@
       </el-menu-item>
       <el-menu-item index="referendum" @click="$router.push('/referendum')">{{$t('common.referendum')}}</el-menu-item>
       <el-menu-item index="auditor" @click="$router.push('/auditor')">{{$t('common.auditor')}}</el-menu-item>
+      <el-submenu index="logout" style="float:right" v-if="account">
+        <template slot="title">{{account}}</template>
+        <el-menu-item @click="forgetIdentity" style="text-align:center">Remove Identity</el-menu-item>
+      </el-submenu>
+      <el-menu-item index="login" style="float:right"  v-else @click="getIdentity">Login</el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script>
+import { NETWORK } from '@/assets/constants.js'
 export default {
   name: 'NavMenu',
   data () {
@@ -20,6 +26,29 @@ export default {
   computed: {
     activeIndex () {
       return this.$route.name
+    },
+    account () {
+      if (this.$store.state.scatter && this.$store.state.scatter.identity) {
+        return this.$store.state.scatter.identity.accounts.find(x => x.blockchain === 'eos').name
+      }
+      return null
+    },
+    scatter () {
+      return this.$store.state.scatter
+    }
+  },
+  methods: {
+    getIdentity () { // scatter认证
+      const requiredFields = {
+        accounts: [ NETWORK ]
+      }
+      this.scatter.getIdentity(requiredFields).then(() => {
+        // console.log(this.scatter.identity)
+        this.$store.dispatch('setScatter', { scatter: this.scatter })
+      })
+    },
+    forgetIdentity () {
+      this.scatter.forgetIdentity()
     }
   }
 }
@@ -39,4 +68,5 @@ export default {
     position absolute
     top 50%
     transform translate(0,-50%)
+
 </style>

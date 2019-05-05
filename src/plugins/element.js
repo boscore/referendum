@@ -7,6 +7,7 @@ import {
   Collapse,
   CollapseItem,
   DatePicker,
+  Dialog,
   Footer,
   Form,
   FormItem,
@@ -21,6 +22,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Submenu,
   Tabs,
   TabPane,
   Table,
@@ -41,6 +43,7 @@ Vue.use(Progress)
 
 Vue.use(Menu)
 Vue.use(MenuItem)
+Vue.use(Submenu)
 
 Vue.use(Container)
 Vue.use(Footer)
@@ -65,3 +68,5 @@ Vue.use(Radio)
 Vue.use(RadioGroup)
 
 Vue.use(Checkbox)
+
+Vue.use(Dialog)

@@ -19,6 +19,7 @@
             Description
           </div>
           <div
+            v-if="votes.length"
             class="radio-button"
             @click="turnTo('stats')"
             :class="{'radio-button-active': activeButton === 'stats'}">
@@ -57,7 +58,12 @@
               <div class="button" style="margin: 20px auto;padding: 5px 20px" @click="showMoreVoters">Load more voters</div>
             </div>
           </div>
-          <div class="card" ref="stats">Stats</div>
+          <div v-if="votes.length" v-loading="chartLoading" class="card" ref="stats">
+            <IEcharts
+              style="width:800px;height:500px;margin:auto"
+              :option="chartOption"
+            ></IEcharts>
+          </div>
 
           <div class="card" ref="comments">
             <h2>Comments {{comments.length}}</h2>
@@ -151,15 +157,89 @@ import marked from 'marked'
 import Eos from 'eosjs'
 import { MessageBox } from 'element-ui'
 import { NETWORK } from '@/assets/constants.js'
+import IEcharts from 'vue-echarts-v3/src/lite.js'
+import 'echarts/lib/chart/pie'
+import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/title'
 import PropCard from '@/components/PropCard.vue'
 import Comment from '@/components/Comment.vue'
 export default {
   name: 'PollDetail',
   components: {
     PropCard,
+    IEcharts,
     Comment
   },
   computed: {
+    chartLoading () {
+      if (this.votes) {
+        return false
+      } else {
+        return true
+      }
+    },
+    chartOption () {
+      let data = []
+      if (this.votes) {
+        this.votes.forEach(vote => {
+          if (this.proposal.stats.staked.total !== 0 && (vote.staked * 10000 / this.proposal.stats.staked.total) > 0.002) {
+            let label = true
+            if (data.length > 20) {
+              label = false
+            }
+            data.push({
+              value: vote.staked,
+              name: vote.voter,
+              itemStyle: {
+                color: (vote.vote === 1) ? 'rgb(97, 169, 19)' : 'rgb(217, 83, 79)'
+              },
+              label: {
+                show: label
+              },
+              labelLine: {
+                show: label
+              }
+            })
+          }
+        })
+      }
+      return {
+        title: {
+          text: 'Votes by vote size',
+          textStyle: {
+            color: '#235894'
+          },
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{b} : {c} BOS ({d}%)'
+        },
+        series: [
+          {
+            type: 'pie',
+            radius: '65%',
+            center: ['50%', '50%'],
+            selectedMode: 'single',
+            data: data,
+            label: {
+              normal: {
+                textStyle: {
+                  fontSize: 18,
+                  color: '#235894'
+                }
+              }
+            },
+            itemStyle: {
+              normal: {
+                borderWidth: 1,
+                borderColor: '#fff'
+              }
+            }
+          }
+        ]
+      }
+    },
     votes () { // votes for this proposal
       let allVotes = this.$store.state.votes || localStorage.getItem('votes')
       let allAccounts = this.$store.state.accounts || localStorage.getItem('accounts')
@@ -181,12 +261,25 @@ export default {
             if (allAccounts[vote.voter]) {
               vote.type = 'Voter'
               vote.staked = Number((allAccounts[vote.voter].staked / 10000).toFixed(0))
-            }
-            if (allProxies[vote.voter]) {
+            } else if (allProxies[vote.voter]) {
               vote.type = 'Proxy'
               vote.staked = Number((allProxies[vote.voter].votes[this.proposalName].staked_proxy / 10000).toFixed(0))
+            } else {
+              vote.type = 'Voter'
+              vote.staked = 0
             }
-            votes.push(vote)
+            if (votes.length === 0 || vote.staked <= votes[votes.length - 1].staked) {
+              votes.push(vote)
+            } else {
+              for (let i = votes.length - 1; i >= 0; i--) {
+                if (vote.staked < votes[i].staked) {
+                  votes.splice(i + 1, 0, vote) // 插在该元素后面
+                  break
+                } else if (i === 0) {
+                  votes.splice(0, 0, vote)
+                }
+              }
+            }
           }
         })
         return votes
@@ -266,7 +359,8 @@ export default {
       const proposals = this.$store.state.proposals
       if (proposals && this.proposal) {
         Object.keys(proposals).forEach(key => {
-          if (proposals[key].proposal.proposer === this.proposal.proposal.proposer) {
+          if (proposals[key].proposal.proposer === this.proposal.proposal.proposer &&
+          proposals[key].proposal.proposal_name !== this.proposal.proposal.proposal_name) {
             if (related.length < 2) {
               related.push(proposals[key])
             }
@@ -330,6 +424,7 @@ export default {
       myComment: '',
       writeComment: false,
       showVotersNum: 30
+
     }
   },
   mounted () {
@@ -379,7 +474,7 @@ export default {
         }
         const transactionOptions = {
           actions: [{
-            account: 'bosforumdapp',
+            account: 'eosio.forum',
             name: 'vote',
             authorization: [{
               actor: account.name,
@@ -414,7 +509,7 @@ export default {
       }
       const transactionOptions = {
         actions: [{
-          account: 'bosforumdapp',
+          account: 'eosio.forum',
           name: 'unvote',
           authorization: [{
             actor: account.name,

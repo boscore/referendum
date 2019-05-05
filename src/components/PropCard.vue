@@ -222,7 +222,7 @@ p
   padding 7px 6px
   box-sizing border-box
   height 60px
-  width 64px
+  width 70px
   border-radius 6px 6px 0 0
   p
     color #FFFFFF

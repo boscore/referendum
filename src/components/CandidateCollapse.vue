@@ -6,14 +6,14 @@
               <i class="el-icon-plus" v-if="!selected"></i>
               <i class="el-icon-check" v-if="selected"></i>
             </div>
-            <Avatar style="margin: 0 18px" :url="image" size="48px"></Avatar>
+            <Avatar style="margin: 0 18px" :url="inform.avator" size="48px"></Avatar>
             <div class="candidate-info">
               <p class="name">
                 {{id}}
-                <span style="font-family: Roboto-Regular">({{`${givenName} ${familyName}`}})</span>
+                <span v-if="(givenName || familyName)" style="font-family: Roboto-Regular">{{`(${givenName} ${familyName})`}}</span>
               </p>
               <p class="vote">
-                Votes: {{votes}} &nbsp;&nbsp; Staked:{{staked}}
+                Votes: {{formVotes}} &nbsp;&nbsp; Staked:{{staked}}
               </p>
             </div>
             <i
@@ -26,7 +26,7 @@
         <div class="collapse-wrap" :style="{display: isActive ? 'block' : 'none'}">
           <div class="title">
             <h1>BIO</h1>
-            <p>Requested Pay: 10.0000 EOS</p>
+            <p v-if="contact" style="float:right">Email: {{contact}}</p>
           </div>
           <div v-html="desc" class="content"></div>
         </div>
@@ -39,12 +39,18 @@ import marked from 'marked'
 export default {
   name: 'CandidateCollapse',
   props: {
-    description: {
-      type: String,
+    inform: {
+      type: Object,
+      default () {
+        return {}
+      }
+    },
+    votes: {
+      type: [String, Number],
       default: ''
     },
-    image: {
-      type: String,
+    staked: {
+      type: [String, Number],
       default: ''
     },
     familyName: {
@@ -66,8 +72,6 @@ export default {
   },
   data () {
     return {
-      votes: '54,423,586.2563',
-      staked: '100,000.0000 BOS',
       isActive: false,
       isSelectedInner: false
     }
@@ -76,11 +80,27 @@ export default {
     Avatar
   },
   computed: {
+    contact () {
+      if (this.inform) {
+        return this.inform.contact
+      }
+      return null
+    },
+    formVotes () {
+      if (this.votes) {
+        return (this.votes / 10000).toFixed(4)
+      }
+      return '0.0000'
+    },
     selected () {
       return this.isSelected
     },
     desc () {
-      return marked(this.description.replace(/↵/g, '\n'), { sanitize: true })
+      if (this.inform.bio) {
+        return marked(this.inform.bio.replace(/↵/g, '\n'), { sanitize: true })
+      } else {
+        return ''
+      }
     }
   },
   methods: {
