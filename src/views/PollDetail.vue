@@ -520,7 +520,7 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(res => {
-          MessageBox.alert(`Your unvote on ${this.proposalName} was successful`, '', {
+          MessageBox.alert(`Your unvote on ${this.proposalName} was successful, data will be updated some time later`, '', {
             confirmButtonText: 'OK'
           })
         }).catch(e => {

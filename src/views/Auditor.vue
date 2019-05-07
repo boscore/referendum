@@ -32,7 +32,7 @@
       <el-aside width="320px">
         <div class="vote-panel">
           <h1>
-            My Vote <span style="color: #91ADFF;">{{selectedCandidates.length}}/{{config ? config.numelected : 5}}</span>
+            My Vote <span style="color: #91ADFF;">{{selectedCandidates.length}}/{{config ? config.maxvotes : 5}}</span>
           </h1>
           <p>
             You can vote for up to 5 auditor candidates at a time. Please select candidates who you think will bring value to the BOS.
@@ -50,7 +50,29 @@
             </div>
           </div>
         </div>
-        <div v-if="scatter">
+        <div v-if="myCandidate" class="card">
+          <h1>You are a candidate</h1>
+          <p>Votes: {{(myCandidate.total_votes / 10000).toFixed(4)}}</p>
+          <p>Staked: {{myCandidate.locked_tokens}}</p>
+          <div v-if="myCandidate.is_active">
+            <p>you are active for elections</p>
+            <div @click="inactive" class="vote-button vote-button-active">Be inactive</div>
+          </div>
+          <div v-else >
+            <p>you are inactive for elections</p>
+            <div v-if="myCandidate.locked_tokens !== '0.0000 BOS' || pendingStake">
+              <div @click="active" class="vote-button vote-button-active">Be active</div>
+              <div @click="unstake" class="vote-button vote-button-active">Unstake</div>
+            </div>
+            <div v-else @click="stake" class="vote-button vote-button-active">Stake</div>
+          </div>
+          <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
+        </div>
+        <div v-else-if="myAuditor" class="card">
+          <h1>You are a auditor</h1>
+          <p>Votes: {{(myAuditor.total_votes / 10000).toFixed(4)}}</p>
+        </div>
+        <div v-else-if="scatter">
           <div v-if="!scatter.identity" class="button"
             @click="getIdentity"
             style="border-radius:6px;width:90%;height:40px;line-height:30px"
@@ -72,9 +94,32 @@
           </a>
         </div>
       </el-aside>
-
     </el-container>
-
+  <el-dialog
+    title="Update candidate information"
+    :visible.sync="updateDialog"
+  >
+    <span>
+      <el-form ref="updateForm" :model="candInfo" label-width="210px" label-position="left" :rules="updateRules">
+        <el-form-item prop="contact">
+            <label slot="label">Email</label>
+            <el-input style="max-width: 400px;" v-model="candInfo.contact"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <label slot="label">Avatar image url</label>
+            <el-input style="max-width: 400px;" v-model="candInfo.avatar" ></el-input>
+          </el-form-item>
+          <el-form-item prop="bio">
+            <label slot="label">BIO</label>
+            <el-input  v-model="candInfo.bio" type="textarea" :rows="10" ></el-input>
+          </el-form-item>
+      </el-form>
+    </span>
+    <span slot="footer">
+      <el-button @click="updateDialog=false">Cancel</el-button>
+      <el-button type="primary" @click="updateBio">Update</el-button>
+    </span>
+  </el-dialog>
   </div>
 </template>
 
@@ -94,8 +139,25 @@ export default {
     return {
       selectedCandidates: [],
       auditorsList: [],
+      allCandList: [],
       candidatesList: [],
-      config: null
+      config: null,
+      contract: 'auditor.bos',
+      updateDialog: false,
+      candInfo: {
+        avatar: '',
+        bio: '',
+        contact: ''
+      },
+      updateRules: {
+        bio: [
+          { required: true, message: 'Bio can\'t be empty', trigger: 'blur' }
+        ],
+        contact: [
+          { required: true, message: 'Contact way can\'t be empty', trigger: 'blur' }
+        ]
+      },
+      pendingStakeTable: []
     }
   },
   created () {
@@ -104,11 +166,31 @@ export default {
         this.getConfig()
         this.getAuditors()
         this.getCandidates()
+        this.getPendingStake()
         clearInterval(interval)
       }
     }, 1000)
   },
   computed: {
+    account () {
+      if (this.scatter && this.scatter.identity) {
+        return this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      } else {
+        return null
+      }
+    },
+    myCandidate () {
+      if (this.account) {
+        return this.allCandList.find(elm => elm.candidate_name === this.account.name)
+      }
+      return null
+    },
+    myAuditor () {
+      if (this.account) {
+        return this.auditorsList.find(elm => elm.cust_name === this.account.name)
+      }
+      return null
+    },
     scatter () {
       return this.$store.state.scatter
     },
@@ -116,10 +198,18 @@ export default {
       if (this.scatter) {
         const eosOptions = { expireInSeconds: 60 }
         const eos = this.scatter.eos(NETWORK, Eos, eosOptions)
-        console.log(eos)
         return eos
       }
       return null
+    },
+    pendingStake () {
+      let flag = false
+      this.pendingStakeTable.forEach(item => {
+        if (item.sender === this.account.name && item.quantity >= this.config.lockupasset) {
+          flag = true
+        }
+      })
+      return flag
     }
   },
   methods: {
@@ -133,6 +223,19 @@ export default {
       if (this.eos) {
         this.eos.getTableRows(tableOptions).then((res) => {
           this.config = res.rows[0]
+        })
+      }
+    },
+    getPendingStake () {
+      const tableOptions = {
+        'scope': 'auditor.bos',
+        'code': 'auditor.bos',
+        'table': 'pendingstake',
+        'json': true
+      }
+      if (this.eos) {
+        this.eos.getTableRows(tableOptions).then((res) => {
+          this.pendingStakeTable = res.rows
         })
       }
     },
@@ -158,6 +261,8 @@ export default {
         }
         const informs = await this.getInforms()
         this.eos.getTableRows(tableOptions).then(res => {
+          this.allCandList = []
+          this.candidatesList = []
           res.rows.forEach(candidate => {
             candidate.isSelected = false
             let inform = informs.find(element => {
@@ -171,6 +276,7 @@ export default {
               candidate.inform = inform.bio
               candidate.isSelected = false
             }
+            this.allCandList.push(candidate)
             if (candidate.is_active) {
               this.candidatesList.push(candidate)
             }
@@ -212,7 +318,7 @@ export default {
       }
     },
     pushCandidate (id) {
-      if (this.selectedCandidates.length <= this.config.numelected) {
+      if (this.selectedCandidates.length <= this.config.maxvotes) {
         for (let i = 0; i < this.candidatesList.length; i++) {
           if (this.candidatesList[i].candidate_name === id) {
             this.candidatesList[i].isSelected = true
@@ -222,6 +328,11 @@ export default {
         }
       } else {
         //  提示
+        Message({
+          showClose: true,
+          type: 'warning',
+          message: `You only can vote to ${this.config.maxvotes} candidates`
+        })
       }
     },
     removeCandidate (id) {
@@ -292,6 +403,129 @@ export default {
             this.removeAllCand()
           })
       }
+    },
+    async stake () {
+      this.eos.transfer(this.account.name, this.contract, this.config.lockupasset, '')
+        .then(res => {
+          this.getCandidates()
+          this.getPendingStake()
+          Message({
+            showClose: true,
+            type: 'success',
+            message: 'Stake successfully'
+          })
+        })
+        .catch(e => {})
+    },
+    unstake () {
+      const transactionOptions = {
+        actions: [
+          {
+            account: this.contract,
+            name: 'unstake',
+            authorization: [{
+              actor: this.account.name,
+              permission: this.account.authority
+            }],
+            data: {
+              cand: this.account.name
+            }
+          }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(() => {
+          this.getCandidates()
+          this.getPendingStake()
+          Message({
+            showClose: true,
+            type: 'success',
+            message: `Unstake successfully, stake will be released back ${this.config.lockup_release_time_delay}s later`
+          })
+        })
+    },
+    active () {
+      const transactionOptions = {
+        actions: [
+          {
+            account: this.contract,
+            name: 'nominatecand',
+            authorization: [{
+              actor: this.account.name,
+              permission: this.account.authority
+            }],
+            data: {
+              cand: this.account.name
+            }
+          }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(() => {
+          this.getCandidates()
+          Message({
+            showClose: true,
+            type: 'success',
+            message: 'You are active for auditor elections'
+          })
+        })
+    },
+    inactive () {
+      const transactionOptions = {
+        actions: [
+          {
+            account: this.contract,
+            name: 'withdrawcand',
+            authorization: [{
+              actor: this.account.name,
+              permission: this.account.authority
+            }],
+            data: {
+              cand: this.account.name
+            }
+          }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(() => {
+          this.getCandidates()
+          Message({
+            showClose: true,
+            type: 'success',
+            message: 'You are inactive for auditor elections'
+          })
+        })
+    },
+    showUpdate () {
+      // this.candInfo = { ...this.myCandidate.inform }
+      this.candInfo = {
+        avatar: this.myCandidate.inform.avatar || '',
+        bio: this.myCandidate.inform.bio,
+        contact: this.myCandidate.inform.contact
+      }
+      this.updateDialog = true
+    },
+    updateBio () {
+      this.$refs['updateForm'].validate(valid => {
+        if (valid) {
+          const transactionOptions = {
+            actions: [
+              {
+                account: this.contract,
+                name: 'updatebio',
+                authorization: [{
+                  actor: this.account.name,
+                  permission: this.account.authority
+                }],
+                data: {
+                  cand: this.account.name,
+                  bio: JSON.stringify(this.candInfo)
+                }
+              }]
+          }
+          this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+            .then(res => {
+              this.updateDialog = false
+            })
+        }
+      })
     }
   }
 }
@@ -335,20 +569,23 @@ h1
     font-size: 12px;
     color: #507DFE;
     letter-spacing: 0;
-  .vote-button
-    height 36px
-    width auto
-    line-height 36px
-    background: #7599FF;
-    border-radius: 6px;
-    font-family: Roboto-Medium;
-    font-size: 16px;
-    color: #FFFFFF;
-    cursor pointer
-    letter-spacing: 0;
-    text-align center
-  .vote-button-active
-    background: #527FFF;
+.vote-button
+  height 36px
+  width auto
+  line-height 36px
+  background: #7599FF;
+  border-radius: 6px;
+  font-family: Roboto-Medium;
+  font-size: 16px;
+  color: #FFFFFF;
+  cursor pointer
+  letter-spacing: 0;
+  text-align center
+  margin 5px 0
+.vote-button-active
+  background: #527FFF;
+  &:hover
+    opacity 0.8
 .card
   padding 22px 34px
   background: #FCFDFF;

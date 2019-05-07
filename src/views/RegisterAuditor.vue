@@ -93,7 +93,7 @@ export default {
       form: {
         stakeAmount: '100000.0000 BOS',
         contact: '',
-        avator: '',
+        avatar: '',
         bio: '',
         signDeclar: false,
         auditorName: ''
@@ -190,7 +190,7 @@ export default {
                 data: {
                   cand: this.form.auditorName,
                   bio: JSON.stringify({
-                    avator: this.form.avator,
+                    avatar: this.form.avatar,
                     bio: this.form.bio,
                     contact: this.form.contact
                   })
