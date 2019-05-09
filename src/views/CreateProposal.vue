@@ -6,7 +6,7 @@
         <i class="el-icon-arrow-left"></i>Back
       </div>
       <h2>Create Proposal</h2>
-      <div class="card">
+      <div class="card" v-loading="actionLoading">
         <el-form ref="form" :rules="rules" :model="form" label-position="top" label-width="110px">
           <el-form-item>
             <label slot="label">Proposer</label>
@@ -76,6 +76,7 @@ export default {
       }
     }
     return {
+      actionLoading: false,
       typeOptions: [
         {
           label: 'Referendum',
@@ -135,8 +136,8 @@ export default {
   methods: {
     createProp () {
       this.$refs['form'].validate(valid => {
-        console.log(valid)
         if (valid) {
+          this.actionLoading = true
           const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
           let actionParams = {
             proposer: account.name,
@@ -161,6 +162,7 @@ export default {
           }
           this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
             .then(res => {
+              this.actionLoading = false
               MessageBox.alert(`You create a new proposal successfully`, '', {
                 confirmButtonText: 'OK',
                 callback: action => {
@@ -173,6 +175,7 @@ export default {
               // if (typeof e === 'string') {
               //   e = JSON.parse(e)
               // }
+              this.actionLoading = false
               MessageBox.alert(e, 'ERROR', {
                 confirmButtonText: 'OK'
               })

@@ -75,6 +75,7 @@
             <h2>Poll Status</h2>
             <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
             <el-progress  :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
+             <el-progress  :stroke-width="10" class="abstain-percent" :percentage="100-rejectPercent-agreePercent"></el-progress>
             <p>{{(this.proposal.stats.staked.total / 10000).toFixed(0)}} BOS voted</p>
             <div class="scatter-panel">
               <div v-if="scatter">
@@ -182,25 +183,29 @@ export default {
       let data = []
       if (this.votes) {
         this.votes.forEach(vote => {
-          if (this.proposal.stats.staked.total !== 0 && (vote.staked * 10000 / this.proposal.stats.staked.total) > 0.002) {
-            let label = true
-            if (data.length > 20) {
-              label = false
-            }
-            data.push({
-              value: vote.staked,
-              name: vote.voter,
-              itemStyle: {
-                color: (vote.vote === 1) ? 'rgb(97, 169, 19)' : 'rgb(217, 83, 79)'
-              },
-              label: {
-                show: label
-              },
-              labelLine: {
-                show: label
-              }
-            })
+          let label = true
+          if (vote.vote !== 1 && vote.vote !== 0) {
+            return
           }
+          if (data.length > 20) {
+            if (this.proposal.stats.staked.total !== 0 && (vote.staked * 10000 / this.proposal.stats.staked.total) > 0.002) {
+              return
+            }
+            label = false
+          }
+          data.push({
+            value: vote.staked,
+            name: vote.voter,
+            itemStyle: {
+              color: (vote.vote === 1) ? 'rgb(97, 169, 19)' : 'rgb(217, 83, 79)'
+            },
+            label: {
+              show: label
+            },
+            labelLine: {
+              show: label
+            }
+          })
         })
       }
       return {
@@ -530,10 +535,12 @@ export default {
         })
     },
     turnTo (target) {
+      // 跳转到某个card
       this.activeButton = target
       this.$refs[target].scrollIntoView()
     },
     turnDetail (prop) {
+      // 进入另一个prop
       if (window.localStorage) {
         localStorage.setItem('proposalName', prop.proposal.proposal_name)
       }
@@ -570,6 +577,16 @@ export default {
       text-align center
     .el-progress-bar__inner
       background-image linear-gradient(269deg, #F06262 0%, #FF7171 100%)
+  .abstain-percent
+    .el-progress__text
+      font-family Roboto-Bold
+      font-size 11px
+      color #F4D03F
+      letter-spacing 0
+      text-align center
+    .el-progress-bar__inner
+      background-image linear-gradient(270deg, #F7DC6F 0%, #F1C40F 100%)
+
 </style>
 
 <style lang="stylus" scoped>

@@ -2,7 +2,7 @@
   <el-container class="register-auditor">
     <el-main>
       <h1 style="line-height:30px;margin:15px 0px;">Register Candidate</h1>
-      <div class="card">
+      <div class="card" v-loading="actionLoading">
         <el-form ref="form" :rules="rules" :model="form" label-position="top" label-width="110px">
           <p>Responsibilities outlined in the. BOS Declaration. Please, do not register as a candidate unless you fully understand and can meet the responsibilites of an BOS custodian board member. And you need to transfer some BOS to auditor.bos as staked token.</p>
           <el-form-item prop="auditorName">
@@ -27,7 +27,7 @@
             <el-input style="max-width: 400px;" v-model="form.avatar" ></el-input>
           </el-form-item>
           <el-form-item prop="bio">
-            <label slot="label">BIO</label>
+            <label slot="label">BIO (support markdown)</label>
             <el-input  v-model="form.bio" type="textarea" :rows="10" ></el-input>
           </el-form-item>
           <el-form-item prop="signDeclar">
@@ -78,6 +78,7 @@
 <script>
 import Eos from 'eosjs'
 import { NETWORK } from '@/assets/constants.js'
+import { MessageBox } from 'element-ui'
 import { setInterval, clearInterval } from 'timers'
 export default {
   name: 'RegisterAuditor',
@@ -90,6 +91,7 @@ export default {
       }
     }
     return {
+      actionLoading: false,
       form: {
         stakeAmount: '100000.0000 BOS',
         contact: '',
@@ -133,15 +135,25 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      this.getConfig()
-    })
+    let interv = setInterval(() => {
+      if (this.scatter && this.scatter.identity) {
+        this.form.auditorName = this.scatter.identity.accounts.find(x => x.blockchain === 'eos').name
+        clearInterval(interv)
+      }
+    }, 500)
+    this.getConfig()
   },
   methods: {
     async stake () {
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
-      const res = await this.eos.transfer(account.name, this.contract, this.form.stakeAmount, '')
-      console.log(res)
+      try {
+        await this.eos.transfer(account.name, this.contract, this.form.stakeAmount, '')
+      } catch (e) {
+        this.actionLoading = false
+        MessageBox.alert(e, 'ERROR', {
+          confirmButtonText: 'OK'
+        })
+      }
     },
     getConfig () {
       const interval = setInterval(() => {
@@ -163,8 +175,12 @@ export default {
     async register () {
       this.$refs['form'].validate(async valid => {
         if (valid) {
+          this.actionLoading = true
           if (this.hasStaked === false) {
             await this.stake()
+          }
+          if (this.actionLoading === false) {
+            return
           }
           const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
           const transactionOptions = {
@@ -198,6 +214,22 @@ export default {
               }]
           }
           this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+            .then(res => {
+              this.actionLoading = false
+              MessageBox.alert(`You register as a new candidate successfully`, '', {
+                confirmButtonText: 'OK',
+                callback: action => {
+                  if (action === 'confirm') {
+                    this.$router.replace('/auditor')
+                  }
+                }
+              })
+            }).catch(e => {
+              this.actionLoading = false
+              MessageBox.alert(e, 'ERROR', {
+                confirmButtonText: 'OK'
+              })
+            })
         } else {
           return false
         }

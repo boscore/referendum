@@ -30,7 +30,7 @@
           <!-- <el-tab-pane label="Search" name="search"></el-tab-pane> -->
           <!-- 我的提案 -->
           <el-tab-pane label="My proposals" name="proposals">
-            <div class="card" style="margin: 10px 25px">
+            <div v-loading="actionLoading" class="card" style="margin: 10px 0px">
               <div v-if="scatter">
                 <div v-if="!scatter.identity">
                   <p>A Scatter account is required</p>
@@ -66,7 +66,7 @@
           </el-tab-pane>
           <!-- 我的投票 -->
           <el-tab-pane label="My votes" name="votes">
-            <div class="card" style="margin: 10px 25px">
+            <div class="card" style="margin: 10px 0px">
               <div v-if="scatter">
                 <div v-if="!scatter.identity">
                   <p>A Scatter account is required</p>
@@ -87,6 +87,47 @@
                  <div class="button">Get Scatter</div>
                 </a>
               </div>
+            </div>
+          </el-tab-pane>
+          <!-- 提案流程 -->
+          <el-tab-pane label="Proposal process" name="process">
+            <div class="card">
+              <h2>Fund payment process points</h2>
+              <ul style="list-style-type:decimal;text-align:left">
+                <li>
+                  The community chooses suitable proposals for fund support by referendum.
+                </li>
+                <li>
+                  The amount of a single proposal incentives cannot exceed 1 Million BOS. Generally, after the deadline expires, the proposal incentives are automatically paid.
+                </li>
+                <li>
+                  10 days before the deadline, if the BOS Executive Team believes that the task has not been effectively executed, it has the right to temporarily freeze the payment of funds and submit the payment proposal to BP vote. BOSCore Executive Team checkpoints:
+                  <ul style="list-style-type:lower-alpha">
+                    <li>
+                      Testcase coverage, whether the test passed?
+                    </li>
+                    <li>
+                      Whether the coding quality is up to standard?
+                    </li>
+                    <li>
+                      Whether the specified functions in the proposal are fully implemented?
+                    </li>
+                    <li>
+                      Is there a security bug?
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  If the fund payment is frozen, the BOS independent auditor needs to publish the review within 7 days, make independent judgment in the contract, and issue a link to the relevant investigation report.
+                </li>
+                <li>
+                  Within two weeks after the auditor’s comments, BP needs to make a decision. If more than 2/3+1 active BPs agree to continue to pay the incentives, it will continue to pay 90% of the incentives; Otherwise the payment will be rejected.
+                </li>
+                <li>
+                  The 10% of the incentives for the proposal are equally divided between the auditors who agree with the majority of the BPs and the BPs who voted.
+                </li>
+              </ul>
+              <img src="@/assets/proposal_flow.png" />
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -140,6 +181,7 @@ export default {
   },
   data () {
     return {
+      actionLoading: false,
       activeTab: 'proposals',
       sortOptions: [
         {
@@ -310,6 +352,7 @@ export default {
   },
   methods: {
     expireProp (proposal) {
+      this.actionLoading = true
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
       const transactionOptions = {
         actions: [{
@@ -324,10 +367,12 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(res => {
+          this.actionLoading = false
           MessageBox.alert(`Expired ${proposal}`, '', {
             confirmButtonText: 'OK'
           })
         }).catch(e => {
+          this.actionLoading = false
           MessageBox.alert(e, 'ERROR', {
             confirmButtonText: 'OK'
           })
@@ -384,6 +429,8 @@ export default {
   justify-content flex-start
 .card
   font-family: Roboto-Regular
+  font-size 18px
+  color #606266
   padding 22px 34px
   background: #FCFDFF;
   box-shadow: 0 2px 4px 0 #B0D9FF;

@@ -1,6 +1,6 @@
 <template>
   <div class="auditor">
-    <el-container>
+    <el-container v-loading="actionLoading">
       <el-main style="padding-top:0">
         <div class="main-panel">
           <h1>Auditor Board</h1>
@@ -71,6 +71,7 @@
         <div v-else-if="myAuditor" class="card">
           <h1>You are a auditor</h1>
           <p>Votes: {{(myAuditor.total_votes / 10000).toFixed(4)}}</p>
+          <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
         </div>
         <div v-else-if="scatter">
           <div v-if="!scatter.identity" class="button"
@@ -98,6 +99,7 @@
   <el-dialog
     title="Update candidate information"
     :visible.sync="updateDialog"
+    v-loading="actionLoading"
   >
     <span>
       <el-form ref="updateForm" :model="candInfo" label-width="210px" label-position="left" :rules="updateRules">
@@ -137,6 +139,7 @@ export default {
   },
   data () {
     return {
+      actionLoading: false,
       selectedCandidates: [],
       auditorsList: [],
       allCandList: [],
@@ -373,6 +376,7 @@ export default {
         })
         this.getIdentity()
       } else {
+        this.actionLoading = true
         let newvotes = []
         this.selectedCandidates.forEach(item => {
           newvotes.push(item.candidate_name)
@@ -395,29 +399,43 @@ export default {
         }
         this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
           .then(() => {
+            this.actionLoading = false
             Message({
               showClose: true,
               type: 'success',
               message: 'Your vote has been cast on candidates'
             })
             this.removeAllCand()
+          }).catch(e => {
+            this.actionLoading = false
+            MessageBox.alert(e, 'ERROR', {
+              confirmButtonText: 'OK'
+            })
           })
       }
     },
     async stake () {
+      this.actionLoading = true
       this.eos.transfer(this.account.name, this.contract, this.config.lockupasset, '')
         .then(res => {
           this.getCandidates()
           this.getPendingStake()
+          this.actionLoading = false
           Message({
             showClose: true,
             type: 'success',
             message: 'Stake successfully'
           })
         })
-        .catch(e => {})
+        .catch(e => {
+          this.actionLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
     },
     unstake () {
+      this.actionLoading = true
       const transactionOptions = {
         actions: [
           {
@@ -434,6 +452,7 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(() => {
+          this.actionLoading = false
           this.getCandidates()
           this.getPendingStake()
           Message({
@@ -442,8 +461,15 @@ export default {
             message: `Unstake successfully, stake will be released back ${this.config.lockup_release_time_delay}s later`
           })
         })
+        .catch(e => {
+          this.actionLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
     },
     active () {
+      this.actionLoading = true
       const transactionOptions = {
         actions: [
           {
@@ -460,6 +486,7 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(() => {
+          this.actionLoading = false
           this.getCandidates()
           Message({
             showClose: true,
@@ -467,8 +494,15 @@ export default {
             message: 'You are active for auditor elections'
           })
         })
+        .catch(e => {
+          this.actionLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
     },
     inactive () {
+      this.actionLoading = true
       const transactionOptions = {
         actions: [
           {
@@ -485,11 +519,18 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(() => {
+          this.actionLoading = false
           this.getCandidates()
           Message({
             showClose: true,
             type: 'success',
             message: 'You are inactive for auditor elections'
+          })
+        })
+        .catch(e => {
+          this.actionLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
           })
         })
     },
@@ -505,6 +546,7 @@ export default {
     updateBio () {
       this.$refs['updateForm'].validate(valid => {
         if (valid) {
+          this.actionLoading = true
           const transactionOptions = {
             actions: [
               {
@@ -523,6 +565,13 @@ export default {
           this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
             .then(res => {
               this.updateDialog = false
+              this.actionLoading = false
+            })
+            .catch(e => {
+              this.actionLoading = false
+              MessageBox.alert(e, 'ERROR', {
+                confirmButtonText: 'OK'
+              })
             })
         }
       })
