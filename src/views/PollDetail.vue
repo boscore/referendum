@@ -523,12 +523,6 @@ export default {
             })
           })
       }
-      // eos.transfer(account.name, 'helloworld', '1.0000 EOS', 'memo', transactionOptions).then(trx => {
-      //   // That's it!
-      //   console.log(`Transaction ID: ${trx.transaction_id}`)
-      // }).catch(error => {
-      //   console.error(error)
-      // })
     },
     sendUnvote () {
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')

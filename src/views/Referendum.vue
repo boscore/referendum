@@ -73,7 +73,7 @@
                   <div class="button" @click="getIdentity">Pair Scatter</div>
                 </div>
                 <div class="proposal-table" v-else>
-                  <p class="account-name">Accout: {{scatter.identity.accounts[0].name}} <span style="margin: 0 10px" class="button" @click="forgetIdentity">Remove Identity</span></p>
+                  <p class="account-name">Account: {{scatter.identity.accounts[0].name}} <span style="margin: 0 10px" class="button" @click="forgetIdentity">Remove Identity</span></p>
                   <el-table :data="myVotes" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
                     <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
                     <el-table-column sortable label="Result" prop="result"></el-table-column>
@@ -93,7 +93,7 @@
           <el-tab-pane label="Proposal process" name="process">
             <div class="card">
               <h2>Fund payment process points</h2>
-              <ul style="list-style-type:decimal;text-align:left">
+              <ul id="fund-process">
                 <li>
                   The community chooses suitable proposals for fund support by referendum.
                 </li>
@@ -455,4 +455,10 @@ export default {
     text-align left
     font-size 20px
     color #8290aa
+#fund-process
+  list-style-type:decimal;
+  text-align:left
+  li
+    margin-top: 20px;
+    margin-bottom: 20px;
 </style>

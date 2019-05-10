@@ -282,6 +282,7 @@ export default {
             this.allCandList.push(candidate)
             if (candidate.is_active) {
               this.candidatesList.push(candidate)
+              this.candidatesList.sort((a, b) => { return b.total_votes - a.total_votes })
             }
           })
         })

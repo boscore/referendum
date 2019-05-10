@@ -28,7 +28,7 @@ export default {
     this.$store.dispatch('getProposals')
     this.$store.dispatch('getVotes')
     this.$store.dispatch('getProxies')
-    ScatterJS.scatter.connect('My-App').then(connected => {
+    ScatterJS.scatter.connect('BOSCore-Referendum').then(connected => {
       if (!connected) return false
       // 有scatter
       this.$store.dispatch('setScatter', { scatter: ScatterJS.scatter })

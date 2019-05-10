@@ -25,7 +25,7 @@
         </div>
       </div>
       <div>
-        <p>support@boscore.io | Terms of Use | Privacy Pocllcy</p>
+        <p>support@boscore.io | Terms of Use | Privacy Policy</p>
       </div>
     </div>
   </div>
