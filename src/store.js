@@ -43,7 +43,7 @@ export default new Vuex.Store({
       commit('setCurrentProposal', { proposal: payload.proposal })
     },
     getProposals ({ commit, dispatch }, payload) {
-      // axios.defaults.headers.common['Orign'] = 'https://s3.amazonaws.com'
+      // axios.defaults.headers.common['Origin'] = 'https://s3.amazonaws.com'
       axios.get(API_URL.API_POLL_TALLY).then(res => {
         if (res.status === 200) {
           Object.keys(res.data).forEach(key => {
