@@ -15,6 +15,7 @@ export const NETWORK = {
 // }
 
 export const API_URL = {
+  API_GET_PRODUCERS: 'http://boswps.eosplay.me:4000/getBPs',
   API_POLL_TALLY: 'https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json',
   API_GET_ALL_VOTES: 'https://s3.amazonaws.com/bostest.referendum/eosio.forum/vote/latest.json',
   API_GET_ALL_ACCOUNTS: 'https://s3.amazonaws.com/bostest.referendum/referendum/accounts/latest.json',

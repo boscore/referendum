@@ -66,18 +66,18 @@
           </div>
 
           <div class="card" ref="comments">
-            <h2>Auditor comments {{comments.length}}</h2>
-            <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
+            <h2>Auditor comments {{auditorComm.length}}</h2>
+            <Comment v-for="(comment, index) in auditorComm" :key="index" v-bind="comment"></Comment>
           </div>
 
           <div class="card">
-            <h2>BP comments {{comments.length}}</h2>
-            <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
+            <h2>BP comments {{BPComm.length}}</h2>
+            <Comment v-for="(comment, index) in BPComm" :key="index" v-bind="comment"></Comment>
           </div>
 
           <div class="card">
-            <h2>Other comments {{comments.length}}</h2>
-            <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
+            <h2>Other comments {{otherComm.length}}</h2>
+            <Comment v-for="(comment, index) in otherComm" :key="index" v-bind="comment"></Comment>
           </div>
         </el-main>
         <el-aside width="350px">
@@ -139,6 +139,12 @@
               <p>{{this.proposal ? this.yesLeadPercent : 0}}% YES lead over NO</p>
             </div>
           </div>
+          <div class="card">
+            <h2>The conditions for the approved proposal</h2>
+            <p>1. The votes from token holders is not less than 10% of BP votes from token holders when the proposal was initiated.</p>
+            <p>2. The ratio of approved votes/disapproved is greater than 1.5.</p>
+            <p>3. The above conditions last for 20 days.</p>
+          </div>
           <h2>
             Related Polls
           </h2>
@@ -167,13 +173,14 @@
 import marked from 'marked'
 import Eos from 'eosjs'
 import { MessageBox } from 'element-ui'
-import { NETWORK } from '@/assets/constants.js'
+import { NETWORK, API_URL } from '@/assets/constants.js'
 import IEcharts from 'vue-echarts-v3/src/lite.js'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
 import PropCard from '@/components/PropCard.vue'
 import Comment from '@/components/Comment.vue'
+import { setInterval, clearInterval } from 'timers'
 export default {
   name: 'PollDetail',
   components: {
@@ -283,6 +290,7 @@ export default {
               vote.type = 'Voter'
               vote.staked = 0
             }
+            // sort votes
             if (votes.length === 0 || vote.staked <= votes[votes.length - 1].staked) {
               votes.push(vote)
             } else {
@@ -322,20 +330,6 @@ export default {
         }
       }
       return null
-    },
-    comments () {
-      let comments = []
-      this.votes.forEach(vote => {
-        if (vote.vote_json && vote.vote_json.comment) {
-          comments.push({
-            avatar: '',
-            name: vote.voter,
-            time: vote.updated_at,
-            comment: vote.vote_json.comment
-          })
-        }
-      })
-      return comments
     },
     proposalName () {
       return this.$route.query.proposal || localStorage.getItem('proposalName')
@@ -438,14 +432,56 @@ export default {
         vote_json: ''
       },
       myComment: '',
+      auditorComm: [],
+      BPComm: [],
+      otherComm: [],
+      producers: [],
       writeComment: false,
       showVotersNum: 30
-
+    }
+  },
+  watch: {
+    votes (newVotes, oldVotes) {
+      this.auditorComm = []
+      this.otherComm = []
+      this.BPComm = []
+      newVotes.forEach(vote => {
+        if (vote.vote_json && vote.vote_json.comment) {
+          let comment = {
+            avatar: '',
+            name: vote.voter,
+            time: vote.updated_at,
+            comment: vote.vote_json.comment
+          }
+          if (this.auditorsList.find(auditor => auditor.cust_name === vote.voter)) {
+            this.auditorComm.push(comment)
+          } else {
+            this.otherComm.push(comment)
+          }
+        }
+      })
     }
   },
   mounted () {
+    this.getProducers()
+    const interv = setInterval(() => {
+      if (this.eos) {
+        this.getAuditors()
+        clearInterval(interv)
+      }
+    }, 1000)
   },
   methods: {
+    getProducers () {
+      this.$axios.get(API_URL.API_GET_PRODUCERS).then(res => {
+        console.log(res)
+        this.producers = res.producer
+      }).catch(e => {
+        MessageBox.alert(e, 'Get Producers ERROR', {
+          confirmButtonText: 'OK'
+        })
+      })
+    },
     getAuditors () {
       if (this.eos) {
         const tableOptions = {
@@ -456,6 +492,10 @@ export default {
         }
         this.eos.getTableRows(tableOptions).then(res => {
           this.auditorsList = res.rows
+        }).catch(e => {
+          MessageBox.alert(e, 'Get Auditors ERROR', {
+            confirmButtonText: 'OK'
+          })
         })
       }
     },

@@ -1,10 +1,10 @@
 <template>
   <div class="home">
     <el-container>
-      <el-main style="padding-left:50px;padding-right:50px">
+      <el-main>
         <div class="clear-float">
           <h1 class="title" style="float:left">Your Opinion Matters</h1>
-          <div style="float:right">
+          <div id="search-bar">
             <el-input
               clearable
               v-model="searchText"
@@ -14,8 +14,7 @@
               <i @click="searchBy = searchText" slot="suffix" class="el-input__icon el-icon-search"></i>
             </el-input>
             <label>
-              Filter
-            </label>
+              Filters:
             <el-select  v-model="filterBy" multiple collapse-tags placeholder="Filter">
               <el-option
                 v-for="item in filterOptions"
@@ -24,6 +23,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
+            </label>
           </div>
         </div>
         <el-tabs v-model="activeTab">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="proposal-table" v-else>
                   <p class="account-name">Accout: {{scatter.identity.accounts[0].name}}
-                    <span style="margin: 0 10px" class="button" @click="forgetIdentity">Remove Identity</span>
+                    <span class="button" @click="forgetIdentity">Remove Identity</span>
                     <router-link :to="{path: '/create_proposal'}">
                       <span class="button">Create Proposal</span>
                     </router-link>
@@ -127,7 +127,7 @@
                   The 10% of the incentives for the proposal are equally divided between the auditors who agree with the majority of the BPs and the BPs who voted.
                 </li>
               </ul>
-              <img src="@/assets/proposal_flow.png" />
+              <img style="width:100%" src="@/assets/proposal_flow.png" />
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -162,8 +162,6 @@
           </div>
         </div>
       </el-main>
-      <el-footer>
-      </el-footer>
     </el-container>
   </div>
 </template>
@@ -214,13 +212,13 @@ export default {
           value: 'referendum',
           label: 'Referendum'
         },
+        // {
+        //   value: 'approved',
+        //   label: 'Approved'
+        // },
         {
-          value: 'approved',
-          label: 'Approved'
-        },
-        {
-          value: 'rejected',
-          label: 'Rejected'
+          value: 'expired',
+          label: 'Expired'
         },
         {
           value: 'ongoing',
@@ -252,35 +250,50 @@ export default {
       return this.$store.state.proposals
     },
     propList () {
+      // filter approved proposals WIP
       let propList = []
       if (this.proposals) {
         Object.keys(this.proposals).forEach(key => {
-          let flags = Array(5).fill(false)
+          let flags = { // types of proposal
+            poll: false,
+            referendum: false,
+            approved: false,
+            expired: false,
+            ongoing: false
+          }
           this.filterBy.forEach(filter => {
             if (filter === 'poll') { // 暂时把不是referendum的认为是poll
               if (this.proposals[key].proposal.proposal_json.type && this.proposals[key].proposal.proposal_json.type.search('referendum') === -1) {
-                flags[0] = true
+                flags.poll = true
               }
             }
             if (filter === 'referendum') {
               if (this.proposals[key].proposal.proposal_json.type && this.proposals[key].proposal.proposal_json.type.search('referendum') !== -1) {
-                flags[1] = true
+                flags.referendum = true
+              }
+            }
+            if (filter === 'expired') {
+              if (this.isExpired(this.proposals[key].proposal.expires_at)) {
+                flags.expired = true
+              }
+            }
+            if (filter === 'ongoing') {
+              if (!this.isExpired(this.proposals[key].proposal.expires_at)) {
+                flags.ongoing = true
               }
             }
           })
-          for (let i = 0; i < flags.length; i++) {
-            if (flags[i]) {
-              if (this.searchBy === '') {
-                propList.push(this.proposals[key])
-              } else { // 根据关键字搜索
-                let regexp = new RegExp(this.searchBy, 'i')
-                if (regexp.test(this.proposals[key].id) ||
+          let flag = (flags.poll || flags.referendum) && (flags.expired || flags.ongoing)
+          if (flag) {
+            if (this.searchBy === '') {
+              propList.push(this.proposals[key])
+            } else { // 根据关键字搜索
+              let regexp = new RegExp(this.searchBy, 'i')
+              if (regexp.test(this.proposals[key].id) ||
                   regexp.test(this.proposals[key].proposal.title) ||
                   (this.proposals[key].proposal.proposal_json.content && regexp.test(this.proposals[key].proposal.proposal_json.content))) {
-                  propList.push(this.proposals[key])
-                }
+                propList.push(this.proposals[key])
               }
-              break
             }
           }
         })
@@ -437,6 +450,7 @@ export default {
   border-radius: 8px;
   margin-bottom 22px
 .button
+  margin 5px
   display inline-block
   background: #527FFF
   cursor pointer
@@ -461,4 +475,10 @@ export default {
   li
     margin-top: 20px;
     margin-bottom: 20px;
+#search-bar
+  float right
+  display flex
+  flex-wrap wrap
+  justify-content flex-end
+
 </style>

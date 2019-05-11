@@ -40,7 +40,7 @@ export default {
         }
       } else {
         return {
-          width: this.size,
+          'min-width': this.size,
           height: this.size
         }
       }

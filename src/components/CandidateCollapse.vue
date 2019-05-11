@@ -117,6 +117,7 @@ export default {
 <style lang="stylus" scoped>
 .candidate-collapse
   padding 10px
+  width 100%
   background: #FCFDFF;
   box-shadow: 0 2px 4px 0 #B0D9FF;
   border-radius: 8px;
@@ -125,7 +126,7 @@ export default {
   transition .3s height
 .choose-button
   height 48px
-  width 48px
+  min-width 48px
   border-radius 50%
   background #507DFE
   text-align center

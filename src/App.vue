@@ -39,7 +39,7 @@ export default {
 }
 </script>
 
-<style scope>
+<style lang="stylus" scope>
 body {
   margin: 0;
   background-color: rgb(232,236,255);
@@ -49,9 +49,12 @@ body {
   min-height: calc(100vh - 160px - 60px);
   background-color: rgb(232,236,255);
   max-width: 1420px;
-  margin: auto
+  margin: auto;
 }
-
+@media only screen and (min-width 450px)
+  .app-main
+    padding-left: 50px;
+    padding-right: 50px;
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -1,16 +1,20 @@
 <template>
-  <div class="nav-menu">
-    <el-menu :default-active="activeIndex" mode="horizontal" class="el-menu-demo clear-float">
-      <el-menu-item index="home" @click="$router.push('/')">
-        <img src="@/assets/bos-logo.png" id="logo-img" />
-      </el-menu-item>
+  <div class="nav-menu clear-float">
+    <div id="logo" @click="$router.push('/')">
+      <img src="@/assets/bos-logo.png" id="logo-img" />
+    </div>
+    <div class="mobile-nav" @click="showMenu = !showMenu">
+      <i class="el-icon-menu mobile-nav-icon"></i>
+    </div>
+    <div class="search-mask" v-if="showMenu" @click="showMenu=false"></div>
+    <el-menu :class="[{'hidden-menu': !showMenu}]" style="float:right" :default-active="activeIndex" mode="horizontal" class="el-menu-main">
       <el-menu-item index="referendum" @click="$router.push('/referendum')">{{$t('common.referendum')}}</el-menu-item>
       <el-menu-item index="auditor" @click="$router.push('/auditor')">{{$t('common.auditor')}}</el-menu-item>
       <el-submenu index="logout" style="float:right" v-if="account">
         <template slot="title">{{account}}</template>
         <el-menu-item @click="forgetIdentity" style="text-align:center">Remove Identity</el-menu-item>
       </el-submenu>
-      <el-menu-item index="login" style="float:right"  v-else @click="getIdentity">Login</el-menu-item>
+      <el-menu-item index="login"  v-else @click="getIdentity">Login</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -21,6 +25,7 @@ export default {
   name: 'NavMenu',
   data () {
     return {
+      showMenu: true
     }
   },
   computed: {
@@ -54,11 +59,54 @@ export default {
 }
 </script>
 
+<style lang="stylus">
+@media only screen and (max-width 450px)
+  .nav-menu
+    .el-menu-item, .el-submenu
+      width 150px
+    .el-menu
+      position absolute
+      right 0
+      top 60px
+      z-index 100
+      width 150px
+</style>
+
 <style lang="stylus" scope>
-// .nav-menu
+.nav-menu
+  background-color #fff
+  position relative
 // .el-menu
 // .el-menu-item
   // float right
-#logo-img
-  width: 158px;
+.search-mask
+  width 100%
+  height 100%
+  position fixed
+  top 0
+  left 0
+  z-index 999
+  overflow hidden
+.mobile-nav
+  display none
+  height 60px
+  width 60px
+  float right
+  .mobile-nav-icon
+    color #507dfe
+    line-height 60px
+    font-size 24px
+    margin auto
+    cursor pointer
+@media only screen and (max-width 450px)
+  .hidden-menu
+    display none
+  .mobile-nav
+    display block
+#logo
+  height 60px
+  float left
+  #logo-img
+    width: 160px;
+    margin 13px
 </style>

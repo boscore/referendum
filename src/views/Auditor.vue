@@ -1,5 +1,5 @@
 <template>
-  <div class="auditor">
+  <div ref="auditor" class="auditor">
     <el-container v-loading="actionLoading">
       <el-main style="padding-top:0">
         <div class="main-panel">
@@ -30,7 +30,7 @@
           </div>
         </div>
       </el-main>
-      <el-aside width="320px">
+      <el-aside :width="asideWidth">
         <div class="vote-panel">
           <h1>
             My Vote <span style="color: #91ADFF;">{{selectedCandidates.length}}/{{config ? config.maxvotes : 5}}</span>
@@ -51,7 +51,7 @@
             </div>
           </div>
         </div>
-        <div v-if="myCandidate" class="card">
+        <div v-if="myCandidate && !myAuditor" class="card">
           <h1>You are a candidate</h1>
           <p>Votes: {{(myCandidate.total_votes / 10000).toFixed(4)}}</p>
           <p>Staked: {{myCandidate.locked_tokens}}</p>
@@ -75,16 +75,14 @@
           <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
         </div>
         <div v-else-if="scatter">
-          <div v-if="!scatter.identity" class="button"
+          <div v-if="!scatter.identity" class="button square-button"
             @click="getIdentity"
-            style="border-radius:6px;width:90%;height:40px;line-height:30px"
           >
             Pair Scatter
           </div>
           <router-link v-else :to="{path: '/auditor/register'}">
-            <div class="button"
+            <div class="button square-button"
               v-if="!candidateLoading && !auditorLoading"
-              style="border-radius:6px;width:90%;height:40px;line-height:30px"
             >
               Register as Candidate
             </div>
@@ -93,7 +91,7 @@
         <div v-else>
           <!-- <p>Scatter is required!</p> -->
           <a target="blank" href="https://get-scatter.com/">
-            <div class="button" style="border-radius:6px;width:90%;height:40px;line-height:30px">Get Scatter</div>
+            <div class="button square-button">Get Scatter</div>
           </a>
         </div>
       </el-aside>
@@ -104,7 +102,7 @@
     v-loading="actionLoading"
   >
     <span>
-      <el-form ref="updateForm" :model="candInfo" label-width="210px" label-position="left" :rules="updateRules">
+      <el-form ref="updateForm" :model="candInfo" label-width="210px" :label-position="screenWidth < 821 ? 'top' : 'left'" :rules="updateRules">
         <el-form-item prop="contact">
             <label slot="label">Email</label>
             <el-input style="max-width: 400px;" v-model="candInfo.contact"></el-input>
@@ -165,20 +163,30 @@ export default {
           { required: true, message: 'Contact way can\'t be empty', trigger: 'blur' }
         ]
       },
-      pendingStakeTable: []
+      pendingStakeTable: [],
+      screenWidth: document.body.clientWidth
     }
   },
-  created () {
+  mounted () {
+    window.onresize = () => {
+      this.screenWidth = document.body.clientWidth
+    }
     const interval = setInterval(async () => {
       if (this.eos) {
         this.getAllInfo()
-        this.getCandidates()
+        this.getConfig()
         this.getPendingStake()
         clearInterval(interval)
       }
     }, 1000)
   },
   computed: {
+    asideWidth () {
+      if (this.screenWidth < 821) {
+        return '100%'
+      }
+      return '320px'
+    },
     account () {
       if (this.scatter && this.scatter.identity) {
         return this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
@@ -266,7 +274,7 @@ export default {
         })
       }
     },
-    async getCandidates () {
+    getCandidates () {
       if (this.eos) {
         const tableOptions = {
           'scope': 'auditor.bos',
@@ -358,7 +366,7 @@ export default {
       }
     },
     pushCandidate (id) {
-      if (this.selectedCandidates.length <= this.config.maxvotes) {
+      if (this.config && this.selectedCandidates.length <= this.config.maxvotes) {
         for (let i = 0; i < this.candidatesList.length; i++) {
           if (this.candidatesList[i].candidate_name === id) {
             this.candidatesList[i].isSelected = true
@@ -617,6 +625,17 @@ export default {
 }
 </script>
 
+<style lang="stylus">
+@media only screen and (max-width 840px)
+  .auditor
+    .el-container
+      flex-wrap wrap
+      flex-direction column-reverse
+    .el-aside
+      width 100%
+      padding 0 20px
+</style>
+
 <style lang="stylus" scoped>
 .auditor
   text-align left
@@ -647,14 +666,14 @@ h1
     font-size: 12px;
     color: #507DFE;
     letter-spacing: 0;
-
 .vote-panel
-  width 90%
   p
     font-family: Roboto-Regular;
     font-size: 12px;
     color: #507DFE;
     letter-spacing: 0;
+.square-button
+  width 100%
 .vote-button
   height 36px
   width auto
