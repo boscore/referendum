@@ -6,8 +6,8 @@
           <h1>Auditor Board</h1>
           <div class="card board">
             <div v-for="auditor in auditorsList" :key="auditor.cust_name" class="board-item">
-              <Avatar :url="cand.url" star></Avatar>
-              <p>{{cand.cust_name}}</p>
+              <Avatar star></Avatar>
+              <p>{{auditor.cust_name}}</p>
             </div>
           </div>
           <div class="candidate-list">

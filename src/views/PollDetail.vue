@@ -66,7 +66,17 @@
           </div>
 
           <div class="card" ref="comments">
-            <h2>Comments {{comments.length}}</h2>
+            <h2>Auditor comments {{comments.length}}</h2>
+            <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
+          </div>
+
+          <div class="card">
+            <h2>BP comments {{comments.length}}</h2>
+            <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
+          </div>
+
+          <div class="card">
+            <h2>Other comments {{comments.length}}</h2>
             <Comment v-for="(comment, index) in comments" :key="index" v-bind="comment"></Comment>
           </div>
         </el-main>
@@ -420,6 +430,7 @@ export default {
     return {
       title: 'Should EOS tokens sent to eosio.ramfee and eosio.names accounts in the future be allocated to REX?',
       activeButton: 'desc',
+      auditorsList: [],
       voteActionParams: {
         voter: '',
         proposal_name: '',
@@ -435,6 +446,19 @@ export default {
   mounted () {
   },
   methods: {
+    getAuditors () {
+      if (this.eos) {
+        const tableOptions = {
+          'scope': 'auditor.bos',
+          'code': 'auditor.bos',
+          'table': 'custodians',
+          'json': true
+        }
+        this.eos.getTableRows(tableOptions).then(res => {
+          this.auditorsList = res.rows
+        })
+      }
+    },
     isExpired (exporiesAt) {
       let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
       let expiry = new Date(exporiesAt).getTime()

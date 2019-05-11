@@ -14,11 +14,19 @@
           </el-form-item >
           <el-form-item prop="name">
             <label slot="label">Proposal Name</label>
-            <el-input v-model="form.name"></el-input>
+            <el-input maxlength="12" v-model="form.name"></el-input>
           </el-form-item>
           <el-form-item prop="title">
             <label slot="label">Title</label>
-            <el-input v-model="form.title"></el-input>
+            <el-input maxlength="1024" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" v-model="form.title" show-word-limit></el-input>
+          </el-form-item>
+          <el-form-item prop="incentives">
+            <label slot="label">Incentives</label>
+            <el-input max="1000000" @change="form.incentives=form.incentives.replace(/[^\d]/g,'')" v-model="form.incentives"></el-input>
+          </el-form-item>
+          <el-form-item prop="receipt">
+            <label slot="label">Receipt account</label>
+            <el-input v-model="form.receipt"></el-input>
           </el-form-item>
           <el-form-item prop="content">
             <label slot="label">Content (support Markdown)</label>
@@ -70,6 +78,19 @@ export default {
         let expiry = new Date(value).getTime()
         if (expiry < now) {
           return callback(new Error('Expiry date shouldn\'t be earlier than now(UTC)'))
+        } else if ((expiry - now) > (1000 * 60 * 60 * 24 * 180)) {
+          return callback(new Error('Expiry date shouldn\'t be later than 6 months in the future'))
+        } else {
+          callback()
+        }
+      }
+    }
+    const checkIncentives = (rule, value, callback) => {
+      if (value === '') {
+        return callback(new Error('Please input a number of incentives'))
+      } else {
+        if (Number(value) > 1000000) {
+          return callback(new Error('No more than 1000,000 BOS'))
         } else {
           callback()
         }
@@ -92,6 +113,8 @@ export default {
         title: '',
         content: '',
         expiry: '',
+        receipt: this.proposer,
+        incentives: 0,
         type: 'referendum-v1'
       },
       rules: {
@@ -109,6 +132,12 @@ export default {
         ],
         type: [
           { required: true, message: 'please choose proposal type', trigger: 'blur' }
+        ],
+        incentives: [
+          { validator: checkIncentives, trigger: 'blur' }
+        ],
+        receipt: [
+          { required: true, message: 'please input receipt account of incentives', trigger: 'blur' }
         ]
       }
     }
