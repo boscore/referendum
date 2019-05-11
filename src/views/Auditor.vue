@@ -4,9 +4,9 @@
       <el-main style="padding-top:0">
         <div class="main-panel">
           <h1>Auditor Board</h1>
-          <div class="card board">
+          <div class="card board" v-loading="auditorLoading">
             <div v-for="auditor in auditorsList" :key="auditor.cust_name" class="board-item">
-              <Avatar star></Avatar>
+              <Avatar :url="auditor.inform ? auditor.inform.avatar : ''" star></Avatar>
               <p>{{auditor.cust_name}}</p>
             </div>
           </div>
@@ -14,6 +14,7 @@
             <h1>Candidate List <span style="color: #91ADFF;">- {{candidatesList.length}}</span></h1>
             <!-- <p>The Custodian Board manages the operations and affairs of the DAC, including but not limited to the governance and administration of the assets and liabilities of the DAC. The following DAC members have vested some of their tokens to submit themselves and candidates for a position on the custodian board which last for 7 days. Every 7 days, your votes are recalculated to select who will be part of the next custodian board. Voting is important! Please vote often and stay engaged within the DAC to know who is providing value</p> -->
             <div
+              v-loading="candidateLoading"
               v-for="candidate in candidatesList"
               :key="candidate.candidate_name">
               <CandidateCollapse
@@ -82,6 +83,7 @@
           </div>
           <router-link v-else :to="{path: '/auditor/register'}">
             <div class="button"
+              v-if="!candidateLoading && !auditorLoading"
               style="border-radius:6px;width:90%;height:40px;line-height:30px"
             >
               Register as Candidate
@@ -140,6 +142,9 @@ export default {
   data () {
     return {
       actionLoading: false,
+      auditorLoading: true,
+      bioInfo: [],
+      candidateLoading: true,
       selectedCandidates: [],
       auditorsList: [],
       allCandList: [],
@@ -164,10 +169,9 @@ export default {
     }
   },
   created () {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       if (this.eos) {
-        this.getConfig()
-        this.getAuditors()
+        this.getAllInfo()
         this.getCandidates()
         this.getPendingStake()
         clearInterval(interval)
@@ -242,7 +246,7 @@ export default {
         })
       }
     },
-    async getInforms () {
+    getAllInfo () {
       if (this.eos) {
         const tableOptions = {
           'scope': 'auditor.bos',
@@ -250,8 +254,16 @@ export default {
           'table': 'bios',
           'json': true
         }
-        const res = await this.eos.getTableRows(tableOptions)
-        return res.rows
+        this.eos.getTableRows(tableOptions).then(res => {
+          this.bioInfo = res.rows
+          this.getAuditors()
+          this.getCandidates()
+        }).catch(e => {
+          this.candidateLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
+        })
       }
     },
     async getCandidates () {
@@ -262,13 +274,13 @@ export default {
           'table': 'candidates',
           'json': true
         }
-        const informs = await this.getInforms()
         this.eos.getTableRows(tableOptions).then(res => {
           this.allCandList = []
           this.candidatesList = []
+          this.candidateLoading = false
           res.rows.forEach(candidate => {
             candidate.isSelected = false
-            let inform = informs.find(element => {
+            let inform = this.bioInfo.find(element => {
               return element.candidate_name === candidate.candidate_name
             })
             if (inform) {
@@ -285,6 +297,11 @@ export default {
               this.candidatesList.sort((a, b) => { return b.total_votes - a.total_votes })
             }
           })
+        }).catch(e => {
+          this.candidateLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
         })
       }
     },
@@ -297,7 +314,26 @@ export default {
           'json': true
         }
         this.eos.getTableRows(tableOptions).then(res => {
+          this.auditorLoading = false
           this.auditorsList = res.rows
+          this.auditorsList.map(auditor => {
+            let inform = this.bioInfo.find(element => {
+              return element.candidate_name === auditor.cust_name
+            })
+            if (inform) {
+              try {
+                inform.bio = JSON.parse(inform.bio)
+              } catch (e) {
+              }
+              auditor.inform = inform.bio
+              return auditor
+            }
+          })
+        }).catch(e => {
+          this.auditorLoading = false
+          MessageBox.alert(e, 'ERROR', {
+            confirmButtonText: 'OK'
+          })
         })
       }
     },

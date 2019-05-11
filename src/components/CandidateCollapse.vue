@@ -6,7 +6,7 @@
               <i class="el-icon-plus" v-if="!selected"></i>
               <i class="el-icon-check" v-if="selected"></i>
             </div>
-            <Avatar style="margin: 0 18px" :url="inform.avator" size="48px"></Avatar>
+            <Avatar style="margin: 0 18px" :url="inform.avatar" size="48px"></Avatar>
             <div class="candidate-info">
               <p class="name">
                 {{id}}
