@@ -487,7 +487,7 @@ export default {
         const tableOptions = {
           'scope': 'auditor.bos',
           'code': 'auditor.bos',
-          'table': 'custodians',
+          'table': 'auditors',
           'json': true
         }
         this.eos.getTableRows(tableOptions).then(res => {
