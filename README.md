@@ -50,4 +50,4 @@ All BOS community participants can submit proposals while staking 100 BOS to sub
 2. Within two weeks after the auditor’s comments, BP needs to make a decision. If more than 2/3+1 active BPs agree to continue to pay the incentives, it will continue to pay 90% of the incentives; Otherwise the payment will be rejected.
 3. The 10% of the incentives for the proposal are equally divided between the auditors who agree with the majority of the BPs and the BPs who voted.
 
-![图片](https://github.com/boscore/referendum-frontend/blob/master/flow.png)
+![图片](https://github.com/boscore/referendum/blob/master/flow.png)

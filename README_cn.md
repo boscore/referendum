@@ -53,4 +53,4 @@ BOS的基础设施搭建者、协议标准制定者、代码优化者、生态�
 5. 评审员发布意见以后2周内，BP可以参考评审员的决定，若超过2/3加1的出块节点同意继续支付提案激励，则继续支付90%的提案激励，反之则否决支付。
 6. 提案激励的10% 平分给和多数节点做出一致结论的评审员 和 参与表决的BP。如果最后BP没有通过，则全部激励转回基金账户。
 
-![图片](https://github.com/boscore/referendum-frontend/blob/master/flow_cn.png)
+![图片](https://github.com/boscore/referendum/blob/master/flow_cn.png)
