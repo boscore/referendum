@@ -1,4 +1,6 @@
-# **BOS Ecosystem Program (Referendum & WPS)**
+# BOS Ecosystem Program (Referendum & WPS)
+[Proposal Structure Example](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example.md)
+
 # 1. Background
 
 This proposal is a BOS development incentive program proposed by the founding core teams of BOS. The goal is to continue to support the development of core protocol and the expansion of the entire EOSIO ecosystem.
