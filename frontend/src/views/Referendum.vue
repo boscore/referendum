@@ -53,6 +53,12 @@
                         <label v-else>Expired</label>
                       </template>
                     </el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                        <el-button v-if="scope.row.approved_by_BET" type="primary" @click="claimRewards()">Claim Rewards</el-button>
+                        <!-- <label v-else>Expired</label> -->
+                      </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -168,7 +174,7 @@
 
 <script>
 // @ is an alias to /src
-import { MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import Eos from 'eosjs'
 import { NETWORK } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
@@ -356,7 +362,9 @@ export default {
       if (this.proposals && this.scatter && this.scatter.identity) {
         Object.keys(this.proposals).forEach(key => {
           if (this.proposals[key].proposal.proposer === this.scatter.identity.accounts[0].name) {
-            myProposals.push(this.proposals[key].proposal)
+            let proposal = { ...this.proposals[key].proposal }
+            proposal.approved_by_BET = this.proposals[key].approved_by_BET
+            myProposals.push(proposal)
           }
         })
       }
@@ -364,6 +372,35 @@ export default {
     }
   },
   methods: {
+    claimRewards () {
+      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      const transactionOptions = {
+        actions: [{
+          account: 'escrow.bos',
+          name: 'claim',
+          authorization: [{
+            actor: account.name,
+            permission: account.authority
+          }],
+          data: { escrow_name: account.name }
+        }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(res => {
+          Message({
+            showClose: true,
+            type: 'success',
+            message: 'Claim success'
+          })
+        })
+        .catch(e => {
+          Message({
+            showClose: true,
+            type: 'error',
+            message: 'Expired ERROR' + String(e)
+          })
+        })
+    },
     expireProp (proposal) {
       this.actionLoading = true
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
@@ -381,14 +418,21 @@ export default {
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(res => {
           this.actionLoading = false
-          MessageBox.alert(`Expired ${proposal}`, '', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            type: 'success',
+            message: `Expired ${proposal}`
           })
         }).catch(e => {
           this.actionLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            type: 'error',
+            message: 'Expired ERROR' + String(e)
           })
+          // MessageBox.alert(e, 'ERROR', {
+          //   confirmButtonText: 'OK'
+          // })
         })
     },
     isExpired (exporiesAt) {
