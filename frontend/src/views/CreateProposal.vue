@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item prop="title">
             <label slot="label">Title</label>
-            <el-input maxlength="1024" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" v-model="form.title" show-word-limit></el-input>
+            <el-input maxlength="1024" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" v-model="form.title"></el-input>
           </el-form-item>
           <el-form-item prop="incentives">
             <label slot="label">Incentives</label>

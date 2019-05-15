@@ -6,7 +6,6 @@
           <i class="el-icon-arrow-left"></i>View All Polls
         </div>
         <h1>{{proposal.proposal.title}}
-
         </h1>
         <h2 v-if="CDToAuditor > 0" style="color: #E74C3C">The countdown to auditors giving opinions ends in {{CDToAuditor}} days</h2>
         <h2 v-if="CDToBP > 0" style="color: #E74C3C">The countdown to BPs voting ends in {{CDToBP}} days</h2>
@@ -43,7 +42,7 @@
             Comments
           </div>
         </div>
-      <el-container>
+      <el-container v-loading="propLoading">
         <el-main class="main">
           <div v-if="activeButton !=='voters'" v-html="content" ref="desc" class="card prop-content">
           </div>
@@ -91,7 +90,7 @@
             <h2>Poll Status</h2>
             <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
             <el-progress :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
-            <el-progress :stroke-width="10" class="abstain-percent" :percentage="100-rejectPercent-agreePercent"></el-progress>
+            <el-progress :stroke-width="10" class="abstain-percent" :percentage="abstainPercent"></el-progress>
             <p>{{(this.proposal.stats.staked.total / 10000).toFixed(0)}} BOS voted</p>
             <div class="scatter-panel">
               <div v-if="scatter">
@@ -151,7 +150,7 @@
               <h3 v-if="this.proposal.approved_by_vote">Meet the conditions {{this.proposal.meet_conditions_days}} Days</h3>
               <p>{{this.proposal ? this.proposal.stats.votes.accounts : 0}} accounts</p>
               <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at, new Date().toString()) : 0}} days since poll started</p>
-              <p>{{this.proposal ? (this.proposal.stats.staked.total / 1e+11).toFixed(2) : 0}}% participation</p>
+              <p>{{this.proposal ? (this.proposal.stats.staked.total / this.proposal.stats.currency_supply).toFixed(2) : 0}}% participation</p>
               <p>{{this.proposal ? this.yesLeadPercent : 0}}% YES lead over NO</p>
             </div>
           </div>
@@ -387,27 +386,30 @@ export default {
         return 'no content'
       }
     },
+    abstainPercent () {
+      return Number((100 - this.agreePercent - this.rejectPercent).toFixed(1))
+    },
     agreePercent () {
-      if (!this.proposal || this.proposal.stats.votes.total === 0 || !this.proposal.stats.votes[1]) {
+      if (!this.proposal || this.proposal.stats.staked.total === 0 || !this.proposal.stats.staked[1]) {
         return 0
       } else {
-        return Number((100 * this.proposal.stats.votes[1] / this.proposal.stats.votes.total).toFixed(1))
+        return Number((100 * this.proposal.stats.staked[1] / this.proposal.stats.staked.total).toFixed(1))
       }
     },
     rejectPercent () {
-      if (!this.proposal || this.proposal.stats.votes.total === 0 || !this.proposal.stats.votes[0]) {
+      if (!this.proposal || this.proposal.stats.staked.total === 0 || !this.proposal.stats.staked[0]) {
         return 0
       } else {
-        return Number((100 * this.proposal.stats.votes[0] / this.proposal.stats.votes.total).toFixed(1))
+        return Number((100 * this.proposal.stats.staked[0] / this.proposal.stats.staked.total).toFixed(1))
       }
     },
     yesLeadPercent () {
-      if (!this.proposal.stats.votes[0]) {
+      if (!this.proposal.stats.staked[0]) {
         return 100
-      } else if (!this.proposal.stats.votes[1]) {
+      } else if (!this.proposal.stats.staked[1]) {
         return 0
       } else {
-        return this.calcPercent(this.proposal.stats.votes[1] - this.proposal.stats.votes[0], this.proposal.stats.votes[1]).toFixed(0)
+        return this.calcPercent(this.proposal.stats.staked[1] - this.proposal.stats.staked[0], this.proposal.stats.staked[1]).toFixed(0)
       }
     },
     scatter () {
@@ -451,11 +453,11 @@ export default {
       otherComm: [],
       producers: [],
       proposal: {
-        approved_by_BET: 0,
-        approved_by_BPs: 0,
-        approved_by_BPs_date: '',
-        approved_by_vote: 0,
-        approved_by_vote_date: '',
+        approved_by_BET: false,
+        approved_by_BPs: false,
+        approved_by_BPs_date: 'None',
+        approved_by_vote: false,
+        approved_by_vote_date: 'None',
         id: '',
         meet_conditions_days: 0,
         proposal: {
@@ -469,7 +471,7 @@ export default {
             content: ''
           }
         },
-        reviewed_by_BET_date: '',
+        reviewed_by_BET_date: 'None',
         stats: {
           votes: {},
           accounts: {},
@@ -478,6 +480,7 @@ export default {
           }
         }
       },
+      propLoading: true,
       writeComment: false,
       showVotersNum: 30,
       screenWidth: document.body.clientWidth
@@ -533,8 +536,9 @@ export default {
     getProposal () {
       this.$axios.get(API_URL.API_GET_PROPOSAL + '/' + this.proposalName).then(res => {
         if (res.status === 200) {
+          this.propLoading = false
           this.proposal = res.data
-          if (this.proposal.approved_by_vote && !this.proposal.approved_by_BET && this.proposal.reviewed_by_BET_date) {
+          if (this.proposal.approved_by_vote && !this.proposal.approved_by_BET && this.proposal.reviewed_by_BET_date && this.proposal.reviewed_by_BET_date !== 'None') {
             const start = new Date(this.proposal.reviewed_by_BET_date).getTime()
             const end = new Date().getTime()
             const d = Math.floor((end - start) / 1000 / 60 / 60 / 24)
@@ -551,6 +555,7 @@ export default {
           }
         }
       }).catch(e => {
+        this.propLoading = false
         Message({
           showClose: true,
           message: 'Get Proposal ERROR\n' + String(e),
@@ -727,7 +732,10 @@ export default {
         localStorage.setItem('proposalName', prop.proposal.proposal_name)
       }
       this.$store.dispatch('setCurrentProposal', { proposal: prop })
+      this.propLoading = true
+
       this.$router.push({ path: '/poll_detail', query: { proposal: prop.proposal.proposal_name } })
+      this.getProposal()
     },
     showMoreVoters () {
       this.showVotersNum += 30
@@ -748,31 +756,24 @@ export default {
     .el-aside
       width 100%
 #poll-status
+  .el-progress__text
+    font-family Roboto-Bold
+    font-size 11px
+    letter-spacing 0
+    text-align center
   .pass-percent
     .el-progress__text
-      font-family Roboto-Bold
-      font-size 11px
       color #30D094
-      letter-spacing 0
-      text-align center
     .el-progress-bar__inner
       background-image linear-gradient(270deg, #41B976 0%, #2CD69B 100%)
   .dissent-percent
     .el-progress__text
-      font-family Roboto-Bold
-      font-size 11px
       color #F46666
-      letter-spacing 0
-      text-align center
     .el-progress-bar__inner
       background-image linear-gradient(269deg, #F06262 0%, #FF7171 100%)
   .abstain-percent
     .el-progress__text
-      font-family Roboto-Bold
-      font-size 11px
       color #F4D03F
-      letter-spacing 0
-      text-align center
     .el-progress-bar__inner
       background-image linear-gradient(270deg, #F7DC6F 0%, #F1C40F 100%)
 

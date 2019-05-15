@@ -162,7 +162,7 @@
               :type="prop.proposal.proposal_json.type || 'unknown'"
               :title="prop.proposal.title"
               :desc="prop.proposal.proposal_json.content || ''"
-              :votes="prop.stats.votes"
+              :votes="prop.stats.staked"
               :staked="prop.stats.staked.total"
               :style="{margin: '25px'}"></PropCard>
           </div>
