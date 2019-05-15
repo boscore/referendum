@@ -70,266 +70,122 @@ $ eosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR 
 
 ### candidates
 
-- candidate_name (name)   - Account name of the candidate (INDEX)
-- is_active (int8) - Boolean indicating if the candidate is currently available for election. (INDEX)
-- locked_tokens (asset) - An asset object representing the number of tokens locked when registering
-- total_votes (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+- `candidate_name` (name)   - Account name of the candidate (INDEX)
+- `is_active` (int8) - Boolean indicating if the candidate is currently available for election. (INDEX)
+- `locked_tokens` (asset) - An asset object representing the number of tokens locked when registering
+- `total_votes` (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
 
 ### auditors
 
-- auditor_name (name) - Account name of the auditor (INDEX)
-- total_votes - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
+- `auditor_name` (name) - Account name of the auditor (INDEX)
+- `total_votes` - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
 
 ### votes
 
-- voter (account_name) - The account name of the voter (INDEX)
-- candidates (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
-
-### pendingpay
-
-- key (uint64) 				-  auto incrementing id to identify a payment due to an auditor
-- receiver (account_name) 	- The account name of the intended receiver.
-- quantity (asset)         - The amount for the payment.
-- memo (string)            - A string used in the memo to help the receiver identify it in logs.
+- `voter` (account_name) - The account name of the voter (INDEX)
+- `candidates` (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
 
 ### config
 
-- lockupasset (asset) -  The amount of assets that are locked up by each candidate applying for election.
-- maxvotes (int default=3) - The maximum number of votes that each member can make for a candidate.
-- numelected (int default=5) -  Number of auditors to be elected for each election count.
-- auditor_tenure (uint32 =  90 * 24 * 60 * 60) - Length of a period in seconds. Used for pay calculations if an early election is called and to trigger deferred `newtenure` calls.
-- authaccount ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
-- initial_vote_quorum_percent (uint32) - Amount of token value in votes required to trigger the initial set of auditors
-- vote_quorum_percent (uint32) - Amount of token value in votes required to trigger the allow a new set of auditors to be set after the initial threshold has been achieved.
-- auth_threshold_auditors (uint8) - Number of auditors required to approve the lowest level actions.
-- lockup_release_time_delay (date) - The time before locked up stake can be released back to the candidate using the unstake action
+- `lockupasset` (asset) -  The amount of assets that are locked up by each candidate applying for election.
+- `maxvotes` (int default=3) - The maximum number of votes that each member can make for a candidate.
+- `numelected` (int default=5) -  Number of auditors to be elected for each election count.
+- `auditor_tenure` (uint32 =  90 * 24 * 60 * 60) - Length of a period in seconds. Used for pay calculations if an early election is called and to trigger deferred `newtenure` calls.
+- `authaccount` ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
+- `initial_vote_quorum_percent` (uint32) - Amount of token value in votes required to trigger the initial set of auditors
+- `vote_quorum_percent` (uint32) - Amount of token value in votes required to trigger the allow a new set of auditors to be set after the initial threshold has been achieved.
+- `auth_threshold_auditors` (uint8) - Number of auditors required to approve the lowest level actions.
+- `lockup_release_time_delay` (date) - The time before locked up stake can be released back to the candidate using the unstake action
 
 ## Actions
 
----
-### nominatecand
+<h1 class="contract">updatebio</h1>
 
-This action is used to nominate a candidate for auditor elections. It must be authorised by the candidate and the candidate must be an active member of BOS, having agreed to the latest constitution. The candidate must have transferred a number of tokens (determined by a config setting - `lockupasset`) to the contract for staking before this action is executed. This could have been from a recent transfer with the contract name in the memo or from a previous time when this account had nominated, as long as the candidate had never `unstake`d those tokens.
+## Description
 
-##### Assertions:
+To allow a candidate update their bio information after they have nominated. The action ensures the user has agreed to the latest terms and conditions, has the correct authorization of the {{ cand }} to perform the action and is already nominated as a candidate. Then the bio information for the candidate will be updated leaving all other data of the candidate unchanged.
 
--   The account performing the action is authorised.
--   The candidate is not already a nominated candidate.
--   The requested pay amount is not more than the config max amount.
--   The requested pay symbol type is the same from config max amount ( The contract supports only one token symbol for payment).
--   The candidate is currently a member or has agreed to the latest constitution.
--   The candidate has transferred sufficient funds for staking if they are a new candidate.
--   The candidate has enough staked if they are re-nominating as a candidate and the required stake has changed since they last nominated.
+<h1 class="contract">fireauditor</h1>
 
-##### Parameters:
+## Description
 
-    cand  			- The account id for the candidate nominating.
+To allow elected auditors to (where quorum and configured majorities are met) to remove a fellow auditor and lock up their tokens until the configured delay period has passed.
 
-##### Post Condition:
+<h1 class="contract">resign</h1>
 
-The candidate should be present in the candidates table and be set to active. If they are a returning candidate they should be set to active again. The `locked_tokens` value should reflect the total of the tokens they have transferred to the contract for staking. The number of active candidates in the contract will be incremented.
+## Description
 
----
-### withdrawcand
+To remove an elected auditor. This action must be run by the resigning auditor and the outcome should remove the elected auditor and lock up their tokens until the delay period has passed so the tokens can be claimed with the unstake action.
 
-This action is used to withdraw a candidate from being active for auditor elections.
+<h1 class="contract">firecand</h1>
 
-#### Assertions:
+## Description
 
--   The account performing the action is authorised.
--   The candidate is already a nominated candidate.
+The intent of forehand is to set a candidate to a state of inactive so they will be excluded from the next election round. This action may only be run by the by elected auditors (where quorum and configured majorities are met). There is an option to lock up the candidate's tokens until a delay period has passed based on the delay set in the config after which the tokens can be claimed with the unstake action. If the option passed is false and there is an existing lockup delay on the tokens then this lockup will continue to be active until the lock up time has passed.
 
-##### Parameters:
+<h1 class="contract">unstake</h1>
 
-    cand  - The account id for the candidate nominating.
+## Description
 
-##### Post Condition:
+To return staked tokens back to the candidate if the user is no longer an active candidate and there is no delay set on the candidate the staked tokens will be returned to the candidate.
+**TERM:** This action lasts for the duration of the time taken to process the transaction.
 
-The candidate should still be present in the candidates table and be set to inactive. If the were recently an elected auditor there may be a time delay on when they can unstake their tokens from the contract. If not they will be able to unstake their tokens immediately using the unstake action.
+<h1 class="contract">updateconfig</h1>
 
----
-### resign
+Update the configuration for the running contract of selected parameters without needing change the source code. This requires a privileged account.
 
-This action is used to resign as an auditor.
+<h1 class="contract">nominatecand</h1>
 
-##### Assertions:
+### V1.0 Auditor’s Declaration of Independence and Impartiality
 
--   The `auditor` account performing the action is authorised to do so.
--   The `auditor` account is currently an elected auditor.
+I, {{ nominatecand }}, accept to serve as Auditor, in accordance with the BOS Rules.
 
-##### Parameters:
+I
+**DECLARE** to be and to intend to remain independent and impartial during the auditing procedure.
 
-    auditor  - The account id for the candidate nominating.
+**DECLARE** that, to my knowledge, there are no facts, circumstances or relationships which may affect my independence and impartiality.
 
-##### Post Condition:
+**DECLARE** to treat all BOS members fairly, reward contributions appropriately and not seek unmerited profits. No member should have less or more information about an auditing decision than others.
 
-The auditor will be removed from the active auditors and should still be present in the candidates table but will be set to inactive. Their staked tokens will be locked up for the time delay added from the moment this action was called so they will not able to unstake until that time has passed. A replacement auditor will be selected from the candidates to fill the missing place (based on vote ranking) then the auths for the controlling BOS auditor auth account will be set for the auditor board.
+**DECLARE** not to seek any stake in, or exert undue influence over, other block producers and shall take appropriate measures to protect my own independence and impartiality.
 
----
+## Description
 
-### updatebio
+The intent of {{ nominatecand }} is to nominates a candidate to auditor election, Accounts must nominate as a candidate before they can be voted for. The candidate must lock a configurable number of tokens before trying to nominate (configurable via {{ updateconfig }} in the parameter lockupasset which will be sent from the token contract as defined and set in the code of the contract. If a user previously been a candidate they may have enough staked tokens to not require further staking but will otherwise need to transfer the difference to meet the required stake.
 
-Update the bio for this candidate / auditor. This will be available on the account immediately in preparation for the next election cycle.
+<h1 class="contract">withdrawcand</h1>
 
-##### Assertions:
+## Description
 
- - the message has the permission of the account registering.
- - the account has agreed to the current terms.
- - the `cand` account is currently registered.
- - the length of the bio must be less than 256 characters.
+To withdraw a candidate for becoming an elected auditor. The action ensures the {{ cand }} account is currently nominated. On success the amount of tokens that was locked up via the {{ nominatecand }} action will be added to a list of pending transactions to transfer back to the {{ cand }} account. The actual transfer would be performed by a separate action due to the auth requirement for sending funds from the contract's account.
 
- ##### Parameters
+<h1 class="contract">voteauditor</h1>
 
-    cand - The account id for updating profile
-    bio - Bio content
+## Description
 
----
+To allow a member of BOS to vote for candidates that are eligible become auditors after the next call to {{ newtenure }}. The action ensures the user has agreed to the latest terms and conditions and has the correct authorization of the account: {{ voter }} to place or change an active vote. Upon success this action will either update an existing vote with a new set of candidates or create a new active vote for the {{ voter }} for candidates eligible for election.
 
-### voteauditor
+<h1 class="contract">newtenure</h1>
 
-This action is to facilitate voting for candidates to become auditors of BOS. Each member will be able to vote a configurable number of auditors set by the contract configuration. When a voter calls this action either a new vote will be recorded or the existing vote for that voter will be modified. If an empty array of candidates is passed to the action an existing vote for that voter will be removed.
+## Description
 
-##### Assertions:
+To signal the end of one election period and commence the next. It performs several actions after the following conditions are met:
 
--   The voter account performing the action is authorised to do so.
--   The voter account performing has agreed to the latest member terms for BOS.
--   The number of candidates in the newvotes vector is not greater than the number of allowed votes per voter as set by the contract config.
--   Ensure there are no duplicate candidates in the voting vector.
--   Ensure all the candidates in the vector are registered and active candidates.
+- The action is not called before the period should have ended
+- Enough voter value has participated to trigger the initial running of the BOS
+- After BOS auditors has started enough voter value has continued engagement with the BOS auditor voting process.
 
-#### Parameters:
+1. Set the permissions for the elected auditors so they have sufficient permission to run the BOS auditor permission according to the constitution and technical permissions design.
+2. Set the time for the beginning of the next period to mark the reset anniversary for the BOS auditor elections.
 
-    voter     - The account id for the voter account.
-    newvotes  - A vector of account ids for the candidate that the voter is voting for.
+<h1 class="contract">claimpay</h1>
 
-##### Post Condition:
+## Description
 
-An active vote record for the voter will have been created or modified to reflect the newvotes. Each of the candidates will have their total_votes amount updated to reflect the delta in voter's token balance. Eg. If a voter has 1000 tokens and votes for 5 candidates, each of those candidates will have their total_votes value increased by 1000. Then if they change their votes to now vote 2 different candidates while keeping the other 3 the same there would be a change of -1000 for 2 old candidates +1000 for 2 new candidates and the other 3 will remain unchanged.
+The intent of {{ claimpay }} is to allow an account to claim pending payment amounts due to the account. The pay claim they are claiming needs to be visible in the `pendingpay` table. Transfers to the claimer via an inline transfer on the `eosio.token` contract and then removes the pending payment record from the `pending_pay` table. The active auth of this claimer is required to complete this action.
 
----
+<h1 class="contract">refreshvote</h1>
 
-### refreshvote
+## Description
 
-Refresh vote since `eosio` does not notify this contract
-
-#### Parameters:
-
-    voter - The account id for the voter account.
-
----
-### updateconfig
-
-Updates the contract configuration parameters to allow changes without needing to redeploy the source code.
-
-#### Message
-
-updateconfig(<params>)
-
-This action asserts:
-
- - the message has the permission of the contract account.
- - the supplied asset symbol matches the current lockup symbol if it has been previously set or that there have been no 	.
-
-The parameters are:
-
-- lockupasset(uint8_t) : defines the asset and amount required for a user to register as a candidate. This is the amount that will be locked up until the user calls `withdrawcand` in order to get the asset returned to them. If there are currently already registered candidates in the contract this cannot be changed to a different asset type because of introduced complexity of handling the staked amounts.
-- maxvotes(asset) : Defines the maximum number of candidates a user can vote for at any given time.
-- numelected(uint16_t) : The number of candidates to elect for auditors. This is used for the payment amount to auditors for median amount.
-- auditor_tenure(uint32_t) : The length of a period in seconds. This is used for the scheduling of the deferred `newtenure` actions at the end of processing the current one. Also is used as part of the partial payment to auditors in the case of an elected auditor resigning which would also trigger a `newtenure` action.
-- authaccount(name) : The managing account that controls the BOS auditor permission.
-- initial_vote_quorum_percent (uint32) : The percent of voters required to activate BOS for the first election period.
-- vote_quorum_percent (uint32) : The percent of voters required to continue BOS for the following election periods after the first one has activated BOS.
-- auth_threshold_auditors (uint8) : The number of auditors required to approve an action in the low permission category ( ordinary action such as a worker proposal).
-
----
-
-### newtenure
-
-This action is to be run to end and begin each period in BOS life cycle. It performs multiple tasks for BOS including:
-
--   Allocate auditors from the candidates tables based on those with most votes at the moment this action is run. -- This action removes and selects a full set of auditors each time it is successfully run selected from the candidates with the most votes weight. If there are not enough eligible candidates to satisfy BOS config numbers the action adds the highest voted candidates as auditors as long their votes weight is greater than 0. At this time the held stake for the departing auditors is set to have a time delayed lockup to prevent the funds from releasing too soon after each auditor has been in office.
--   Distribute pay for the existing auditors based on the configs into the pending pay table so it can be claimed by individual candidates. -- The pay is distributed as determined by the median pay of the currently elected auditors. Therefore all elected auditors receive the same pay amount.
--   Set BOS auths for the intended controlling accounts based on the configs thresholds with the newly elected auditors. This action asserts unless the following conditions have been met:
--   The action cannot be called multiple times within the period since the last time it was previously run successfully. This minimum time between allowed calls is configured by the period length parameter in contract configs.
--   To run for the first time a minimum threshold of voter engagement must be satisfied. This is configured by the `initial_vote_quorum_percent` field in the contract config with the percentage calculated from the amount of registered votes cast by voters against the max supply of tokens for BOS's primary currency.
--   After the initial vote quorum percent has been reached subsequent calls to this action will require a minimum of `vote_quorum_percent` to vote for the votes to be considered sufficient to trigger a new period with new auditors.
-
- ##### Parameters:
-
-     message - a string that is used to log a message in the chain history logs. It serves no function in the contract logic.
-
----
-
-### claimpay
-
-This action is to claim pay as a auditor.
-
-##### Assertions:
-
--   The caller to the action account performing the action is authorised to do so.
--   The payid is for a valid pay record in the pending pay table.
--   The caller account is the same as the intended destination account for the pay record.
-
-##### Parameters:
-
-     payid - The id for the pay record to claim from the pending pay table.
-
- Post Condition:
-
-The quantity owed to the auditor as referred to by the pay record is transferred to the claimer and then the pay record is removed from the pending pay table.
-
----
-### unstake
-
-This action is used to unstake a candidates tokens and have them transferred to their account.
-
-##### Assertions:
-
--   The candidate was a nominated candidate at some point in the past.
--   The candidate is not already a nominated candidate.
--   The tokens held under candidate's account are not currently locked in a time delay.
-
-##### Parameters:
-
-    cand  - The account id for the candidate nominating.
-
-### Post Condition:
-
-The candidate should still be present in the candidates table and should be still set to inactive. The candidates tokens will be transferred back to their account and their `locked_tokens` value will be reduced to 0.
-
----
-### firecand
-
-This action is used to remove a candidate from being a candidate for auditor elections.
-
-## Assertions:
-
--   The action is authorised by the mid level permission the auth account for the contract.
--   The candidate is already a nominated candidate.
-
-##### Parameters
-
-     cand        - The account id for the candidate nominating.
-     lockupStake - if true the stake will be locked up for a time period as set by the contract config `lockup_release_time_delay`
-
-##### Post Condition:
-
-The candidate should still be present in the candidates table and be set to inactive. If the `lockupstake` parameter is true the stake will be locked until the time delay has passed. If not the candidate will be able to unstake their tokens immediately using the unstake action to have them returned.
-
----
-### fireauditor
-
-This action is used to remove a auditor.
-
-##### Assertions:
-
--   The action is authorised by the mid level of the auth account (currently elected auditor board).
--   The `auditor` account is currently an elected auditor.
-
-##### Parameters:
-
-     cand - The account id for the candidate nominating.
-
-##### Post Condition:
-
-The auditor will be removed from the active auditors and should still be present in the candidates table but will be set to inactive. Their staked tokens will be locked up for the time delay added from the moment this action was called so they will not able to unstake until that time has passed. A replacement auditor will be selected from the candidates to fill the missing place (based on vote ranking) then the auths for the controlling BOS auditor auth account will be set for the auditor board.
+To update the auditor's vote weight.
