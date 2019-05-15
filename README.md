@@ -84,7 +84,7 @@ How do you and your team plan to build this project?
 
 In this section, you should specifically define a plan of action for building and deploying your project. First, you should list the major milestones for the project. Make sure that you explicitly define what is included in each milestone. Next, you should attempt to map your project milestones to a specific timeline. How much time do you expect each milestone to take to complete?
 
-Wherever possible, offer specifics around tasks and timelines. Each milestone should be the result of specific scoped and measurable tasks that can allow for clear recognition and accountability.
+Wherever possible, offer specifics around tasks and timelines. Each milestone / proposal should be the result of specific scoped and measurable tasks that can allow for clear recognition and accountability.
 
 ## 6. Fund Release Plan
 How much will the project cost, and how should funds be deployed? 
@@ -93,9 +93,9 @@ In this section you should present the cost of the project and explain the reaso
 
 This section should also contain a release plan for the funds based around the Execution Plan. For most projects, funds will be released in batches in order to properly align incentives and create better accountability. This means that you can split your project into several proposals.
 
-Project proposals will be re-submitted after each milestone, and token holders will be able to vote on funding. Breaking up the project into smaller proposals will allow your team to recieve funding in stages as the project progresses. If you prefer to structure the project around one major proposal, then you can apply to recieve funding after the project is complete.  
+Project proposals will be re-submitted after each milestone, and token holders will be able to vote on funding. Breaking up the project into smaller proposals will allow your team to recieve funding in stages as the project progresses. If you prefer to structure the project around one major proposal, then you can apply to recieve funding after the project is complete.
 
-Be as specific as possible around costs-- team, salaries, servers and infrastructure, etc. 
+Be as specific as possible around costs-- team, salaries, servers and infrastructure, etc.
 
 ## 7. Team
 Who are the people behind this project? 
