@@ -23,7 +23,7 @@ How do you and your team plan to build this project?
 
 In this section, you should specifically define a plan of action for building and deploying your project. First, you should list the major milestones for the project. Make sure that you explicitly define what is included in each milestone. Next, you should attempt to map your project milestones to a specific timeline. How much time do you expect each milestone to take to complete?
 
-Wherever possible, offer specifics around tasks and timelines. Each milestone should be the result of specific scoped and measurable tasks that can allow for clear recognition and accountability.
+Wherever possible, offer specifics around tasks and timelines. Each milestone / proposal should be the result of specific scoped and measurable tasks that can allow for clear recognition and accountability.
 
 ## Fund Release Plan
 How much will the project cost, and how should funds be deployed? 
