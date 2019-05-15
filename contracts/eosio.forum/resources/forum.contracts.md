@@ -82,9 +82,9 @@ after `unvote` has been called by {{ voter }}.
 
 ## Description
 
-I, {{ voter }}, am casting a vote of {{ vote_value }} on {{ proposal_name }}. To change my vote, I may call another `vote` action, with only the most recent `vote` of {{ vote_value }} being the `vote` which I, {{ voter }}, intend to be considered as valid. I acknowledge that using the `unvote` action after placing a `vote` will render my previous `vote` of {{ vote_value }} null and void. 
+I, {{ voter }}, am casting a vote of {{ vote_value }} on {{ proposal_name }}. To change my vote, I may call another `vote` action, with only the most recent `vote` of {{ vote_value }} being the `vote` which I, {{ voter }}, intend to be considered as valid. I acknowledge that using the `unvote` action after placing a `vote` will render my previous `vote` of {{ vote_value }} null and void.
 
-If I, {{ voter }}, have a proxy registered for my on-chain voting, my own `vote` of {{ vote_value }} shall take  precedence over my proxy's `vote`. My stake weight shall be deducted from their voting power and cast as my own. 
+If I, {{ voter }}, have a proxy registered for my on-chain voting, my own `vote` of {{ vote_value }} shall take  precedence over my proxy's `vote`. My stake weight shall be deducted from their voting power and cast as my own.
 
 If I, {{ voter }}, am not the beneficial owner of these tokens, I stipulate I have proof that I’ve been authorized to vote these tokens by their beneficial owner(s).
 
