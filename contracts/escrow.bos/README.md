@@ -56,6 +56,12 @@ $ bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"eosio
 $ bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
 ```
 
+3. Exec MSIG
+
+```bash
+$ bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER>
+```
+
 ## Caveats
 
 - The sender of an escrow will temporarily be whitelisted to BOS executives. In the future anyone may be a sender
