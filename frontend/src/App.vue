@@ -34,6 +34,12 @@ export default {
       this.$store.dispatch('setScatter', { scatter: ScatterJS.scatter })
     })
   },
+  mounted () {
+    this.$store.dispatch('setScreenWidth', { screenWidth: document.body.clientWidth })
+    window.onresize = () => {
+      this.$store.dispatch('setScreenWidth', { screenWidth: document.body.clientWidth })
+    }
+  },
   methods: {
   }
 }

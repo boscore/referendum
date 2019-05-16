@@ -7,7 +7,8 @@
       <i class="el-icon-menu mobile-nav-icon"></i>
     </div>
     <div class="search-mask" v-if="showMenu" @click="showMenu=false"></div>
-    <el-menu :class="[{'hidden-menu': !showMenu}]" style="float:right" :default-active="activeIndex" mode="horizontal" class="el-menu-main">
+    <div class="el-menu-main">
+    <el-menu :class="[{'hidden-menu': !showMenu}]" style="float:right" :default-active="activeIndex" mode="horizontal">
       <el-menu-item index="referendum" @click="$router.push('/referendum')">{{$t('common.referendum')}}</el-menu-item>
       <el-menu-item index="auditor" @click="$router.push('/auditor')">{{$t('common.auditor')}}</el-menu-item>
       <el-submenu index="logout" style="float:right" v-if="account">
@@ -16,6 +17,7 @@
       </el-submenu>
       <el-menu-item index="login"  v-else @click="getIdentity">Login</el-menu-item>
     </el-menu>
+    </div>
   </div>
 </template>
 
@@ -25,7 +27,7 @@ export default {
   name: 'NavMenu',
   data () {
     return {
-      showMenu: true
+      showMenu: false
     }
   },
   computed: {
@@ -68,7 +70,7 @@ export default {
       position absolute
       right 0
       top 60px
-      z-index 100
+      z-index 1000
       width 150px
 </style>
 

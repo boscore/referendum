@@ -41,6 +41,7 @@
         </el-form>
       </div>
       <el-dialog
+        :width="dialogWidth"
         title="Declaration"
         :visible.sync="showDeclar"
       >
@@ -78,7 +79,7 @@
 <script>
 import Eos from 'eosjs'
 import { NETWORK } from '@/assets/constants.js'
-import { MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import { setInterval, clearInterval } from 'timers'
 export default {
   name: 'RegisterAuditor',
@@ -121,6 +122,12 @@ export default {
     }
   },
   computed: {
+    dialogWidth () {
+      if (this.$store.state.screenWidth < 450) {
+        return '90%'
+      }
+      return '60%'
+    },
     scatter () {
       return this.$store.state.scatter
     },
@@ -150,8 +157,10 @@ export default {
         await this.eos.transfer(account.name, this.contract, this.form.stakeAmount, '')
       } catch (e) {
         this.actionLoading = false
-        MessageBox.alert(e, 'ERROR', {
-          confirmButtonText: 'OK'
+        Message({
+          showClose: true,
+          type: 'error',
+          message: 'Stake ERROR' + String(e)
         })
       }
     },
@@ -216,18 +225,26 @@ export default {
           this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
             .then(res => {
               this.actionLoading = false
-              MessageBox.alert(`You register as a new candidate successfully`, '', {
-                confirmButtonText: 'OK',
-                callback: action => {
-                  if (action === 'confirm') {
-                    this.$router.replace('/auditor')
-                  }
-                }
+              Message({
+                showClose: true,
+                type: 'success',
+                message: 'You register as a new candidate successfully'
               })
+              this.$router.replace('/auditor')
+              // MessageBox.alert(`You register as a new candidate successfully`, '', {
+              //   confirmButtonText: 'OK',
+              //   callback: action => {
+              //     if (action === 'confirm') {
+              //       this.$router.replace('/auditor')
+              //     }
+              //   }
+              // })
             }).catch(e => {
               this.actionLoading = false
-              MessageBox.alert(e, 'ERROR', {
-                confirmButtonText: 'OK'
+              Message({
+                showClose: true,
+                type: 'error',
+                message: 'Register ERROR' + String(e)
               })
             })
         } else {

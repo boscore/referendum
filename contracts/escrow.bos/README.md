@@ -25,7 +25,7 @@ $ eosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bo
 
 ### Approve Escrow
 
-> Only `bet.bos@active` or `eosio@active` are allowed to be the `approver`
+> Only `bet.bos@active` or `eosio@active` are allowed to approve.
 > if approver is bet.bos, no change, allow proposer to claim 100% of the fund
 > if approver is BPs, only keep 90% fund for proposer to claim, and BET.BOS will manually execute transfer ACTION in escrow.bos to send fund to each BPs and each auditors
 
@@ -43,6 +43,7 @@ $ eosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <ACCOUNT>
 ```
 
 ## Caveats
+
 - The sender of an escrow will temporarily be whitelisted to BOS executives. In the future anyone may be a sender
 - The sender may only have one unfilled escrow at any given time, however they may have many filled escrows
 - To fill an escrow the sender must transfer the `BOS` tokens to this contract. An unfilled escrow will be filled
@@ -55,158 +56,64 @@ $ eosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <ACCOUNT>
 - The approver may close an escrow. This is essentially the same as refunding it, however without waiting for the expiry to lapse
 - The approver may Lock and Unlock an escrow. This prevents ALL actions except unlock and actions made by the approver.
 
-<h1 class="contract">
-    init
-</h1>
+<h1 class="contract">init</h1>
 
-## ACTION: `init`
+## Description
 
-**PARAMETERS:**
+To create an empty escrow payment agreement for safe and secure funds transfer protecting both {{ sender }} and {{ receiver }} for a determined amount of time.
 
-- __sender__ is an eosio account name.
-- __receiver__ is an eosio account name.
-- __approver__ is an eosio account name.
-- __escrow_name__ unique escrow name.
-- __expires__ The date/time after which the escrow amount can be refunded by the sender.
-- __memo__ is a memo to send as the eventual transfer memo at the end of the escrow contract.
-
-**INTENT:** The intent of init is to create an empty escrow payment agreement for safe and secure funds transfer protecting both sender and receiver for a determined amount of time.
-
-> **Warning**: This action will store the content on the chain in the history logs and the data cannot be deleted later so therefore should only store a unidentifiable hash of content rather than human readable content.
-
-<h1 class="contract">
-    transfer
-</h1>
+<h1 class="contract">transfer</h1>
 
 ## ACTION: `transfer`
 
-**PARAMETERS:**
+## Description
 
-- __from__ is an eosio account name.
-- __to__ is an eosio account name.
-- __quantity__ is an eosio asset name.
-- __memo__ is a string that provides a memo for the transfer action.
+To listen and react to the eosio.token contract's transfer action and ensure the correct parameters have been included in the transfer action.
 
-**INTENT:** The intent of transfer is to listen and react to the eosio.token contract's transfer action and ensure the correct parameters have been included in the transfer action.
+<h1 class="contract">approve</h1>
 
-> **Warning**: This action will store the content on the chain in the history logs and the data cannot be deleted later.
+## Description
 
-<h1 class="contract">
-    approve
-</h1>
+To approve the release of funds to the intended {{ receiver }}. Each escrow agreement requires at least {{ sender }} or {{ approver }} to grant fund release.
 
-## ACTION: `approve`
+<h1 class="contract">unapprove</h1>
 
-**PARAMETERS:**
+## Description
 
-- __escrow_name__ is a unique identifying name for an escrow entry.
-- __approver__ is an eosio account name. (BET Account)
+To unapprove the release of funds to the intended receiver from a previous approved action.
 
-**INTENT:** The intent of approve is to approve the release of funds to the intended receiver. Each escrow agreement requires at least 7 BET permissions (excluding sender) to grant fund release.
+<h1 class="contract">claim</h1>
 
-> **Warning**: This action will store the content on the chain in the history logs and the data cannot be deleted later.
+To claim the escrowed funds for an intended {{ receiver }} after an escrow agreement has met the required approvals.
 
-<h1 class="contract">
-  unapprove
-</h1>
+<h1 class="contract">refund</h1>
 
-## ACTION: `unapprove`
+To return the escrowed funds back to the original {{ sender }}. This action can only be run after the contract has met the intended expiry time.
 
-**PARAMETERS:**
+<h1 class="contract">cancel</h1>
 
-- __escrow_name__ is a unique identifying name for an escrow entry.
-- __disapprover__ is an eosio account name.
+## Description
 
-**INTENT:** The intent of unapprove is to unapprove the release of funds to the intended receiver from a previous approved action.
+To cancel an escrow agreement. This action can only be performed by the {{ sender }} as long as no funds have already been transferred for the escrow agreement. Otherwise they would need to wait for the expiry time and then use the refund action.
 
-> **Warning**: This action will store the content on the chain in the history logs and the data cannot be deleted later.
+<h1 class="contract">extend</h1>
 
-<h1 class="contract">
-    claim
-</h1>
+## Description
 
-## ACTION: `claim`
+Allows the sender to extend the expiry
 
-**PARAMETERS:**
+<h1 class="contract">close</h1>
 
-- __escrow_name__ is a unique identifying name for an escrow entry.
+Allows the {{ approver }} to close and refund an unexpired escrow
 
-**INTENT:** The intent of claim is to claim the escrowed funds for an intended receiver after an escrow agreement has met the required approvals.
+<h1 class="contract">lock</h1>
 
-**TERM:** This action lasts for the duration of the time taken to process the transaction.
+## Description
 
-<h1 class="contract">
-    refund
-</h1>
+Allows the {{ approver }} to lock an escrow preventing any actions by {{ sender }} or {{ receiver }}.
 
-## ACTION: `refund`
+<h1 class="contract">clean</h1>
 
-**PARAMETERS:**
-- __escrow_name__ is a unique identifying name for an escrow entry.
+## Description
 
-**INTENT:** The intent of refund is to return the escrowed funds back to the original sender. This action can only be run after the contract has met the intended expiry time.
-
-**TERM:** This action lasts for the duration of the time taken to process the transaction.
-
-<h1 class="contract">
-  cancel
-</h1>
-
-## ACTION: `cancel`
-
-**PARAMETERS:**
-
-- __escrow_name__ is a unique identifying name for an escrow entry.
-
-**INTENT:** The intent of cancel is to cancel an escrow agreement. This action can only be performed by the sender as long as no funds have already been transferred for the escrow agreement. Otherwise they would need to wait for the expiry time and then use the refund action.
-
-**TERM:** This action lasts for the duration of the time taken to process the transaction.
-
-<h1 class="contract">
-  clean
-</h1>
-
-## ACTION: `clean`
-
-**INTENT:** The intent of clean is remove all existing escrow agreements for developer purposes. This can only be run with _self permission of the contract which would be unavailable on the main net once the contract permissions are removed for the contract account.
-
-**TERM:** This action lasts for the duration of the time taken to process the transaction.
-
-<h1 class="contract">
-  extend
-</h1>
-
-## ACTION: `extend`
-
-**PARAMETERS:**
-
-- __escrow_name__ is a unique identifying name for an escrow entry.
-- __expires_at__ timestamp to set when escrow will expire
-
-**INTENT:** Allows the sender to extend the expiry
-
-<h1 class="contract">
-  close
-</h1>
-
-## ACTION: `close`
-
-**PARAMETERS:**
-
-- __escrow_name__ is a unique identifying name for an escrow entry.
-
-**INTENT:** Allows the `approver` to close and refund an unexpired escrow
-
-
-<h1 class="contract">
-  lock
-</h1>
-
-## ACTION: `lock`
-
-**PARAMETERS:**
-
-- __escrow_name__ is a unique identifying name for an escrow entry.
-- __lock__ boolean to set escrow locked attribute as true/false
-
-**INTENT:** Allows the `approver` to lock an escrow preventing any actions by `sender` or `receiver`.
+To remove all existing escrow agreements for developer purposes. This can only be run with _self permission of the contract which would be unavailable on the main net once the contract permissions are removed for the contract account.

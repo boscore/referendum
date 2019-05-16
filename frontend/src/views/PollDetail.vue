@@ -5,11 +5,15 @@
         <div id="back-button" @click="$router.push({path: '/'})">
           <i class="el-icon-arrow-left"></i>View All Polls
         </div>
-        <h1>{{proposal.proposal.title}}</h1>
+        <h1>{{proposal.proposal.title}}
+        </h1>
+        <h2 v-if="CDToAuditor > 0" style="color: #E74C3C">The countdown to auditors giving opinions ends in {{CDToAuditor}} days</h2>
+        <h2 v-if="CDToBP > 0" style="color: #E74C3C">The countdown to BPs voting ends in {{CDToBP}} days</h2>
         <p>
           <span>{{`${proposal.proposal.proposal_name} by ${proposal.proposal.proposer} `}}</span>
           <span style="margin: 0 5px">{{proposal.proposal.expires_at}} </span>
           <span>{{proposal.proposal.proposal_json.type || 'unknown'}}</span>
+          <span v-if="proposal.approved_by_BET || proposal.approved_by_BPs" style="color:#2ECC71; font-weight:800"> Approved</span>
         </p>
         <div style="margin-bottom:30px">
           <div
@@ -38,8 +42,8 @@
             Comments
           </div>
         </div>
-      <el-container>
-        <el-main class="main" style="padding-top: 0;padding-left:0">
+      <el-container v-loading="propLoading">
+        <el-main class="main">
           <div v-if="activeButton !=='voters'" v-html="content" ref="desc" class="card prop-content">
           </div>
           <!-- <div class="card">
@@ -54,13 +58,14 @@
               <el-table-column sortable label="Type" prop="type"></el-table-column>
               <el-table-column sortable label="Vote" prop="result"></el-table-column>
             </el-table>
-            <div>
+            <div v-if="showVotersNum < votes.length">
               <div class="button" style="margin: 20px auto;padding: 5px 20px" @click="showMoreVoters">Load more voters</div>
             </div>
           </div>
           <div v-if="votes.length" v-loading="chartLoading" class="card" ref="stats">
             <IEcharts
-              style="width:800px;height:500px;margin:auto"
+              ref="chart"
+              style="height:500px;margin:auto"
               :option="chartOption"
             ></IEcharts>
           </div>
@@ -80,12 +85,12 @@
             <Comment v-for="(comment, index) in otherComm" :key="index" v-bind="comment"></Comment>
           </div>
         </el-main>
-        <el-aside width="350px">
+        <el-aside :width="asideWidth">
           <div class="card" id="poll-status">
             <h2>Poll Status</h2>
             <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
-            <el-progress  :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
-             <el-progress  :stroke-width="10" class="abstain-percent" :percentage="100-rejectPercent-agreePercent"></el-progress>
+            <el-progress :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
+            <el-progress :stroke-width="10" class="abstain-percent" :percentage="abstainPercent"></el-progress>
             <p>{{(this.proposal.stats.staked.total / 10000).toFixed(0)}} BOS voted</p>
             <div class="scatter-panel">
               <div v-if="scatter">
@@ -103,10 +108,15 @@
                     <el-radio :label="255">ABSTAIN</el-radio>
                   </el-radio-group>
                   </div>
-                  <div @click="sendVote" class="button" style="margin-right: 20px">
-                    Vote
+                  <div v-if="isAuditor || isBP">
+                    <p>Please write your opinion</p>
+                    <el-input
+                      type="textarea"
+                      :rows="4"
+                      v-model="myComment"
+                    ></el-input>
                   </div>
-                  <div style="margin:5px 0">
+                  <div v-else style="margin:5px 0">
                     <el-checkbox v-model="writeComment">
                       Post a public comment (optional)
                     </el-checkbox>
@@ -119,9 +129,13 @@
                       <p>Select Yes/No to cast your vote and make your comment public on the EOS blockchain. Your comment and vote will be recorded on-chain for ever, if you want to change your comment please vote again and our algorithm will attempt to just show your latest comment.</p>
                     </div>
                   </div>
-                  <div v-if="myVote">
-                    <div class="button" @click="sendUnvote" style="background: red;margin-right: 20px">Unvote</div>
-                    <span>You voted {{myVote.result}}</span>
+
+                  <div v-if="myVote">You voted {{myVote.result}}</div>
+                  <div style="display: flex; justify-content:flex-start;margin-top:10px">
+                    <div @click="sendVote" class="button" style="margin-right: 20px;width:80px">
+                      Vote
+                    </div>
+                    <div v-if="myVote" class="button" @click="sendUnvote" style="background: red;margin-right: 20px;width:80px">Unvote</div>
                   </div>
                 </div>
               </div>
@@ -131,11 +145,12 @@
                 </div>
               </a>
             </div>
-            <hr style="border: none; border-bottom:1px solid #D8D8D8;" />
+            <hr style="border: none; border-bottom:2px solid #D8D8D8;" />
             <div>
+              <h3 v-if="this.proposal.approved_by_vote">Meet the conditions {{this.proposal.meet_conditions_days}} Days</h3>
               <p>{{this.proposal ? this.proposal.stats.votes.accounts : 0}} accounts</p>
-              <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at,new Date().toString()) : 0}} days since poll started</p>
-              <p>{{this.proposal ? (this.proposal.stats.staked.total / 1e+11).toFixed(2) : 0}}% participation</p>
+              <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at, new Date().toString()) : 0}} days since poll started</p>
+              <p>{{this.proposal ? (this.proposal.stats.staked.total / this.proposal.stats.currency_supply).toFixed(2) : 0}}% participation</p>
               <p>{{this.proposal ? this.yesLeadPercent : 0}}% YES lead over NO</p>
             </div>
           </div>
@@ -145,22 +160,25 @@
             <p>2. The ratio of approved votes/disapproved is greater than 1.5.</p>
             <p>3. The above conditions last for 20 days.</p>
           </div>
-          <h2>
+          <h2 v-if="relatedPolls.length">
             Related Polls
           </h2>
-          <div
-            v-for="(prop, index) in relatedPolls"
-            @click="turnDetail(prop)"
-            :key="index"
-            :style="{'margin-bottom': '30px', 'cursor': 'pointer'}"
-          >
-          <PropCard
-            :type="prop.proposal.proposal_json.type || 'unknown'"
-            :title="prop.proposal.title"
-            :desc="prop.proposal.proposal_json.content || ''"
-            :votes="prop.stats.votes"
-            :staked="prop.stats.staked.total"
-            ></PropCard>
+          <div id="related-polls">
+            <div
+              v-for="(prop, index) in relatedPolls"
+              @click="turnDetail(prop)"
+              :key="index"
+              style="margin-bottom: 30px; cursor: pointer"
+            >
+            <PropCard
+              :type="prop.proposal.proposal_json.type || 'unknown'"
+              :title="prop.proposal.title"
+              :desc="prop.proposal.proposal_json.content || ''"
+              :votes="prop.stats.votes"
+              :staked="prop.stats.staked.total"
+              >
+            </PropCard>
+          </div>
           </div>
         </el-aside>
       </el-container>
@@ -172,7 +190,7 @@
 <script>
 import marked from 'marked'
 import Eos from 'eosjs'
-import { MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import { NETWORK, API_URL } from '@/assets/constants.js'
 import IEcharts from 'vue-echarts-v3/src/lite.js'
 import 'echarts/lib/chart/pie'
@@ -189,6 +207,18 @@ export default {
     Comment
   },
   computed: {
+    account () {
+      if (this.scatter && this.scatter.identity) {
+        return this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      }
+      return null
+    },
+    asideWidth () {
+      if (this.screenWidth < 821) {
+        return '100%'
+      }
+      return '350px'
+    },
     chartLoading () {
       if (this.votes) {
         return false
@@ -334,35 +364,6 @@ export default {
     proposalName () {
       return this.$route.query.proposal || localStorage.getItem('proposalName')
     },
-    proposal () {
-      if (!this.$store.state.currentProposal) {
-        this.$store.dispatch('getProposals', {
-          proposalName: this.proposalName
-        })
-      }
-      const defaultProp = {
-        id: '',
-        proposal: {
-          expires_at: '',
-          created_at: '',
-          proposal_json: {
-            type: '',
-            content: ''
-          },
-          title: '',
-          proposer: '',
-          proposal_name: ''
-        },
-        stats: {
-          votes: {},
-          accounts: {},
-          staked: {
-            total: 0
-          }
-        }
-      }
-      return this.$store.state.currentProposal || defaultProp
-    },
     relatedPolls () {
       let related = []
       const proposals = this.$store.state.proposals
@@ -385,27 +386,30 @@ export default {
         return 'no content'
       }
     },
+    abstainPercent () {
+      return Number((100 - this.agreePercent - this.rejectPercent).toFixed(1))
+    },
     agreePercent () {
-      if (!this.proposal || this.proposal.stats.votes.total === 0 || !this.proposal.stats.votes[1]) {
+      if (!this.proposal || this.proposal.stats.staked.total === 0 || !this.proposal.stats.staked[1]) {
         return 0
       } else {
-        return Number((100 * this.proposal.stats.votes[1] / this.proposal.stats.votes.total).toFixed(1))
+        return Number((100 * this.proposal.stats.staked[1] / this.proposal.stats.staked.total).toFixed(1))
       }
     },
     rejectPercent () {
-      if (!this.proposal || this.proposal.stats.votes.total === 0 || !this.proposal.stats.votes[0]) {
+      if (!this.proposal || this.proposal.stats.staked.total === 0 || !this.proposal.stats.staked[0]) {
         return 0
       } else {
-        return Number((100 * this.proposal.stats.votes[0] / this.proposal.stats.votes.total).toFixed(1))
+        return Number((100 * this.proposal.stats.staked[0] / this.proposal.stats.staked.total).toFixed(1))
       }
     },
     yesLeadPercent () {
-      if (!this.proposal.stats.votes[0]) {
+      if (!this.proposal.stats.staked[0]) {
         return 100
-      } else if (!this.proposal.stats.votes[1]) {
+      } else if (!this.proposal.stats.staked[1]) {
         return 0
       } else {
-        return this.calcPercent(this.proposal.stats.votes[1] - this.proposal.stats.votes[0], this.proposal.stats.votes[1]).toFixed(0)
+        return this.calcPercent(this.proposal.stats.staked[1] - this.proposal.stats.staked[0], this.proposal.stats.staked[1]).toFixed(0)
       }
     },
     scatter () {
@@ -418,6 +422,16 @@ export default {
         return eos
       }
       return null
+    },
+    isAuditor () {
+      return this.auditorsList.find(auditor => {
+        return auditor.auditor_name === this.account.name
+      })
+    },
+    isBP () {
+      return this.auditorsList.find(auditor => {
+        return auditor.auditor_name === this.account.name
+      })
     }
   },
   data () {
@@ -425,6 +439,10 @@ export default {
       title: 'Should EOS tokens sent to eosio.ramfee and eosio.names accounts in the future be allocated to REX?',
       activeButton: 'desc',
       auditorsList: [],
+      auditorComm: [],
+      BPComm: [],
+      CDToBP: -1,
+      CDToAuditor: -1,
       voteActionParams: {
         voter: '',
         proposal_name: '',
@@ -432,12 +450,40 @@ export default {
         vote_json: ''
       },
       myComment: '',
-      auditorComm: [],
-      BPComm: [],
       otherComm: [],
       producers: [],
+      proposal: {
+        approved_by_BET: false,
+        approved_by_BPs: false,
+        approved_by_BPs_date: 'None',
+        approved_by_vote: false,
+        approved_by_vote_date: 'None',
+        id: '',
+        meet_conditions_days: 0,
+        proposal: {
+          expires_at: '',
+          created_at: '',
+          title: '',
+          proposer: '',
+          proposal_name: '',
+          proposal_json: {
+            type: '',
+            content: ''
+          }
+        },
+        reviewed_by_BET_date: 'None',
+        stats: {
+          votes: {},
+          accounts: {},
+          staked: {
+            total: 0
+          }
+        }
+      },
+      propLoading: true,
       writeComment: false,
-      showVotersNum: 30
+      showVotersNum: 30,
+      screenWidth: document.body.clientWidth
     }
   },
   watch: {
@@ -453,7 +499,15 @@ export default {
             time: vote.updated_at,
             comment: vote.vote_json.comment
           }
-          if (this.auditorsList.find(auditor => auditor.cust_name === vote.voter)) {
+          let isAuditor = this.auditorsList.find(auditor => {
+            return Boolean(auditor.auditor_name === vote.voter)
+          })
+          let isBP = this.producers.find(producer => {
+            return Boolean(producer.owner === vote.voter)
+          })
+          if (isAuditor) {
+            this.auditorComm.push(comment)
+          } else if (isBP) {
             this.auditorComm.push(comment)
           } else {
             this.otherComm.push(comment)
@@ -462,7 +516,14 @@ export default {
       })
     }
   },
+  created () {
+    this.getProposal()
+  },
   mounted () {
+    window.addEventListener('resize', () => {
+      this.$refs['chart'].resize()
+      this.screenWidth = document.body.clientWidth
+    })
     this.getProducers()
     const interv = setInterval(() => {
       if (this.eos) {
@@ -472,14 +533,50 @@ export default {
     }, 1000)
   },
   methods: {
+    getProposal () {
+      this.$axios.get(API_URL.API_GET_PROPOSAL + '/' + this.proposalName).then(res => {
+        if (res.status === 200) {
+          this.propLoading = false
+          this.proposal = res.data
+          if (this.proposal.approved_by_vote && !this.proposal.approved_by_BET && this.proposal.reviewed_by_BET_date && this.proposal.reviewed_by_BET_date !== 'None') {
+            const start = new Date(this.proposal.reviewed_by_BET_date).getTime()
+            const end = new Date().getTime()
+            const d = Math.floor((end - start) / 1000 / 60 / 60 / 24)
+            if (d >= 7) {
+              this.CDToBP = 14 - d + 7
+            } else {
+              this.CDToAuditor = 7 - d
+            }
+          }
+          try {
+            this.proposal.proposal.proposal_json = JSON.parse(this.proposal.proposal.proposal_json)
+          } catch (e) {
+            console.log(e)
+          }
+        }
+      }).catch(e => {
+        this.propLoading = false
+        Message({
+          showClose: true,
+          message: 'Get Proposal ERROR\n' + String(e),
+          type: 'error'
+        })
+      })
+    },
     getProducers () {
       this.$axios.get(API_URL.API_GET_PRODUCERS).then(res => {
-        console.log(res)
-        this.producers = res.producer
+        if (res.status === 200) {
+          this.producers = res.data.producer
+        }
       }).catch(e => {
-        MessageBox.alert(e, 'Get Producers ERROR', {
-          confirmButtonText: 'OK'
+        Message({
+          showClose: true,
+          message: 'Get Producers ERROR\n' + String(e),
+          type: 'error'
         })
+        // MessageBox.alert(e, 'Get Producers ERROR', {
+        //   confirmButtonText: 'OK'
+        // })
       })
     },
     getAuditors () {
@@ -493,8 +590,13 @@ export default {
         this.eos.getTableRows(tableOptions).then(res => {
           this.auditorsList = res.rows
         }).catch(e => {
-          MessageBox.alert(e, 'Get Auditors ERROR', {
-            confirmButtonText: 'OK'
+          // MessageBox.alert(e, 'Get Auditors ERROR', {
+          //   confirmButtonText: 'OK'
+          // })
+          Message({
+            showClose: true,
+            message: 'Get Auditors ERROR\n' + String(e),
+            type: 'error'
           })
         })
       }
@@ -530,13 +632,22 @@ export default {
     },
     sendVote () {
       if (this.voteActionParams.vote === -1) {
-        MessageBox.alert('Please choose your vote', '', {
-          confirmButtonText: 'OK'
+        // MessageBox.alert('Please choose your vote', '', {
+        //   confirmButtonText: 'OK'
+        // })
+        Message({
+          showClose: true,
+          message: 'Please choose your vote',
+          type: 'warning'
+        })
+      } else if (this.myComment === '' && (this.isAuditor || this.isBP)) {
+        Message({
+          showClose: true,
+          message: 'Please write your opinion of this proposal',
+          type: 'warning'
         })
       } else {
-        const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
-
-        this.voteActionParams.voter = account.name
+        this.voteActionParams.voter = this.account.name
         this.voteActionParams.proposal_name = this.proposalName
         if (this.myComment !== '' && this.writeComment) {
           this.voteActionParams.vote_json = JSON.stringify({ comment: this.myComment })
@@ -546,21 +657,30 @@ export default {
             account: 'eosio.forum',
             name: 'vote',
             authorization: [{
-              actor: account.name,
-              permission: account.authority
+              actor: this.account.name,
+              permission: this.account.authority
             }],
             data: { ...this.voteActionParams }
           }]
         }
         this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
           .then(res => {
-            MessageBox.alert(`Your vote has been cast on ${this.proposalName}`, '', {
-              confirmButtonText: 'OK'
+            Message({
+              message: `Your vote  has been cast on ${this.proposalName}, data will be updated some time later`,
+              type: 'success'
             })
+            // MessageBox.alert(`Your vote has been cast on ${this.proposalName}`, '', {
+            //   confirmButtonText: 'OK'
+            // })
           }).catch(e => {
-            MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
-              confirmButtonText: 'OK'
+            Message({
+              showClose: true,
+              message: 'Vote ERROR\n' + String(e),
+              type: 'error'
             })
+            // MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
+            //   confirmButtonText: 'OK'
+            // })
           })
       }
     },
@@ -583,13 +703,22 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(res => {
-          MessageBox.alert(`Your unvote on ${this.proposalName} was successful, data will be updated some time later`, '', {
-            confirmButtonText: 'OK'
+          Message({
+            message: `Your unvote on ${this.proposalName} was successful, data will be updated some time later`,
+            type: 'success'
           })
+          // MessageBox.alert(`Your unvote on ${this.proposalName} was successful, data will be updated some time later`, '', {
+          //   confirmButtonText: 'OK'
+          // })
         }).catch(e => {
-          MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            message: 'Unvote ERROR\n' + String(e),
+            type: 'error'
           })
+          // MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
+          //   confirmButtonText: 'OK'
+          // })
         })
     },
     turnTo (target) {
@@ -603,7 +732,10 @@ export default {
         localStorage.setItem('proposalName', prop.proposal.proposal_name)
       }
       this.$store.dispatch('setCurrentProposal', { proposal: prop })
+      this.propLoading = true
+
       this.$router.push({ path: '/poll_detail', query: { proposal: prop.proposal.proposal_name } })
+      this.getProposal()
     },
     showMoreVoters () {
       this.showVotersNum += 30
@@ -616,32 +748,32 @@ export default {
 </script>
 
 <style lang="stylus">
+@media only screen and (max-width 840px)
+  .poll-detail
+    .el-container
+      flex-wrap wrap
+      // flex-direction column-reverse
+    .el-aside
+      width 100%
 #poll-status
+  .el-progress__text
+    font-family Roboto-Bold
+    font-size 11px
+    letter-spacing 0
+    text-align center
   .pass-percent
     .el-progress__text
-      font-family Roboto-Bold
-      font-size 11px
       color #30D094
-      letter-spacing 0
-      text-align center
     .el-progress-bar__inner
       background-image linear-gradient(270deg, #41B976 0%, #2CD69B 100%)
   .dissent-percent
     .el-progress__text
-      font-family Roboto-Bold
-      font-size 11px
       color #F46666
-      letter-spacing 0
-      text-align center
     .el-progress-bar__inner
       background-image linear-gradient(269deg, #F06262 0%, #FF7171 100%)
   .abstain-percent
     .el-progress__text
-      font-family Roboto-Bold
-      font-size 11px
       color #F4D03F
-      letter-spacing 0
-      text-align center
     .el-progress-bar__inner
       background-image linear-gradient(270deg, #F7DC6F 0%, #F1C40F 100%)
 
@@ -671,6 +803,8 @@ export default {
   font-size: 18px;
   color: #8A8A8A;
   letter-spacing: 0;
+  padding-left 0
+  padding-top 0
   h1, h2, h3, h4, h5
     font-family: Roboto-Medium;
     color: #507DFE;
@@ -683,6 +817,8 @@ export default {
     font-size: 18px;
     color: #8A8A8A;
     letter-spacing: 0;
+  >>> img
+    max-width 100%
 #back-button
   cursor pointer
   width 160px
@@ -718,4 +854,17 @@ export default {
   text-align: center;
 .radio-button-active
   opacity 1
+.pie-chart
+  width:800px
+  height:500px
+  margin:auto
+@media only screen and (max-width 840px)
+  .main
+    padding 0
+  .radio-button
+    margin-bottom 5px
+  #related-polls
+    display flex
+    flex-wrap wrap
+    justify-content center
 </style>

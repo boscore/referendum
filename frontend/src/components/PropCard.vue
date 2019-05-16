@@ -9,7 +9,7 @@
       <p>{{title}}</p>
     </div>
     <div class="card-bottom">
-      <p class="desc">{{desc}}</p>
+      <p class="desc">{{propDesc}}</p>
       <hr/>
       <div class="card-bottom-board">
         <div class="card-bottom-board-left" :class="cardBoardClass">
@@ -98,6 +98,9 @@ export default {
     },
     pollAt () {
       return (this.staked / 100 / 1e+9).toFixed(2)
+    },
+    propDesc () {
+      return this.desc.replace(/#/g, '')
     }
   }
 }
