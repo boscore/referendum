@@ -72,6 +72,9 @@ class [[eosio::contract("escrow")]] escrow : public eosio::contract {
         void lock(const name escrow_name, const bool locked);
 
         [[eosio::action]]
+        void review(const name escrow_name, const name user, const name reviewer, const string memo);
+
+        [[eosio::action]]
         void clean();
 
     private:

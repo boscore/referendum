@@ -33,6 +33,15 @@ $ bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bo
 $ bosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}' -p eosio
 ```
 
+
+### Review Escrow
+
+Allows the {{ sender }}, {{ approver }} or {{ receiver }} to perform an on-chain notification which is used to signal a review of the {{ escrow_name }}.
+
+```bash
+$ bosc tx create escrow.bos review '{"escrow_name":"<NAME>","user":"<USER>","reviewer":"<REVIEWER>","memo": "review escrow"}' -p <USER>
+```
+
 ### Claim Escrow
 
 > Executing `claim` will complete the escrow process and transfer the BOS tokens to the receiver.
@@ -131,6 +140,12 @@ Allows the {{ approver }} to close and refund an unexpired escrow
 ## Description
 
 Allows the {{ approver }} to lock an escrow preventing any actions by {{ sender }} or {{ receiver }}.
+
+<h1 class="contract">review</h1>
+
+## Description
+
+Allows the {{ sender }}, {{ approver }} or {{ receiver }} to perform an on-chain notification which is used to signal a review of the {{ escrow_name }}.
 
 <h1 class="contract">clean</h1>
 
