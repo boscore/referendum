@@ -19,7 +19,7 @@
         <div class="card-bottom-board-right">
           <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
           <el-progress  :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
-          <p>{{(staked / 10000).toFixed(0)}} BOS voted</p>
+          <p>{{$util.toThousands((staked / 10000).toFixed(0))}} BOS voted</p>
         </div>
       </div>
     </div>

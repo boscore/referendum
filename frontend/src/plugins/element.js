@@ -26,7 +26,8 @@ import {
   Tabs,
   TabPane,
   Table,
-  TableColumn
+  TableColumn,
+  Tag
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
@@ -56,6 +57,8 @@ Vue.use(TabPane)
 
 Vue.use(Table)
 Vue.use(TableColumn)
+
+Vue.use(Tag)
 
 Vue.use(Form)
 Vue.use(FormItem)

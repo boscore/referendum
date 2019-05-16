@@ -13,7 +13,7 @@
             >
               <i @click="searchBy = searchText" slot="suffix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <label>
+            <span>
               Filters:
             <el-select  v-model="filterBy" multiple collapse-tags placeholder="Filter">
               <el-option
@@ -23,7 +23,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            </label>
+            </span>
           </div>
         </div>
         <el-tabs v-model="activeTab">
@@ -45,8 +45,16 @@
                   </p>
                   <el-table  :data="myProposals" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
                     <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
-                    <el-table-column sortable label="Created" prop="created_at"></el-table-column>
-                    <el-table-column sortable label="Expire" prop="expires_at"></el-table-column>
+                    <el-table-column sortable label="Created" >
+                       <template slot-scope="scope">
+                         <span>{{$util.dateConvert(scope.row.created_at)}}</span>
+                       </template>
+                    </el-table-column>
+                    <el-table-column sortable label="Expire">
+                      <template slot-scope="scope">
+                         <span>{{$util.dateConvert(scope.row.expires_at)}}</span>
+                       </template>
+                    </el-table-column>
                     <el-table-column>
                       <template slot-scope="scope">
                         <el-button v-if="!isExpired(scope.row.expires_at)" type="danger" @click="expireProp(scope.row.proposal_name)">Expire</el-button>
@@ -83,7 +91,11 @@
                   <el-table :data="myVotes" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
                     <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
                     <el-table-column sortable label="Result" prop="result"></el-table-column>
-                    <el-table-column sortable label="Voted" prop="updated_at"></el-table-column>
+                    <el-table-column sortable label="Voted">
+                      <template slot-scope="scope">
+                         <span>{{$util.dateConvert(scope.row.updated_at)}}</span>
+                       </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -231,7 +243,7 @@ export default {
           label: 'Ongoing'
         }
       ],
-      filterBy: ['poll', 'referendum', 'approved', 'rejected', 'ongoing'],
+      filterBy: ['poll', 'referendum', 'expired', 'ongoing'],
       sortBy: 'MostVoted',
       searchText: '',
       searchBy: ''

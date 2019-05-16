@@ -11,9 +11,13 @@
         <h2 v-if="CDToBP > 0" style="color: #E74C3C">The countdown to BPs voting ends in {{CDToBP}} days</h2>
         <p>
           <span>{{`${proposal.proposal.proposal_name} by ${proposal.proposal.proposer} `}}</span>
-          <span style="margin: 0 5px">{{proposal.proposal.expires_at}} </span>
-          <span>{{proposal.proposal.proposal_json.type || 'unknown'}}</span>
-          <span v-if="proposal.approved_by_BET || proposal.approved_by_BPs" style="color:#2ECC71; font-weight:800"> Approved</span>
+          <span style="margin: 0 5px">{{$util.dateConvert(proposal.proposal.expires_at)}} </span>
+          <span>{{proposal.proposal.proposal_json.type || 'unknown'}} </span>
+          <el-tag v-if="proposal.approved_by_vote && proposal.reviewed_by_BET_date === 'None'" type="success"> Approved by accounts</el-tag>
+          <el-tag v-if="proposal.approved_by_BET" type="success"> Approved by BET</el-tag >
+          <el-tag v-if="proposal.approved_by_BPs" type="success"> Approved by BPs</el-tag >
+          <el-tag v-if="!proposal.approved_by_BPs && proposal.reviewed_by_BET_date !== 'None'" type="danger"> Disapproved by BET</el-tag >
+          <el-tag v-if="proposal.approved_by_BPs && proposal.approved_by_BPs" type="danger"> Disapproved by BPs</el-tag >
         </p>
         <div style="margin-bottom:30px">
           <div
@@ -65,7 +69,7 @@
           <div v-if="votes.length" v-loading="chartLoading" class="card" ref="stats">
             <IEcharts
               ref="chart"
-              style="height:500px;margin:auto"
+              style="min-height:500px;margin:auto"
               :option="chartOption"
             ></IEcharts>
           </div>
@@ -91,7 +95,7 @@
             <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
             <el-progress :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
             <el-progress :stroke-width="10" class="abstain-percent" :percentage="abstainPercent"></el-progress>
-            <p>{{(this.proposal.stats.staked.total / 10000).toFixed(0)}} BOS voted</p>
+            <p>{{$util.toThousands((this.proposal.stats.staked.total / 10000).toFixed(0))}} BOS voted</p>
             <div class="scatter-panel">
               <div v-if="scatter">
                 <div v-if="isExpired(proposal.proposal.expires_at)">
@@ -340,6 +344,69 @@ export default {
         return []
       }
     },
+    auditorComm () {
+      let comm = []
+      this.votes.forEach(vote => {
+        if (vote.vote_json && vote.vote_json.comment) {
+          let comment = {
+            avatar: '',
+            name: vote.voter,
+            time: vote.updated_at,
+            comment: vote.vote_json.comment
+          }
+          let isAuditor = this.auditorsList.find(auditor => {
+            return Boolean(auditor.auditor_name === vote.voter)
+          })
+          if (isAuditor) {
+            comm.push(comment)
+          }
+        }
+      })
+      return comm
+    },
+    BPComm () {
+      let comm = []
+      this.votes.forEach(vote => {
+        if (vote.vote_json && vote.vote_json.comment) {
+          let comment = {
+            avatar: '',
+            name: vote.voter,
+            time: vote.updated_at,
+            comment: vote.vote_json.comment
+          }
+          let isBP = this.producers.find(producer => {
+            return Boolean(producer.owner === vote.voter)
+          })
+          if (isBP) {
+            comm.push(comment)
+          }
+        }
+      })
+      return comm
+    },
+    otherComm () {
+      let comm = []
+      this.votes.forEach(vote => {
+        if (vote.vote_json && vote.vote_json.comment) {
+          let comment = {
+            avatar: '',
+            name: vote.voter,
+            time: vote.updated_at,
+            comment: vote.vote_json.comment
+          }
+          let isAuditor = this.auditorsList.find(auditor => {
+            return Boolean(auditor.auditor_name === vote.voter)
+          })
+          let isBP = this.producers.find(producer => {
+            return Boolean(producer.owner === vote.voter)
+          })
+          if (!isAuditor && !isBP) {
+            comm.push(comment)
+          }
+        }
+      })
+      return comm
+    },
     showVoters () {
       return this.votes.slice(0, this.showVotersNum)
     },
@@ -439,8 +506,6 @@ export default {
       title: 'Should EOS tokens sent to eosio.ramfee and eosio.names accounts in the future be allocated to REX?',
       activeButton: 'desc',
       auditorsList: [],
-      auditorComm: [],
-      BPComm: [],
       CDToBP: -1,
       CDToAuditor: -1,
       voteActionParams: {
@@ -450,7 +515,6 @@ export default {
         vote_json: ''
       },
       myComment: '',
-      otherComm: [],
       producers: [],
       proposal: {
         approved_by_BET: false,
@@ -484,36 +548,6 @@ export default {
       writeComment: false,
       showVotersNum: 30,
       screenWidth: document.body.clientWidth
-    }
-  },
-  watch: {
-    votes (newVotes, oldVotes) {
-      this.auditorComm = []
-      this.otherComm = []
-      this.BPComm = []
-      newVotes.forEach(vote => {
-        if (vote.vote_json && vote.vote_json.comment) {
-          let comment = {
-            avatar: '',
-            name: vote.voter,
-            time: vote.updated_at,
-            comment: vote.vote_json.comment
-          }
-          let isAuditor = this.auditorsList.find(auditor => {
-            return Boolean(auditor.auditor_name === vote.voter)
-          })
-          let isBP = this.producers.find(producer => {
-            return Boolean(producer.owner === vote.voter)
-          })
-          if (isAuditor) {
-            this.auditorComm.push(comment)
-          } else if (isBP) {
-            this.auditorComm.push(comment)
-          } else {
-            this.otherComm.push(comment)
-          }
-        }
-      })
     }
   },
   created () {
@@ -649,7 +683,7 @@ export default {
       } else {
         this.voteActionParams.voter = this.account.name
         this.voteActionParams.proposal_name = this.proposalName
-        if (this.myComment !== '' && this.writeComment) {
+        if (this.myComment !== '' && (this.writeComment || this.isAuditor || this.isBP)) {
           this.voteActionParams.vote_json = JSON.stringify({ comment: this.myComment })
         }
         const transactionOptions = {
@@ -858,13 +892,14 @@ export default {
   width:800px
   height:500px
   margin:auto
+#related-polls
+  display flex
+  flex-wrap wrap
+  justify-content center
 @media only screen and (max-width 840px)
   .main
     padding 0
   .radio-button
     margin-bottom 5px
-  #related-polls
-    display flex
-    flex-wrap wrap
-    justify-content center
+
 </style>
