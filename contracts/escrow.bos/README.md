@@ -46,13 +46,13 @@ $ bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <ACCOUNT>
 
 1. Create an `approve.json` transaction file which is signed by `eosio@active`
 
-```
-$ bosc tx create escrow.bos approve '{"escrow_name": "newtest2", "approver":"eosio"}' -p eosio --skip-sign --expiration 36000 --write-transaction approve.json
+```bash
+$ bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"eosio"}' -p eosio --skip-sign --expiration 36000 --write-transaction approve.json
 ```
 
 2. Propose MSIG
 
-```
+```bash
 $ bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
 ```
 
