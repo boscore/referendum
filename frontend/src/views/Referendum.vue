@@ -164,7 +164,7 @@
               :desc="prop.proposal.proposal_json.content || ''"
               :votes="prop.stats.staked"
               :staked="prop.stats.staked.total"
-              :style="{margin: '25px'}"></PropCard>
+              class="prop-card"></PropCard>
           </div>
         </div>
       </el-main>
@@ -484,6 +484,8 @@ export default {
   display flex
   flex-wrap wrap
   justify-content flex-start
+.prop-card
+  margin 25px
 .card
   font-family: Roboto-Regular
   font-size 18px
@@ -524,5 +526,9 @@ export default {
   display flex
   flex-wrap wrap
   justify-content flex-end
-
+@media only screen and (max-width 450px)
+  .prop-card
+    margin 25px 0
+  .prop-list
+    justify-content center
 </style>
