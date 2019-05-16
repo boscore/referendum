@@ -187,4 +187,6 @@ export default {
   .content
     overflow auto
     max-height 300px
+    >>> img
+     max-width 100%
 </style>

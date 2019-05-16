@@ -13,7 +13,8 @@ export default new Vuex.Store({
     accounts: null,
     votes: null,
     proposals: null,
-    proxies: null
+    proxies: null,
+    screenWidth: -1
   },
   mutations: {
     setScatter (state, payload) {
@@ -33,9 +34,15 @@ export default new Vuex.Store({
     },
     setVotes (state, payload) {
       state.votes = payload.votes
+    },
+    setScreenWidth (state, payload) {
+      state.screenWidth = payload.screenWidth
     }
   },
   actions: {
+    setScreenWidth ({ commit }, payload) {
+      commit('setScreenWidth', { screenWidth: payload.screenWidth })
+    },
     setScatter ({ commit }, payload) {
       commit('setScatter', { scatter: payload.scatter })
     },
@@ -44,7 +51,7 @@ export default new Vuex.Store({
     },
     getProposals ({ commit, dispatch }, payload) {
       // axios.defaults.headers.common['Origin'] = 'https://s3.amazonaws.com'
-      axios.get(API_URL.API_POLL_TALLY).then(res => {
+      axios.get(API_URL.API_GET_ALL_PROPOSALS).then(res => {
         if (res.status === 200) {
           Object.keys(res.data).forEach(key => {
             try {

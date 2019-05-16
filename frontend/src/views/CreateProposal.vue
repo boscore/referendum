@@ -18,7 +18,7 @@
           </el-form-item>
           <el-form-item prop="title">
             <label slot="label">Title</label>
-            <el-input maxlength="1024" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" v-model="form.title" show-word-limit></el-input>
+            <el-input maxlength="1024" type="textarea" :autosize="{ minRows: 1, maxRows: 3}" v-model="form.title"></el-input>
           </el-form-item>
           <el-form-item prop="incentives">
             <label slot="label">Incentives</label>
@@ -66,7 +66,7 @@
 <script>
 import Eos from 'eosjs'
 import { NETWORK } from '@/assets/constants.js'
-import { MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 export default {
   name: 'CreateProposal',
   data () {
@@ -192,22 +192,33 @@ export default {
           this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
             .then(res => {
               this.actionLoading = false
-              MessageBox.alert(`You create a new proposal successfully`, '', {
-                confirmButtonText: 'OK',
-                callback: action => {
-                  if (action === 'confirm') {
-                    this.$router.replace('/referendum')
-                  }
-                }
+              Message({
+                showClose: true,
+                type: 'success',
+                message: 'You create a new proposal successfully'
               })
+              this.$router.replace('/referendum')
+              // MessageBox.alert(`You create a new proposal successfully`, '', {
+              //   confirmButtonText: 'OK',
+              //   callback: action => {
+              //     if (action === 'confirm') {
+              //       this.$router.replace('/referendum')
+              //     }
+              //   }
+              // })
             }).catch(e => {
               // if (typeof e === 'string') {
               //   e = JSON.parse(e)
               // }
               this.actionLoading = false
-              MessageBox.alert(e, 'ERROR', {
-                confirmButtonText: 'OK'
+              Message({
+                showClose: true,
+                type: 'error',
+                message: 'Create ERROR' + String(e)
               })
+              // MessageBox.alert(e, 'ERROR', {
+              //   confirmButtonText: 'OK'
+              // })
             })
         }
       })
@@ -236,6 +247,9 @@ export default {
   width 400px
   margin auto
   margin-top 20px
+@media only screen and (max-width 600px)
+  .button
+    width 100%
 #back-button
   cursor pointer
   width 100px

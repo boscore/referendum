@@ -5,9 +5,9 @@
         <div class="main-panel">
           <h1>Auditor Board</h1>
           <div class="card board" v-loading="auditorLoading">
-            <div v-for="auditor in auditorsList" :key="auditor.cust_name" class="board-item">
+            <div v-for="auditor in auditorsList" :key="auditor.auditor_name" class="board-item">
               <Avatar :url="auditor.inform ? auditor.inform.avatar : ''" star></Avatar>
-              <p>{{auditor.cust_name}}</p>
+              <p>{{auditor.auditor_name}}</p>
             </div>
           </div>
           <div class="candidate-list">
@@ -97,6 +97,7 @@
       </el-aside>
     </el-container>
   <el-dialog
+    :width="dialogWidth"
     title="Update candidate information"
     :visible.sync="updateDialog"
     v-loading="actionLoading"
@@ -194,6 +195,12 @@ export default {
         return null
       }
     },
+    dialogWidth () {
+      if (this.$store.state.screenWidth < 450) {
+        return '90%'
+      }
+      return '60%'
+    },
     myCandidate () {
       if (this.account) {
         return this.allCandList.find(elm => elm.candidate_name === this.account.name)
@@ -202,7 +209,7 @@ export default {
     },
     myAuditor () {
       if (this.account) {
-        return this.auditorsList.find(elm => elm.cust_name === this.account.name)
+        return this.auditorsList.find(elm => elm.auditor_name === this.account.name)
       }
       return null
     },
@@ -268,9 +275,9 @@ export default {
           this.getCandidates()
         }).catch(e => {
           this.candidateLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
-          })
+          // MessageBox.alert(e, 'ERROR.\n', {
+          //   confirmButtonText: 'OK'
+          // })
         })
       }
     },
@@ -307,9 +314,14 @@ export default {
           })
         }).catch(e => {
           this.candidateLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            message: 'Get candidates ERROR.\n' + String(e),
+            type: 'error'
           })
+          // MessageBox.alert(e, 'ERROR.\n', {
+          //   confirmButtonText: 'OK'
+          // })
         })
       }
     },
@@ -318,7 +330,7 @@ export default {
         const tableOptions = {
           'scope': 'auditor.bos',
           'code': 'auditor.bos',
-          'table': 'custodians',
+          'table': 'auditors',
           'json': true
         }
         this.eos.getTableRows(tableOptions).then(res => {
@@ -326,7 +338,7 @@ export default {
           this.auditorsList = res.rows
           this.auditorsList.map(auditor => {
             let inform = this.bioInfo.find(element => {
-              return element.candidate_name === auditor.cust_name
+              return element.candidate_name === auditor.auditor_name
             })
             if (inform) {
               try {
@@ -339,9 +351,14 @@ export default {
           })
         }).catch(e => {
           this.auditorLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            message: 'Get auditors ERROR.\n' + String(e),
+            type: 'error'
           })
+          // MessageBox.alert(e, 'ERROR.\n', {
+          //   confirmButtonText: 'OK'
+          // })
         })
       }
     },
@@ -408,6 +425,7 @@ export default {
       if (!this.scatter) {
         MessageBox.alert('Get Scatter first', '', {
           confirmButtonText: 'Get it',
+          distinguishCancelAndClose: true,
           cancelButtonText: 'Later',
           callback: action => {
             if (action === 'confirm') {
@@ -416,9 +434,14 @@ export default {
           }
         })
       } else if (!this.scatter.identity) {
-        MessageBox.alert('Pair Scatter first', '', {
-          confirmButtonText: 'OK'
+        Message({
+          showClose: true,
+          type: 'warning',
+          message: `Pair Scatter first`
         })
+        // MessageBox.alert('Pair Scatter first', '', {
+        //   confirmButtonText: 'OK'
+        // })
         this.getIdentity()
       } else {
         this.actionLoading = true
@@ -431,7 +454,7 @@ export default {
           actions: [
             {
               account: 'auditor.bos',
-              name: 'votecust',
+              name: 'voteauditor',
               authorization: [{
                 actor: account.name,
                 permission: account.authority
@@ -453,9 +476,14 @@ export default {
             this.removeAllCand()
           }).catch(e => {
             this.actionLoading = false
-            MessageBox.alert(e, 'ERROR', {
-              confirmButtonText: 'OK'
+            Message({
+              showClose: true,
+              type: 'error',
+              message: 'Vote ERROR.\n' + String(e)
             })
+            // MessageBox.alert(e, 'ERROR.\n.\n', {
+            //   confirmButtonText: 'OK'
+            // })
           })
       }
     },
@@ -474,9 +502,14 @@ export default {
         })
         .catch(e => {
           this.actionLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            type: 'error',
+            message: 'Stake ERROR.\n' + String(e)
           })
+          // MessageBox.alert(e, 'ERROR.\n.\n', {
+          //   confirmButtonText: 'OK'
+          // })
         })
     },
     unstake () {
@@ -503,14 +536,19 @@ export default {
           Message({
             showClose: true,
             type: 'success',
-            message: `Unstake successfully, stake will be released back ${this.config.lockup_release_time_delay}s later`
+            message: `Unstake successfully`
           })
         })
         .catch(e => {
           this.actionLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            type: 'error',
+            message: 'Unstake ERROR.\n' + String(e)
           })
+          // MessageBox.alert(e, 'ERROR.\n.\n', {
+          //   confirmButtonText: 'OK'
+          // })
         })
     },
     active () {
@@ -541,9 +579,14 @@ export default {
         })
         .catch(e => {
           this.actionLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            type: 'error',
+            message: 'Be active ERROR.\n' + String(e)
           })
+          // MessageBox.alert(e, 'ERROR.\n', {
+          //   confirmButtonText: 'OK'
+          // })
         })
     },
     inactive () {
@@ -574,8 +617,10 @@ export default {
         })
         .catch(e => {
           this.actionLoading = false
-          MessageBox.alert(e, 'ERROR', {
-            confirmButtonText: 'OK'
+          Message({
+            showClose: true,
+            type: 'error',
+            message: 'Be inactive ERROR.\n' + String(e)
           })
         })
     },
@@ -614,9 +659,14 @@ export default {
             })
             .catch(e => {
               this.actionLoading = false
-              MessageBox.alert(e, 'ERROR', {
-                confirmButtonText: 'OK'
+              Message({
+                showClose: true,
+                type: 'error',
+                message: 'Update BIO ERROR.\n' + String(e)
               })
+              // MessageBox.alert(e, 'ERROR.\n', {
+              //   confirmButtonText: 'OK'
+              // })
             })
         }
       })
