@@ -58,7 +58,7 @@ ACTION escrow::init( const name           sender,
     // Enforce `sender` as BOS Executive & `approver` as EOSIO
     // Asserts should be removed once escrow.bos is ready for public use
     check(sender == name("bet.bos"), "sender must be bet.bos");
-    check(approver == name("eosio"), "approver must be eosio");
+    check(approver == name("eosio") || sender == name("bet.bos"), "approver must be eosio or bet.bos");
 
     // Notify the following accounts
     require_recipient( sender );
