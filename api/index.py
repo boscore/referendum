@@ -41,6 +41,11 @@ def test_net_is_working(urls):
 
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
+
+@app.route('/')
+def hi():
+    return '🐛'
 
 @app.route('/getBPs')
 def bpinfos():
