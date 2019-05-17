@@ -7,34 +7,34 @@ We use the eosc cmd tool blow. [https://eosc.app/](https://eosc.app/)
 
 alias bosc= "eosc -u https://xxxxxxxxxxxx"
 
-## Part 1. Proposer And User 
+## Part 1. Proposal Submission and Referendum
 
 ![img](https://uploader.shimo.im/f/K0qO5RiIfVoFNxbU.png!thumbnail)       
 
 Detail: https://github.com/boscore/referendum/tree/master/contracts/eosio.forum
 
 
---popose (for proposer)
+Proposer proposes proposal
 ```
 $ bosc tx create eosio.forum propose '{"proposer": "proposer1", "proposal_name": "example", "title": "The title, for list views", "proposal_json": "", "expires_at": "2019-01-30T17:03:20"}' -p proposer1@active
 ```
 
---vote (for user)
+Voter votes proposal
 ```
 bosc tx create eosio.forum vote '{"voter": "voter1", "proposal_name": "example", "vote": 1, "vote_json": ""}' -p voter1@active
 ```
 
-## Part 2. Auditor And User 
+## Part 2. Auditor Nomination and Elections
 
 Detail: https://github.com/boscore/referendum/tree/master/contracts/auditor.bos
 
 
---stake asset (for auditor candidate)
+Candidate stakes token
 ```
 bosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
 ```
 
---nominate to a candidate (for auditor candidate)
+Candidate nominates
 ```
 bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>@active
 ```
@@ -42,7 +42,7 @@ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>
 ### Vote for Auditor Candidate
 
 
---vote (for user)
+Voter votes for Auditor Candidate
 ```
 bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
 ```
@@ -60,49 +60,44 @@ Detail: https://github.com/boscore/referendum/tree/master/contracts/escrow.bos
 ### Proposal Approved
 
 
---init (for BET)
+BET Initialize escrow
 ```
 $ bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
 ```
 
---Fund/Initialize Escrow (for BET)
+BET transfer Fund
 ```
 bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bos
 ```
 
 
 
--- Approve MSIG (for BET)
+BET approve escrow (MSIG)
 ```
 bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"bet.bos"}' -p bet.bos --skip-sign --expiration 36000 --write-transaction approve.json
 ```
 
 
-
-
--- Propose MSIG (for BET)
+Add Top 30 Block Producers to approval list 
 ```
 bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
 ```
 
 
-
--- BP approve (for BET)
-$ bosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"bet.bos"}' -p <BET ACCOUNT>
-
-
-
-
--- Exec MSIG (for BET)
+BP approve the escrow
 ```
-bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER>
+bosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}' -p <BP ACCOUNT>
+```
+
+Execute MSIG (by anyone)
+```
+bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER> -p <EXECUTER>
 ```
 
 
-
---Claim Escrow 100% (for proposer)
+Claim Escrow 100% (by anyone)
 ```
-bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p
+bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <CLAIMER>
 ```
 
 ### Proposal Dispproved by BET and Approved by BPs
