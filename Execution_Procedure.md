@@ -5,7 +5,7 @@
 
 We use the eosc cmd tool blow. [https://eosc.app/](https://eosc.app/)
 
-alias bosc= "eosc -u https://xxxxxxxxxxxx"
+alias bosc= "eosc -u https://api.boscore.io"
 
 ## Part 1. Proposal Submission and Referendum
 
