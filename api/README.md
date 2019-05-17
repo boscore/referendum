@@ -98,5 +98,5 @@ supervisord start boswps
 
 Or:
 
-Login  http:// localhost:9001, operation it with UI.
+Login  http://localhost:9001, operation it with UI.
 
