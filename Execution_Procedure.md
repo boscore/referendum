@@ -43,7 +43,7 @@ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDA
 
 
 
-## Part 3. BET and BPs ([escrow.bos](https://github.com/boscore/referendum/tree/master/contracts/escrow.bos))
+## Part 3. BET/BPs Review and Approve ([escrow.bos](https://github.com/boscore/referendum/tree/master/contracts/escrow.bos))
 
 ![img](https://uploader.shimo.im/f/0YbGxhOpqG4U5ObT.png)       
 
