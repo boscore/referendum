@@ -96,6 +96,8 @@ def jsoninfo():
 		_reviewed_by_BET_date =  None
 		_approved_by_BPs =  0
 		_approved_by_BPs_date =  None
+		_finish =  0
+		_finish_date =  None
 		# check if the proposal exists
 		try:
 			propos = Proposal.select().where(Proposal.name == proposal).count()
@@ -121,10 +123,6 @@ def jsoninfo():
 						, meet_conditions_days = int(meet) + 1
 						, approved_by_vote = _approved_by_vote
 						, approved_by_vote_date = _approved_by_vote_date
-						# , approved_by_BET = _approved_by_BET
-						# , reviewed_by_BET_date = _reviewed_by_BET_date
-						# , approved_by_BPs = _approved_by_BPs
-						# , approved_by_BPs_date = _approved_by_BPs_date
 						).where(Proposal.name == proposal).execute())
 				else:
 					nrow = (Proposal.update(
@@ -137,10 +135,12 @@ def jsoninfo():
 						, meet_conditions_days = 0
 						, approved_by_vote = 0
 						, approved_by_vote_date = None
-						# , approved_by_BET = _approved_by_BET
-						# , reviewed_by_BET_date = _reviewed_by_BET_date
-						# , approved_by_BPs = _approved_by_BPs
-						# , approved_by_BPs_date = _approved_by_BPs_date
+						, approved_by_BET = 0
+						, reviewed_by_BET_date = None
+						, approved_by_BPs = 0
+						, approved_by_BPs_date = None
+						, finish = 0
+						, finish_date = None
 						).where(Proposal.name == proposal).execute())
 			else:
 				if proposal_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
@@ -161,7 +161,9 @@ def jsoninfo():
 				, approved_by_BET = _approved_by_BET
 				, reviewed_by_BET_date = _reviewed_by_BET_date
 				, approved_by_BPs = _approved_by_BPs
-				, approved_by_BPs_date = _approved_by_BPs_date)
+				, approved_by_BPs_date = _approved_by_BPs_date
+				, finish = _finish
+				, finish_date = _finish_date)
 				new_proposal.save()  
 		except Exception as err:
 			logger.error(err)
@@ -202,6 +204,8 @@ def proposals():
 				proposals[proposal]['reviewed_by_BET_date'] = str(propos.reviewed_by_BET_date)
 				proposals[proposal]['approved_by_BPs'] = propos.approved_by_BPs
 				proposals[proposal]['approved_by_BPs_date'] = str(propos.approved_by_BPs_date)
+				proposals[proposal]['finish'] = propos.finish
+				proposals[proposal]['finish_date'] = str(propos.finish_date)
 			else:
 				proposals[proposal]['meet_conditions_days'] = 0
 				proposals[proposal]['approved_by_vote'] = 0
@@ -210,6 +214,8 @@ def proposals():
 				proposals[proposal]['reviewed_by_BET_date'] = ""
 				proposals[proposal]['approved_by_BPs'] = 0
 				proposals[proposal]['approved_by_BPs_date'] = ""
+				proposals[proposal]['finish'] = ""
+				proposals[proposal]['finish_date'] = 0
 		except Exception as err:
 				logger.error(err)
 	resp = flask.Response(json.dumps(proposals), mimetype='application/json')
@@ -240,6 +246,8 @@ def proposal(proposal_name):
 			proposals[proposal_name]['reviewed_by_BET_date'] = str(propos.reviewed_by_BET_date)
 			proposals[proposal_name]['approved_by_BPs'] = propos.approved_by_BPs
 			proposals[proposal_name]['approved_by_BPs_date'] = str(propos.approved_by_BPs_date)
+			proposals[proposal_name]['finish'] = propos.finish
+			proposals[proposal_name]['finish_date'] = str(propos.finish_date)
 		else:
 			proposals[proposal_name]['meet_conditions_days'] = 0
 			proposals[proposal_name]['approved_by_vote'] = 0
@@ -248,8 +256,73 @@ def proposal(proposal_name):
 			proposals[proposal_name]['reviewed_by_BET_date'] = ""
 			proposals[proposal_name]['approved_by_BPs'] = 0
 			proposals[proposal_name]['approved_by_BPs_date'] = ""
+			proposals[proposal_name]['finish'] = ""
+			proposals[proposal_name]['finish_date'] = 0
 	except Exception as err:
 			logger.error(err)
 	resp = flask.Response(json.dumps(proposals[proposal_name]), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
+
+
+@app.route('/review/<proposal_name>')
+def review(proposal_name):
+	logger = reactive_log('review')
+	try:
+		propos = Proposal.select().where(Proposal.name == proposal_name).count()
+		logger.info("result"+str(proposal_name))
+		#the proposal exists
+		if propos > 0:
+			propos2 = Proposal.get(Proposal.name == proposal_name)
+			print(propos2)
+			if propos2.approved_by_vote == 1:
+				nrow=(Proposal.update(approved_by_BET = 1
+					,reviewed_by_BET_date = datetime.now()
+					).where(Proposal.name == proposal_name).execute())
+				resp = flask.Response(json.dumps({"result":"ok"}), mimetype='application/json')
+				resp.headers['Access-Control-Allow-Origin'] = '*'
+				return resp
+			else:
+				resp = flask.Response(json.dumps({"result":"not approved by vote"}), mimetype='application/json')
+				resp.headers['Access-Control-Allow-Origin'] = '*'
+				return resp
+		else:
+			resp = flask.Response(json.dumps({"result":"not exited"}), mimetype='application/json')
+			resp.headers['Access-Control-Allow-Origin'] = '*'
+			return resp
+	except Exception as err:
+			logger.error(err)
+			resp = flask.Response(json.dumps({"result":"ERROR"}), mimetype='application/json')
+			resp.headers['Access-Control-Allow-Origin'] = '*'
+			return resp
+
+@app.route('/finish/<proposal_name>')
+def finish(proposal_name):
+	logger = reactive_log('review')
+	try:
+		propos = Proposal.select().where(Proposal.name == proposal_name).count()
+		logger.info("result"+str(propos))
+		# the proposal exists
+		if propos > 0:
+			propos2 = Proposal.get(Proposal.name == proposal_name)
+			if propos2.approved_by_vote == 1 and propos2.approved_by_BET == 1:
+				nrow = (Proposal.update(
+							finish = 1
+							, finish_date = datetime.now()
+							).where(Proposal.name == proposal_name).execute())
+				resp = flask.Response(json.dumps({"result":"ok"}), mimetype='application/json')
+				resp.headers['Access-Control-Allow-Origin'] = '*'
+				return resp
+			else:
+				resp = flask.Response(json.dumps({"result":"not approved by vote and not review"}), mimetype='application/json')
+				resp.headers['Access-Control-Allow-Origin'] = '*'
+				return resp
+		else:
+			resp = flask.Response(json.dumps({"result":"not exited"}), mimetype='application/json')
+			resp.headers['Access-Control-Allow-Origin'] = '*'
+			return resp
+	except Exception as err:
+			logger.error(err)
+			resp = flask.Response(json.dumps({"result":"ERROR"}), mimetype='application/json')
+			resp.headers['Access-Control-Allow-Origin'] = '*'
+			return resp
