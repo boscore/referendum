@@ -7,11 +7,9 @@ We use the eosc cmd tool blow. [https://eosc.app/](https://eosc.app/)
 
 alias bosc= "eosc -u https://api.boscore.io"
 
-## Part 1. Proposal Submission and Referendum (eosio.forum)
+## Part 1. Proposal Submission and Referendum ([eosio.forum](https://github.com/boscore/referendum/tree/master/contracts/eosio.forum))
 
 ![img](https://uploader.shimo.im/f/K0qO5RiIfVoFNxbU.png!thumbnail)       
-
-Detail: [eosio.forum](https://github.com/boscore/referendum/tree/master/contracts/eosio.forum)
 
 
 Proposer proposes proposal
@@ -24,9 +22,7 @@ Voter votes proposal
 bosc tx create eosio.forum vote '{"voter": "voter1", "proposal_name": "example", "vote": 1, "vote_json": ""}' -p voter1@active
 ```
 
-## Part 2. Auditor Nomination and Elections
-
-Detail: [auditor.bos](https://github.com/boscore/referendum/tree/master/contracts/auditor.bos)
+## Part 2. Auditor Nomination and Elections ([auditor.bos](https://github.com/boscore/referendum/tree/master/contracts/auditor.bos))
 
 
 Candidate stakes token
@@ -47,9 +43,7 @@ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDA
 
 
 
-## Part 3. BET and BPs 
-
-Detail: [escrow.bos](https://github.com/boscore/referendum/tree/master/contracts/escrow.bos)
+## Part 3. BET and BPs ([escrow.bos](https://github.com/boscore/referendum/tree/master/contracts/escrow.bos))
 
 ![img](https://uploader.shimo.im/f/0YbGxhOpqG4U5ObT.png)       
 
