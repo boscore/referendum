@@ -10,7 +10,7 @@ https://bos-pull.keosd.io/#/poll_detail?proposal=newtest
 
 ## Command Line Quick Start
 
-We use the eosc cmd tool blow. [https://bosc.app/](https://eosc.app/)
+We use the eosc cmd tool blow. [https://eosc.app/](https://eosc.app/)
 
 alias bosc= "eosc -u https://xxxxxxxxxxxx"
 
@@ -18,7 +18,7 @@ alias bosc= "eosc -u https://xxxxxxxxxxxx"
 
 ![img](https://uploader.shimo.im/f/K0qO5RiIfVoFNxbU.png!thumbnail)       
 
-Detail: https://github.com/EOS-Nation/eosio.forum/blob/master/README.md
+Detail: https://github.com/boscore/referendum/tree/master/contracts/eosio.forum
 
 
 --popose (for proposer)
@@ -33,7 +33,7 @@ bosc tx create eosio.forum vote '{"voter": "voter1", "proposal_name": "example",
 
 ## Part 2. Auditor And User 
 
-Detail: https://github.com/EOS-Nation/auditor.bos/blob/master/README.md
+Detail: https://github.com/boscore/referendum/tree/master/contracts/auditor.bos
 
 
 --stake asset (for auditor candidate)
@@ -58,7 +58,7 @@ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDA
 
 ## Part 3. BET and BPs 
 
-Detial:https://github.com/EOS-Nation/escrow.bos/blob/master/README.md
+Detial: https://github.com/boscore/referendum/tree/master/contracts/escrow.bos
 
 ![img](https://uploader.shimo.im/f/030svcQ4BmEB84nz.png)       
 
