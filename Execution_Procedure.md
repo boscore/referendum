@@ -75,12 +75,6 @@ bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"bet.bos
 ```
 
 
-Add Top 30 Block Producers to approval list 
-```
-bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
-```
-
-
 Execute MSIG (by anyone)
 ```
 bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER> -p <EXECUTER>
@@ -95,12 +89,16 @@ bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <CLAIMER>
 ### Review, Approved by BPs, and Claims
 
 
-
 BET Request Review the Proposal (MSIG)
 ```
 bosc multisig propose <PROPOSER> <PROPOSAL NAME> review.json --request <BET ACCOUNT>CC,<BET ACCOUNT>...(7 accounts)
 ```
 
+
+Add Top 30 Block Producers to approval list 
+```
+bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
+```
 
 BP Approve the escrow (MSIG)
 ```
