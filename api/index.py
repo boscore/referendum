@@ -101,6 +101,8 @@ def jsoninfo():
 		_reviewed_by_BET_date =  None
 		_approved_by_BPs =  0
 		_approved_by_BPs_date =  None
+		_review = 0
+		_review_date = None
 		_finish =  0
 		_finish_date =  None
 		# check if the proposal exists
@@ -144,6 +146,8 @@ def jsoninfo():
 						, reviewed_by_BET_date = None
 						, approved_by_BPs = 0
 						, approved_by_BPs_date = None
+						, review = 0
+						, review_date = None
 						, finish = 0
 						, finish_date = None
 						).where(Proposal.name == proposal).execute())
@@ -167,6 +171,8 @@ def jsoninfo():
 				, reviewed_by_BET_date = _reviewed_by_BET_date
 				, approved_by_BPs = _approved_by_BPs
 				, approved_by_BPs_date = _approved_by_BPs_date
+				, review = 0
+				, review_date = None
 				, finish = _finish
 				, finish_date = _finish_date)
 				new_proposal.save()  
@@ -209,6 +215,8 @@ def proposals():
 				proposals[proposal]['reviewed_by_BET_date'] = str(propos.reviewed_by_BET_date)
 				proposals[proposal]['approved_by_BPs'] = propos.approved_by_BPs
 				proposals[proposal]['approved_by_BPs_date'] = str(propos.approved_by_BPs_date)
+				proposals[proposal]['review'] = propos.review
+				proposals[proposal]['review_date'] = str(propos.review_date)
 				proposals[proposal]['finish'] = propos.finish
 				proposals[proposal]['finish_date'] = str(propos.finish_date)
 			else:
@@ -219,6 +227,8 @@ def proposals():
 				proposals[proposal]['reviewed_by_BET_date'] = ""
 				proposals[proposal]['approved_by_BPs'] = 0
 				proposals[proposal]['approved_by_BPs_date'] = ""
+				proposals[proposal]['review'] = 0
+				proposals[proposal]['review_date'] = ""
 				proposals[proposal]['finish'] = ""
 				proposals[proposal]['finish_date'] = 0
 		except Exception as err:
@@ -251,6 +261,8 @@ def proposal(proposal_name):
 			proposals[proposal_name]['reviewed_by_BET_date'] = str(propos.reviewed_by_BET_date)
 			proposals[proposal_name]['approved_by_BPs'] = propos.approved_by_BPs
 			proposals[proposal_name]['approved_by_BPs_date'] = str(propos.approved_by_BPs_date)
+			proposals[proposal_name]['review'] = propos.review
+			proposals[proposal_name]['review_date'] = str(propos.review_date)
 			proposals[proposal_name]['finish'] = propos.finish
 			proposals[proposal_name]['finish_date'] = str(propos.finish_date)
 		else:
@@ -261,6 +273,8 @@ def proposal(proposal_name):
 			proposals[proposal_name]['reviewed_by_BET_date'] = ""
 			proposals[proposal_name]['approved_by_BPs'] = 0
 			proposals[proposal_name]['approved_by_BPs_date'] = ""
+			proposals[proposal_name]['review'] = 0
+			proposals[proposal_name]['review_date'] = ""
 			proposals[proposal_name]['finish'] = ""
 			proposals[proposal_name]['finish_date'] = 0
 	except Exception as err:
@@ -281,8 +295,8 @@ def review(proposal_name):
 			propos2 = Proposal.get(Proposal.name == proposal_name)
 			print(propos2)
 			if propos2.approved_by_vote == 1:
-				nrow=(Proposal.update(approved_by_BET = 1
-					,reviewed_by_BET_date = datetime.now()
+				nrow=(Proposal.update(review = 1
+					,review_date = datetime.now()
 					).where(Proposal.name == proposal_name).execute())
 				resp = flask.Response(json.dumps({"result":"ok"}), mimetype='application/json')
 				resp.headers['Access-Control-Allow-Origin'] = '*'
