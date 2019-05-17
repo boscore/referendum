@@ -4,3 +4,4 @@ Flask
 peewee
 gunicorn
 supervisor
+psycopg2-binary
