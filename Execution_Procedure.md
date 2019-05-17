@@ -53,7 +53,7 @@ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDA
 
 Detail: https://github.com/boscore/referendum/tree/master/contracts/escrow.bos
 
-![img](https://uploader.shimo.im/f/030svcQ4BmEB84nz.png)       
+![img](https://uploader.shimo.im/f/0YbGxhOpqG4U5ObT.png)       
 
 
 
@@ -62,7 +62,7 @@ Detail: https://github.com/boscore/referendum/tree/master/contracts/escrow.bos
 
 BET Initialize escrow
 ```
-$ bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
+bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
 ```
 
 BET transfer Fund
