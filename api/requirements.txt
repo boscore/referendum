@@ -1,0 +1,6 @@
+lxml
+eospy
+Flask
+peewee
+gunicorn
+supervisor
