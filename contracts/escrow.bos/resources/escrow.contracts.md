@@ -54,6 +54,12 @@ Allows the {{ approver }} to close and refund an unexpired escrow
 
 Allows the {{ approver }} to lock an escrow preventing any actions by {{ sender }} or {{ receiver }}.
 
+<h1 class="contract">review</h1>
+
+## Description
+
+Allows the {{ sender }}, {{ approver }} or {{ receiver }} to perform an on-chain notification which is used to signal a review of the {{ escrow_name }}.
+
 <h1 class="contract">clean</h1>
 
 ## Description

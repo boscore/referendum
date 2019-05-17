@@ -1,5 +1,6 @@
 # BOS Ecosystem Program (Referendum & WPS)
-[Proposal Structure Example](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example.md)
+[Proposal Structure Example](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example.md)   
+[Referendum Deployment Procedure](https://github.com/boscore/referendum/blob/master/Execution_Procedure.md)
 
 # 1. Background
 
@@ -27,7 +28,7 @@ All BOS community participants can submit proposals while staking 100 BOS to sub
 * The deadline of task completion will start from the date the referendum is approved (relative to the referendum approved time)
 * The amount of the incentives, and receipt account (the account can be changed later)
 ### The conditions for the approved proposal:
-* The votes from token holders is not less than 10% of BP votes from token holders when the proposal was initiated.
+* The votes from token holders is not less than 40% of BP votes from token holders when the proposal was initiated.
 * The ratio of approved votes/disapproved is greater than 1.5.
 * The above conditions last for 20 days.
 ### BOS Auditor:
@@ -51,6 +52,6 @@ All BOS community participants can submit proposals while staking 100 BOS to sub
   * Is there a security bug?
 1. If the fund payment is frozen, the BOS independent auditor needs to publish the review within 7 days, make independent judgment in the contract, and issue a link to the relevant investigation report.
 2. Within two weeks after the auditor’s comments, BP needs to make a decision. If more than 2/3+1 active BPs agree to continue to pay the incentives, it will continue to pay 90% of the incentives; Otherwise the payment will be rejected.
-3. The 10% of the incentives for the proposal are equally divided between the auditors who agree with the majority of the BPs and the BPs who voted.
+3. The 40% of the incentives for the proposal are equally divided between the auditors who agree with the majority of the BPs and the BPs who voted.
 
 ![图片](https://github.com/boscore/referendum/blob/master/flow.png)

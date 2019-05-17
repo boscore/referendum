@@ -311,6 +311,27 @@ ACTION escrow::lock(const name escrow_name, const bool locked)
     });
 }
 
+ACTION escrow::review(const name escrow_name, const name user, const name reviewer, const string memo)
+{
+    // Validate user input
+    require_auth( user );
+    check( user != reviewer, "cannot review to self" );
+    check( is_account( reviewer ), "reviewer account does not exist" );
+
+    // Check if `escrow_name` already exists
+    auto esc_itr = escrows.find( escrow_name.value );
+    check( esc_itr != escrows.end(), "Could not find escrow with that name" );
+
+    // Only `sender`, `approver` or `reviewer` can request for review
+    check( esc_itr->sender == user || esc_itr->approver == user || esc_itr->receiver == user, "User is not allowed to request review for this escrow." );
+
+    // Notify the following accounts
+    require_recipient( esc_itr->sender );
+    require_recipient( esc_itr->approver );
+    require_recipient( esc_itr->receiver );
+    require_recipient( reviewer );
+}
+
 ACTION escrow::clean()
 {
     // Only `escrow.bos` can call `clean` action
