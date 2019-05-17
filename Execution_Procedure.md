@@ -1,12 +1,5 @@
-## Example
+# Referndum Execution Procedure
 
-Proposer：`pursonpurson`
-
-Auditor：`directflight`
-
-bet: betbetbet111 - betbetbet121
-
-https://bos-pull.keosd.io/#/poll_detail?proposal=newtest
 
 ## Command Line Quick Start
 
