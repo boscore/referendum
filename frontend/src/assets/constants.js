@@ -6,6 +6,7 @@ export const NETWORK = {
   port: 443,
   chainId: '33cc2426f1b258ef8c798c34c0360b31732ea27a2d7e35a65797850a86d1ba85'
 }
+export const NODE_ENDPOINT = 'https://bostest.api.blockgo.vip'
 // export const NETWORK = {
 //   blockchain: 'eos',
 //   protocol: 'https',

@@ -128,7 +128,7 @@
 
 <script>
 import Eos from 'eosjs'
-import { NETWORK } from '@/assets/constants.js'
+import { NETWORK, NODE_ENDPOINT } from '@/assets/constants.js'
 import Avatar from '@/components/Avatar.vue'
 import { Message, MessageBox } from 'element-ui'
 import CandidateCollapse from '@/components/CandidateCollapse.vue'
@@ -172,14 +172,10 @@ export default {
     window.onresize = () => {
       this.screenWidth = document.body.clientWidth
     }
-    const interval = setInterval(async () => {
-      if (this.eos) {
-        this.getAllInfo()
-        this.getConfig()
-        this.getPendingStake()
-        clearInterval(interval)
-      }
-    }, 1000)
+
+    this.getAllInfo()
+    this.getConfig()
+    this.getPendingStake()
   },
   computed: {
     asideWidth () {
@@ -242,11 +238,15 @@ export default {
         'table': 'config',
         'json': true
       }
-      if (this.eos) {
-        this.eos.getTableRows(tableOptions).then((res) => {
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', {
+        method: 'POST',
+        body: JSON.stringify(tableOptions)
+      }).then(res => res.json())
+        .then((res) => {
           this.config = res.rows[0]
+        }).catch(e => {
+          console.log(e)
         })
-      }
     },
     getPendingStake () {
       const tableOptions = {
@@ -255,112 +255,116 @@ export default {
         'table': 'pendingstake',
         'json': true
       }
-      if (this.eos) {
-        this.eos.getTableRows(tableOptions).then((res) => {
-          this.pendingStakeTable = res.rows
-        })
-      }
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', {
+        method: 'POST',
+        body: JSON.stringify(tableOptions)
+      }).then(res => res.json()).then((res) => {
+        this.pendingStakeTable = res.rows
+      }).catch(e => { console.log(e) })
     },
     getAllInfo () {
-      if (this.eos) {
-        const tableOptions = {
-          'scope': 'auditor.bos',
-          'code': 'auditor.bos',
-          'table': 'bios',
-          'json': true
-        }
-        this.eos.getTableRows(tableOptions).then(res => {
-          this.bioInfo = res.rows
-          this.getAuditors()
-          this.getCandidates()
-        }).catch(e => {
-          this.candidateLoading = false
-          // MessageBox.alert(e, 'ERROR.\n', {
-          //   confirmButtonText: 'OK'
-          // })
-        })
+      const tableOptions = {
+        'scope': 'auditor.bos',
+        'code': 'auditor.bos',
+        'table': 'bios',
+        'json': true
       }
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', {
+        method: 'POST',
+        body: JSON.stringify(tableOptions)
+      }).then(res => res.json()).then(res => {
+        this.bioInfo = res.rows
+        this.getAuditors()
+        this.getCandidates()
+      }).catch(e => {
+        this.candidateLoading = false
+        // MessageBox.alert(e, 'ERROR.\n', {
+        //   confirmButtonText: 'OK'
+        // })
+      })
     },
     getCandidates () {
-      if (this.eos) {
-        const tableOptions = {
-          'scope': 'auditor.bos',
-          'code': 'auditor.bos',
-          'table': 'candidates',
-          'json': true
-        }
-        this.eos.getTableRows(tableOptions).then(res => {
-          this.allCandList = []
-          this.candidatesList = []
-          this.candidateLoading = false
-          res.rows.forEach(candidate => {
-            candidate.isSelected = false
-            let inform = this.bioInfo.find(element => {
-              return element.candidate_name === candidate.candidate_name
-            })
-            if (inform) {
-              try {
-                inform.bio = JSON.parse(inform.bio)
-              } catch (e) {
-              }
-              candidate.inform = inform.bio
-              candidate.isSelected = false
-            }
-            this.allCandList.push(candidate)
-            if (candidate.is_active) {
-              this.candidatesList.push(candidate)
-              this.candidatesList.sort((a, b) => { return b.total_votes - a.total_votes })
-            }
-          })
-        }).catch(e => {
-          this.candidateLoading = false
-          Message({
-            showClose: true,
-            message: 'Get candidates ERROR.\n' + String(e),
-            type: 'error'
-          })
-          // MessageBox.alert(e, 'ERROR.\n', {
-          //   confirmButtonText: 'OK'
-          // })
-        })
+      const tableOptions = {
+        'scope': 'auditor.bos',
+        'code': 'auditor.bos',
+        'table': 'candidates',
+        'json': true
       }
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', {
+        method: 'POST',
+        body: JSON.stringify(tableOptions)
+      }).then(res => res.json()).then(res => {
+        this.allCandList = []
+        this.candidatesList = []
+        this.candidateLoading = false
+        res.rows.forEach(candidate => {
+          candidate.isSelected = false
+          let inform = this.bioInfo.find(element => {
+            return element.candidate_name === candidate.candidate_name
+          })
+          if (inform) {
+            try {
+              inform.bio = JSON.parse(inform.bio)
+            } catch (e) {
+            }
+            candidate.inform = inform.bio
+            candidate.isSelected = false
+          }
+          this.allCandList.push(candidate)
+          if (candidate.is_active) {
+            this.candidatesList.push(candidate)
+            this.candidatesList.sort((a, b) => { return b.total_votes - a.total_votes })
+          }
+        })
+      }).catch(e => {
+        this.candidateLoading = false
+        Message({
+          showClose: true,
+          message: 'Get candidates ERROR.\n' + String(e),
+          type: 'error'
+        })
+        // MessageBox.alert(e, 'ERROR.\n', {
+        //   confirmButtonText: 'OK'
+        // })
+      })
     },
     getAuditors () {
-      if (this.eos) {
-        const tableOptions = {
-          'scope': 'auditor.bos',
-          'code': 'auditor.bos',
-          'table': 'auditors',
-          'json': true
-        }
-        this.eos.getTableRows(tableOptions).then(res => {
-          this.auditorLoading = false
-          this.auditorsList = res.rows
-          this.auditorsList.map(auditor => {
-            let inform = this.bioInfo.find(element => {
-              return element.candidate_name === auditor.auditor_name
-            })
-            if (inform) {
-              try {
-                inform.bio = JSON.parse(inform.bio)
-              } catch (e) {
-              }
-              auditor.inform = inform.bio
-              return auditor
-            }
-          })
-        }).catch(e => {
-          this.auditorLoading = false
-          Message({
-            showClose: true,
-            message: 'Get auditors ERROR.\n' + String(e),
-            type: 'error'
-          })
-          // MessageBox.alert(e, 'ERROR.\n', {
-          //   confirmButtonText: 'OK'
-          // })
-        })
+      const tableOptions = {
+        'scope': 'auditor.bos',
+        'code': 'auditor.bos',
+        'table': 'auditors',
+        'json': true
       }
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', {
+        method: 'POST',
+        body: JSON.stringify(tableOptions)
+      }).then(res => res.json()).then(res => {
+        this.auditorLoading = false
+        this.auditorsList = res.rows
+        this.auditorsList.map(auditor => {
+          let inform = this.bioInfo.find(element => {
+            return element.candidate_name === auditor.auditor_name
+          })
+          if (inform) {
+            try {
+              inform.bio = JSON.parse(inform.bio)
+            } catch (e) {
+            }
+            auditor.inform = inform.bio
+            return auditor
+          }
+        })
+      }).catch(e => {
+        this.auditorLoading = false
+        Message({
+          showClose: true,
+          message: 'Get auditors ERROR.\n' + String(e),
+          type: 'error'
+        })
+        // MessageBox.alert(e, 'ERROR.\n', {
+        //   confirmButtonText: 'OK'
+        // })
+      })
     },
     getIdentity () { // scatter认证
       const requiredFields = {

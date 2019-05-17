@@ -78,7 +78,7 @@
 
 <script>
 import Eos from 'eosjs'
-import { NETWORK } from '@/assets/constants.js'
+import { NETWORK, NODE_ENDPOINT } from '@/assets/constants.js'
 import { Message } from 'element-ui'
 import { setInterval, clearInterval } from 'timers'
 export default {
@@ -165,21 +165,22 @@ export default {
       }
     },
     getConfig () {
-      const interval = setInterval(() => {
-        const tableOptions = {
-          'scope': 'auditor.bos',
-          'code': 'auditor.bos',
-          'table': 'config',
-          'json': true
-        }
-        if (this.eos) {
-          this.eos.getTableRows(tableOptions).then((res) => {
-            this.config = res.rows[0]
-            this.form.stakeAmount = this.config.lockupasset
-          })
-          clearInterval(interval)
-        }
-      }, 1000)
+      const tableOptions = {
+        'scope': 'auditor.bos',
+        'code': 'auditor.bos',
+        'table': 'config',
+        'json': true
+      }
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', {
+        method: 'POST',
+        body: JSON.stringify(tableOptions)
+      }).then(res => res.json())
+        .then((res) => {
+          this.config = res.rows[0]
+          this.form.stakeAmount = this.config.lockupasset
+        }).catch(e => {
+          console.log(e)
+        })
     },
     async register () {
       this.$refs['form'].validate(async valid => {

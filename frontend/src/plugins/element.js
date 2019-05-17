@@ -23,6 +23,8 @@ import {
   RadioGroup,
   Select,
   Submenu,
+  Steps,
+  Step,
   Tabs,
   TabPane,
   Table,
@@ -51,6 +53,9 @@ Vue.use(Footer)
 Vue.use(Header)
 Vue.use(Aside)
 Vue.use(Main)
+
+Vue.use(Steps)
+Vue.use(Step)
 
 Vue.use(Tabs)
 Vue.use(TabPane)
