@@ -25,10 +25,9 @@ class Proposal(BaseModel):
     reviewed_by_BET_date = DateTimeField(null = True)
     approved_by_BPs = BooleanField()
     approved_by_BPs_date = DateTimeField(null = True)
+    finish = BooleanField()
+    finish_date = DateTimeField(null = True)
     timestamp = DateTimeField(default=datetime.now)
-
-
-
 
 db.connect()
 db.create_tables([Proposal])
