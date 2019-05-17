@@ -34,12 +34,10 @@ Candidate stakes token
 bosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
 ```
 
-Candidate nominates
+Candidate nominates himself/herself
 ```
 bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>@active
 ```
-
-### Vote for Auditor Candidate
 
 
 Voter votes for Auditor Candidate
@@ -65,14 +63,13 @@ BET Initialize escrow
 bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
 ```
 
-BET transfer Fund
+BET Transfer Fund
 ```
 bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bos
 ```
 
 
-
-BET approve escrow (MSIG)
+BET Approve escrow (MSIG)
 ```
 bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"bet.bos"}' -p bet.bos --skip-sign --expiration 36000 --write-transaction approve.json
 ```
@@ -83,11 +80,6 @@ Add Top 30 Block Producers to approval list
 bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
 ```
 
-
-BP approve the escrow
-```
-bosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}' -p <BP ACCOUNT>
-```
 
 Execute MSIG (by anyone)
 ```
@@ -100,62 +92,34 @@ Claim Escrow 100% (by anyone)
 bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <CLAIMER>
 ```
 
-### Proposal Dispproved by BET and Approved by BPs
-
---init (for BET)
-```
-bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
-```
+### Review, Approved by BPs, and Claims
 
 
 
---Fund/Initialize Escrow (for BET)
+BET Request Review the Proposal (MSIG)
 ```
-bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bos
-```
-
--- Approve MSIG (for BPs)
-```
-bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"eosio"}' -p eosio --skip-sign --expiration 36000 --write-transaction approve.json
+bosc multisig propose <PROPOSER> <PROPOSAL NAME> review.json --request <BET ACCOUNT>CC,<BET ACCOUNT>...(7 accounts)
 ```
 
--- Propose MSIG (for BPs)
-```
-bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
-```
 
--- BP approve (for BPs)
+BP Approve the escrow (MSIG)
 ```
 bosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}' -p <BP ACCOUNT>
 ```
 
--- Exec MSIG (for BPs)
+Execute MSIG (by anyone)
 ```
-bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER>
+bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER> -p <EXECUTER>
 ```
 
---90% Claim Escrow  (for proposer)
+
+BET Claim 90% of Fund (for proposer), **only if the approver account is eosio**
 ```
 bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <ACCOUNT>
 ```
 
---10% Transfer to each BPs and auditors manually  (for BET)
+BET manually Transfer 10% of fund from the escrow to each BPs and auditors (for BET), **only if the approver account is eosio**
 
 ```
 bosc tx create eosio.token transfer '{"from": "escrow.bos", "to":<ACCOUNT>,"quantity":"0.9000 BOS","memo":"Thanks for your opinions"}' -p bet.bos --skip-sign --expiration 36000 --write-transaction approve.json
-```
-
--- Propose MSIG (for BET)
-```
-bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request <BET ACCOUNT>CC,<BET ACCOUNT>...(7 accounts)
-```
-
--- MSIG approve (for BET)
-```
-bosc multisig approve <PROPOSER> <PROPOSAL NAME> <APPROVER> 
-```
-
--- Exec MSIG (for BET)
-```
-bosc multisig exec <PROPOSER> <PROSOAL NAME> 
 ```
