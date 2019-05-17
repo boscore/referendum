@@ -12,7 +12,7 @@ An escrow contract designed for paying worker proposals.  The intention is that 
 > This will initialize the escrow between the `sender` & `receiver`.
 
 ```bash
-$ eosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
+$ bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","approver":"eosio","escrow_name":"<NAME>","expires_at":"2019-09-15T00:00:00","memo":"BOS escrow"}' -p bet.bos
 ```
 
 ### Fund/Initialize Escrow
@@ -20,7 +20,7 @@ $ eosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","a
 > BOS funds must be `transfer` into the `escrow.bos` account before starting another escrow
 
 ```bash
-$ eosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bos
+$ bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bos
 ```
 
 ### Approve Escrow
@@ -30,7 +30,16 @@ $ eosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bo
 > if approver is BPs, only keep 90% fund for proposer to claim, and BET.BOS will manually execute transfer ACTION in escrow.bos to send fund to each BPs and each auditors
 
 ```bash
-$ eosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}' -p eosio
+$ bosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}' -p eosio
+```
+
+
+### Review Escrow
+
+Allows the {{ sender }}, {{ approver }} or {{ receiver }} to perform an on-chain notification which is used to signal a review of the {{ escrow_name }}.
+
+```bash
+$ bosc tx create escrow.bos review '{"escrow_name":"<NAME>","user":"<USER>","reviewer":"<REVIEWER>","memo": "review escrow"}' -p <USER>
 ```
 
 ### Claim Escrow
@@ -39,7 +48,27 @@ $ eosc tx create escrow.bos approve '{"escrow_name":"<NAME>","approver":"eosio"}
 > Anyone can execute the `claim` action.
 
 ```bash
-$ eosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <ACCOUNT>
+$ bosc tx create escrow.bos claim '{"escrow_name":"<NAME>"}' -p <ACCOUNT>
+```
+
+### Proposing `approve` MSIG
+
+1. Create an `approve.json` transaction file which is signed by `eosio@active`
+
+```bash
+$ bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"eosio"}' -p eosio --skip-sign --expiration 36000 --write-transaction approve.json
+```
+
+2. Propose MSIG
+
+```bash
+$ bosc multisig propose <PROPOSER> <PROPOSAL NAME> approve.json --request-producers
+```
+
+3. Exec MSIG
+
+```bash
+$ bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER>
 ```
 
 ## Caveats
@@ -111,6 +140,12 @@ Allows the {{ approver }} to close and refund an unexpired escrow
 ## Description
 
 Allows the {{ approver }} to lock an escrow preventing any actions by {{ sender }} or {{ receiver }}.
+
+<h1 class="contract">review</h1>
+
+## Description
+
+Allows the {{ sender }}, {{ approver }} or {{ receiver }} to perform an on-chain notification which is used to signal a review of the {{ escrow_name }}.
 
 <h1 class="contract">clean</h1>
 

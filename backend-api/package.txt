@@ -1,0 +1,9 @@
+lxml
+eospy
+Flask
+peewee
+gunicorn
+supervisor
+
+UnboundLocalError: local variable 'proposals' referenced before assignment
+先初始化数据库然后 /getJson

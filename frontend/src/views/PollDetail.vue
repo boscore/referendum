@@ -68,17 +68,20 @@
             </div>
           </div>
           <div
-            style="text-align: center"
+            style="text-align: center; overflow: auto"
             v-if="votes.length"
             v-loading="chartLoading"
             class="card"
             ref="stats">
             <h3>Votes by vote size</h3>
+          <div style="min-width:600px;height:500px">
+
             <IEcharts
               ref="chart"
-              style="min-height:500px;margin:auto"
+
               :option="chartOption"
             ></IEcharts>
+            </div>
           </div>
 
           <div class="card" ref="comments">
@@ -207,6 +210,7 @@ import IEcharts from 'vue-echarts-v3/src/lite.js'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/title'
+import 'echarts/lib/component/grid'
 import PropCard from '@/components/PropCard.vue'
 import Comment from '@/components/Comment.vue'
 export default {
@@ -285,6 +289,12 @@ export default {
         })
       }
       return {
+        // grid: {
+        //   left: 200,
+        //   right: 100,
+        //   top: 1000,
+        //   containLabel: true
+        // },
         tooltip: {
           trigger: 'item',
           formatter: '{b} : {c} BOS ({d}%)'

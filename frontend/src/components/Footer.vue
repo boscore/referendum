@@ -40,9 +40,10 @@ export default {
 <style lang="stylus" scoped>
 .footer
   width 100%
-  height 160px
+  min-height 160px
   background-image linear-gradient(270deg, #5B87FF 0%, #4CB7FF 100%)
   display flex
+  flex-wrap wrap
   justify-content space-between
   align-items center
   padding 34px
@@ -52,7 +53,6 @@ export default {
     height 34px
     width 158px
 .footer-right
-  margin-right 50px
   font-family: PingFangSC-Semibold;
   font-size: 14px;
   color: #FFFFFF;
@@ -68,4 +68,7 @@ export default {
     width 100px
     display flex
     justify-content space-between
+@media only screen and (max-width 450px)
+  .footer
+    justify-content center
 </style>

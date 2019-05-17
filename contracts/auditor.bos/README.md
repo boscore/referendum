@@ -1,6 +1,6 @@
 # `auditor.bos` - BOS Auditor Elections Contract
 
-This contract will be in charge of auditor registration and voting for BOS auditors.  It will also contain a function which could be called periodically to update the auditor set, and allocate payments.
+This contract will be in charge of auditor registration and voting for BOS auditors.
 
 When an auditor registers, they need to provide their bio by calling the `updatebio` action.
 
@@ -11,7 +11,6 @@ If an elected auditor resigns via the `withdrawcand` during a period a new candi
 ### Nominate Candidante
 
 > Must `eosio::transfer` BOS tokens at a minimum of `lockupasset` before submitting `nominatecand` action
-
 > Once candidate is nominated, BOS users can now vote for that candidate to become a BOS auditor.
 
 ```
