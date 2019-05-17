@@ -84,6 +84,8 @@ def jsoninfo():
 	for proposal in proposals:
 		proposal_item = proposals[proposal]
 		vote_key = proposal_item['stats']['votes']
+		stake_key = proposal_item['stats']['staked']
+		staked_total = float(int(proposal_item['stats']['staked']['total'])/10000) if 'total' in stake_key else 0
 		vote_total = proposal_item['stats']['votes']['total'] if  'total' in vote_key else 0
 		vote_yes = proposal_item['stats']['votes']['1'] if  '1' in vote_key else 0
 		vote_no = proposal_item['stats']['votes']['0'] if '0' in vote_key else 0
@@ -101,7 +103,7 @@ def jsoninfo():
 			# the proposal exists
 			if propos > 0:
 				# check if the proposal is passed
-				if proposal_base_condition_ckeck(BP_TOTAL_VOTES, vote_total, vote_yes, vote_no):
+				if proposal_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
 					propos = Proposal.get(Proposal.name == proposal)
 					meet = propos.meet_conditions_days
 					# abv = propos.approved_by_vote 
@@ -112,6 +114,8 @@ def jsoninfo():
 					nrow = (Proposal.update(
 						json_info = proposal_item
 						, vote_total = vote_total
+						, staked_total = staked_total
+						, vote_bp_total = BP_TOTAL_VOTES
 						, vote_yes = vote_yes
 						, vote_no = vote_no
 						, meet_conditions_days = int(meet) + 1
@@ -126,6 +130,8 @@ def jsoninfo():
 					nrow = (Proposal.update(
 						json_info = proposal_item
 						, vote_total = vote_total
+						, staked_total = staked_total
+						, vote_bp_total = BP_TOTAL_VOTES
 						, vote_yes = vote_yes
 						, vote_no = vote_no
 						, meet_conditions_days = 0
@@ -137,7 +143,7 @@ def jsoninfo():
 						# , approved_by_BPs_date = _approved_by_BPs_date
 						).where(Proposal.name == proposal).execute())
 			else:
-				if proposal_base_condition_ckeck(BP_TOTAL_VOTES, vote_total, vote_yes, vote_no):
+				if proposal_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
 					_approved_by_vote = 1
 					_approved_by_vote_date = datetime.now()
 				else:
@@ -145,6 +151,8 @@ def jsoninfo():
 				new_proposal = Proposal(name = proposal
 				, json_info = proposal_item
 				, vote_total = vote_total
+				, staked_total = staked_total
+				, vote_bp_total = BP_TOTAL_VOTES
 				, vote_yes = vote_yes
 				, vote_no = vote_no
 				, meet_conditions_days = _meet_conditions_days
@@ -159,6 +167,7 @@ def jsoninfo():
 			logger.error(err)
 		logger.info("proposal name: " + proposal)
 		logger.info("vote total: " + str(vote_total))
+		logger.info("staked total: " + str(staked_total))
 		logger.info("vote yes: " + str(vote_yes))
 		logger.info("vote no: " + str(vote_no))
 		logger.info("___________________")
