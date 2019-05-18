@@ -172,7 +172,7 @@ bosc multisig exec <PROPOSER> <PROSOAL NAME> <EXECUTER> -p <EXECUTER>
 bosc tx create escrow.bos review '{"escrow_name":<ESCROW NAME>,"user":<USER ACCOUNT>,"reviewer":"eosio","memo": "review escrow"}' -p <USER ACCOUNT>
 ```
 
-####BP Reviewed and pass the Proposal 
+BP Reviewed and pass the Proposal 
 Create a proposal tx json
 ```
 bosc tx create escrow.bos approve '{"escrow_name": "<NAME>", "approver":"eosio"}' -p eosio --skip-sign --expiration 36000 --write-transaction review.json
