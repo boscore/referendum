@@ -13,6 +13,8 @@ export const API_URL = {
   API_GET_PRODUCERS: BACKEND_URL + '/getBPs',
   API_GET_ALL_PROPOSALS: BACKEND_URL + '/getAllProposals',
   API_GET_PROPOSAL: BACKEND_URL + '/getProposal',
+  API_APPLY_REVIEW: BACKEND_URL + '/review',
+  API_APPLY_FINISH: BACKEND_URL + '/finish',
   API_POLL_TALLY: 'https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json',
   API_GET_ALL_VOTES: 'https://s3.amazonaws.com/bostest.referendum/eosio.forum/vote/latest.json',
   API_GET_ALL_ACCOUNTS: 'https://s3.amazonaws.com/bostest.referendum/referendum/accounts/latest.json',

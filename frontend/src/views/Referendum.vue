@@ -63,10 +63,17 @@
                     </el-table-column>
                     <el-table-column>
                       <template slot-scope="scope">
-                        <el-button v-if="scope.row.approved_by_BET" type="primary" @click="claimRewards()">Claim Rewards</el-button>
+                        <el-button :disabled="!scope.row.shouldReview" type="primary" @click="applyReview(scope.row.proposal_name)">Apply for Review</el-button>
                         <!-- <label v-else>Expired</label> -->
                       </template>
                     </el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                        <el-button :disabled="!scope.row.approved_by_BET" type="primary" @click="claimRewards()">Claim Rewards</el-button>
+                        <!-- <label v-else>Expired</label> -->
+                      </template>
+                    </el-table-column>
+
                   </el-table>
                 </div>
               </div>
@@ -188,7 +195,7 @@
 // @ is an alias to /src
 import { Message } from 'element-ui'
 import Eos from 'eosjs'
-import { NETWORK } from '@/assets/constants.js'
+import { NETWORK, API_URL } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
 export default {
   name: 'Referendum',
@@ -376,6 +383,7 @@ export default {
           if (this.proposals[key].proposal.proposer === this.scatter.identity.accounts[0].name) {
             let proposal = { ...this.proposals[key].proposal }
             proposal.approved_by_BET = this.proposals[key].approved_by_BET
+            proposal.shouldReview = this.proposals[key].approved_by_vote && !this.proposals[key].review
             myProposals.push(proposal)
           }
         })
@@ -384,6 +392,24 @@ export default {
     }
   },
   methods: {
+    applyReview (proposal) {
+      fetch(API_URL.API_APPLY_REVIEW)
+        .then(res => res.json())
+        .then(res => {
+          Message({
+            showClose: true,
+            type: 'success',
+            message: 'Apply for review success'
+          })
+        })
+        .catch(e => {
+          Message({
+            showClose: true,
+            type: 'error',
+            message: String(e)
+          })
+        })
+    },
     claimRewards () {
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
       const transactionOptions = {
