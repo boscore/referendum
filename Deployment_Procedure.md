@@ -1,20 +1,20 @@
 ## 1. Account Creation and Authority
 
-### eosio.forum
+### `eosio.forum`
 
 ```
 owner: eosio
 active: eosio
 ```
 
-### bet.bos
+### `bet.bos`
 
 ```
 owner:  eosio@active
 active: (7/25) bet
 ```
 
-### escrow.bos
+### `escrow.bos`
 
 ```
 owner: eosio@active
@@ -24,7 +24,7 @@ active:
         eosio@active
 ```
 
-### auditor.bos
+### `auditor.bos`
 
 ```
 owner: eosio@active
@@ -142,7 +142,7 @@ cleos -u https://bos.eoshenzhen.io:9443 set contract escrow.bos escrow.bos  -p  
 cleos -u https://bos.eoshenzhen.io:9443 set account permission bet.bos active '{"threshold":7,"keys":[],"waits":[],"accounts":[{"permission": {"actor":"kesaritooooo","permission":"active"},"weight": 1}, {"permission": {"actor":"chengsong111","permission":"active"},"weight": 1}, {"permission": {"actor":"tyeeeeeeeeee","permission":"active"},"weight": 1}, {"permission": {"actor":"iwangyunpeng","permission":"active"},"weight": 1}, {"permission": {"actor":"igor","permission":"active"},"weight": 1}, {"permission": {"actor":"mybabylilian","permission":"active"},"weight": 1}, {"permission": {"actor":"bosmasterdin","permission":"active"},"weight": 1}, {"permission": {"actor":"vitojingchen","permission":"active"},"weight": 1}, {"permission": {"actor":"sheldonhuang","permission":"active"},"weight": 1}, {"permission": {"actor":"catherine521","permission":"active"},"weight": 1}, {"permission": {"actor":"larosenonaka","permission":"active"},"weight": 1}, {"permission": {"actor":"winlinwinlin","permission":"active"},"weight": 1}, {"permission": {"actor":"mike","permission":"active"},"weight": 1}, {"permission": {"actor":"rohananswers","permission":"active"},"weight": 1}, {"permission": {"actor":"breaktherule","permission":"active"},"weight": 1}, {"permission": {"actor":"angelcats123","permission":"active"},"weight": 1}, {"permission": {"actor":"leonsunlucky","permission":"active"},"weight": 1}, {"permission": {"actor":"angeliazhang","permission":"active"},"weight": 1}, {"permission": {"actor":"ckqdbwzpmtqz","permission":"active"},"weight": 1}, {"permission": {"actor":"blokspartner","permission":"active"},"weight": 1}, {"permission": {"actor":"eric","permission":"active"},"weight": 1}, {"permission": {"actor":"pursonpurson","permission":"active"},"weight": 1}, {"permission": {"actor":"victorleeosx","permission":"active"},"weight": 1}, {"permission": {"actor":"deadlock2bos","permission":"active"},"weight": 1}, {"permission": {"actor":"deniscarrier","permission":"active"},"weight": 1]}' -p bet.bos@owner
 ```
 
-### 4.2 分配owner权限 3/7
+### 4.2 set owner key to `eosio`
 
 ```
 cleos -u https://bos.eoshenzhen.io:9443 set account permission bet.bos owner '{"threshold":1,"keys":"","accounts":[{"permission": {"actor":"eosio","permission":"active"},"weight":1}]}' -p bet.bos@owner
@@ -170,10 +170,7 @@ cleos -u  https://bos.eoshenzhen.io:9443 set account permission eosio.forum owne
 ### 6.1 set active key to `eosio`, `bet.bos` and `auditors`
 
 ```
-cleos -u  https://bos.eoshenzhen.io:9443 set account permission auditor.bos active '{"threshold":1 ,"keys":[],"waits":[],"accounts":[{"weight": 1, "permission": {"actor": "eosio", "permission": active},
-{"permission": {"actor": "bet.bos", "permission": "active"}, "weight": 1},
-{"permission": {"actor": "auditor.bos", "permission": "active"}, "weight": 1}
-]}'  -p auditor.bos@active
+cleos -u  https://bos.eoshenzhen.io:9443 set account permission auditor.bos active '{"threshold":1 ,"keys":[],"waits":[],"accounts":[{"weight": 1, "permission": {"actor": "eosio", "permission": active},{"permission": {"actor": "bet.bos", "permission": "active"}, "weight": 1},{"permission": {"actor": "auditor.bos", "permission": "active"}, "weight": 1}]}'  -p auditor.bos@active
 ```
 
 
@@ -191,12 +188,8 @@ cleos -u  https://bos.eoshenzhen.io:9443 set account permission auditor.bos owne
 ### 7.1 set active key to `eosio`, `bet.bos` and `auditors`
 
 ```
-cleos -u  https://bos.eoshenzhen.io:9443 set account permission auditor.bos active '{"threshold":1 ,"keys":[],"waits":[],"accounts":{"weight": 1, "permission": {"actor": "eosio", "permission": active}},
-{"permission": {"actor": "bet.bos", "permission": "active"}, "weight": 1},
-{"permission": {"actor": "escrow.bos", "permission": "active"}, "weight": 1},
-}'  -p auditor.bos@active
+cleos -u  https://bos.eoshenzhen.io:9443 set account permission auditor.bos active '{"threshold":1 ,"keys":[],"waits":[],"accounts":{"weight": 1, "permission": {"actor": "eosio", "permission": active}},{"permission": {"actor": "bet.bos", "permission": "active"}, "weight": 1},{"permission": {"actor": "escrow.bos", "permission": "active"}, "weight": 1},}'  -p auditor.bos@active
 ```
-
 
 
 ### 7.2 set owner key to `eosio`
