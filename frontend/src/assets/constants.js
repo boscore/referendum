@@ -7,13 +7,7 @@ export const NETWORK = {
   chainId: '33cc2426f1b258ef8c798c34c0360b31732ea27a2d7e35a65797850a86d1ba85'
 }
 export const NODE_ENDPOINT = 'https://bostest.api.blockgo.vip'
-// export const NETWORK = {
-//   blockchain: 'eos',
-//   protocol: 'https',
-//   host: 'nodes.get-scatter.com',
-//   port: 443,
-//   chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906'
-// }
+
 const BACKEND_URL = `https://boswps.eosplay.me`
 export const API_URL = {
   API_GET_PRODUCERS: BACKEND_URL + '/getBPs',
