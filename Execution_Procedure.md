@@ -5,7 +5,11 @@
 
 We use the eosc cmd tool blow. [https://eosc.app/](https://eosc.app/)
 
+Add to your .bashrc or .zshrc file
+
+```
 alias bosc= "eosc -u https://api.boscore.io"
+```
 
 ## 1. Proposal Submission and Referendum ([eosio.forum](https://github.com/boscore/referendum/tree/master/contracts/eosio.forum))
 
