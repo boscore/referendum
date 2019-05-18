@@ -13,7 +13,7 @@
             >
               <i @click="searchBy = searchText" slot="suffix" class="el-input__icon el-icon-search"></i>
             </el-input>
-            <label>
+            <span>
               Filters:
             <el-select  v-model="filterBy" multiple collapse-tags placeholder="Filter">
               <el-option
@@ -23,7 +23,7 @@
                 :value="item.value">
               </el-option>
             </el-select>
-            </label>
+            </span>
           </div>
         </div>
         <el-tabs v-model="activeTab">
@@ -45,8 +45,16 @@
                   </p>
                   <el-table  :data="myProposals" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
                     <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
-                    <el-table-column sortable label="Created" prop="created_at"></el-table-column>
-                    <el-table-column sortable label="Expire" prop="expires_at"></el-table-column>
+                    <el-table-column sortable label="Created" >
+                       <template slot-scope="scope">
+                         <span>{{$util.dateConvert(scope.row.created_at)}}</span>
+                       </template>
+                    </el-table-column>
+                    <el-table-column sortable label="Expire">
+                      <template slot-scope="scope">
+                         <span>{{$util.dateConvert(scope.row.expires_at)}}</span>
+                       </template>
+                    </el-table-column>
                     <el-table-column>
                       <template slot-scope="scope">
                         <el-button v-if="!isExpired(scope.row.expires_at)" type="danger" @click="expireProp(scope.row.proposal_name)">Expire</el-button>
@@ -55,10 +63,17 @@
                     </el-table-column>
                     <el-table-column>
                       <template slot-scope="scope">
-                        <el-button v-if="scope.row.approved_by_BET" type="primary" @click="claimRewards()">Claim Rewards</el-button>
+                        <el-button :disabled="!scope.row.shouldReview" type="primary" @click="applyReview(scope.row.proposal_name)">Apply for Review</el-button>
                         <!-- <label v-else>Expired</label> -->
                       </template>
                     </el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                        <el-button :disabled="!scope.row.approved_by_BET" type="primary" @click="claimRewards()">Claim Rewards</el-button>
+                        <!-- <label v-else>Expired</label> -->
+                      </template>
+                    </el-table-column>
+
                   </el-table>
                 </div>
               </div>
@@ -83,7 +98,11 @@
                   <el-table :data="myVotes" empty-text="No records found" :default-sort="{prop:'proposal_name', order:'ascending'}">
                     <el-table-column sortable label="Proposal" prop="proposal_name"></el-table-column>
                     <el-table-column sortable label="Result" prop="result"></el-table-column>
-                    <el-table-column sortable label="Voted" prop="updated_at"></el-table-column>
+                    <el-table-column sortable label="Voted">
+                      <template slot-scope="scope">
+                         <span>{{$util.dateConvert(scope.row.updated_at)}}</span>
+                       </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -164,7 +183,7 @@
               :desc="prop.proposal.proposal_json.content || ''"
               :votes="prop.stats.staked"
               :staked="prop.stats.staked.total"
-              :style="{margin: '25px'}"></PropCard>
+              class="prop-card"></PropCard>
           </div>
         </div>
       </el-main>
@@ -176,7 +195,7 @@
 // @ is an alias to /src
 import { Message } from 'element-ui'
 import Eos from 'eosjs'
-import { NETWORK } from '@/assets/constants.js'
+import { NETWORK, API_URL } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
 export default {
   name: 'Referendum',
@@ -231,7 +250,7 @@ export default {
           label: 'Ongoing'
         }
       ],
-      filterBy: ['poll', 'referendum', 'approved', 'rejected', 'ongoing'],
+      filterBy: ['poll', 'referendum', 'expired', 'ongoing'],
       sortBy: 'MostVoted',
       searchText: '',
       searchBy: ''
@@ -364,6 +383,7 @@ export default {
           if (this.proposals[key].proposal.proposer === this.scatter.identity.accounts[0].name) {
             let proposal = { ...this.proposals[key].proposal }
             proposal.approved_by_BET = this.proposals[key].approved_by_BET
+            proposal.shouldReview = this.proposals[key].approved_by_vote && !this.proposals[key].review
             myProposals.push(proposal)
           }
         })
@@ -372,6 +392,24 @@ export default {
     }
   },
   methods: {
+    applyReview (proposal) {
+      fetch(API_URL.API_APPLY_REVIEW)
+        .then(res => res.json())
+        .then(res => {
+          Message({
+            showClose: true,
+            type: 'success',
+            message: 'Apply for review success'
+          })
+        })
+        .catch(e => {
+          Message({
+            showClose: true,
+            type: 'error',
+            message: String(e)
+          })
+        })
+    },
     claimRewards () {
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
       const transactionOptions = {
@@ -484,6 +522,8 @@ export default {
   display flex
   flex-wrap wrap
   justify-content flex-start
+.prop-card
+  margin 25px
 .card
   font-family: Roboto-Regular
   font-size 18px
@@ -524,5 +564,9 @@ export default {
   display flex
   flex-wrap wrap
   justify-content flex-end
-
+@media only screen and (max-width 450px)
+  .prop-card
+    margin 25px 0
+  .prop-list
+    justify-content center
 </style>

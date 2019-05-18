@@ -7,9 +7,11 @@ import VueI18n from 'vue-i18n'
 import messages from '@/language'
 import '@/assets/common.styl'
 import axios from 'axios'
+import util from '@/util.js'
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
+Vue.prototype.$util = util
 
 Vue.use(VueI18n)
 

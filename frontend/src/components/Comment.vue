@@ -6,7 +6,7 @@
       </div>
       <div class="comment-info">
         <p class="comment-commenter">{{name}}</p>
-        <p class="comment-time">{{time}}</p>
+        <p class="comment-time">{{$util.dateConvert(time)}}</p>
       </div>
     </div>
     <div class="comment-content">{{comment}}</div>
