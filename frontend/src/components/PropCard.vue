@@ -147,7 +147,7 @@ p
   p
     width 246px
     height 60px
-    margin 9px 17px
+    margin 9px 5%
     font-family Roboto-Medium
     font-size 17px
     color #FFFFFF
@@ -191,8 +191,8 @@ p
   box-sizing border-box
   position relative
   padding-top 14px
-  padding-right 17px
-  padding-left 17px
+  padding-right 5%
+  padding-left 5%
   hr
     opacity 0.22
     background #004496
@@ -214,9 +214,10 @@ p
 .card-bottom-board
   position absolute
   bottom 0
-  width 246px
+  width 90%
   display flex
-  justify-content space-around
+  align-items flex-end
+  justify-content space-between
 .card-bottom-board-referendum
   background-image linear-gradient(137deg, #0570EC 0%, #53A0FD 47%, #67FFAF 100%)
 .card-bottom-board-poll
