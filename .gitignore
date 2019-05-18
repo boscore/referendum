@@ -2,3 +2,4 @@
 *.abi
 .vscode
 .idea
+.history
