@@ -16,5 +16,6 @@ https://www.boscore.io/team.html
 * 让更多的社区力量参与进来
 * 加速EOSIO技术的不断进化
 * 繁荣EOSIO生态
-
-![图片](./flow_cn.png)
+   
+## 4. 详情
+[Referendum_WPS/BOS生态基金方案.md](https://github.com/boscore/Documentation/blob/master/Referendum_WPS/BOS生态基金方案(含公投%26WPS).md)
