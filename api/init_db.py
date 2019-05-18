@@ -1,10 +1,12 @@
 from peewee import *
 from datetime import date,datetime
+import os
 
 DATABASE = "tally.db"
 
-
-db = SqliteDatabase(DATABASE)
+# os.environ.get('DB_PWD')
+# db = SqliteDatabase(DATABASE)
+db = PostgresqlDatabase('d3cjkjmhbkt11i', user='dtzkpiirdsycdh', password=os.environ.get('DB_PWD'), host='ec2-54-247-178-166.eu-west-1.compute.amazonaws.com', port=5432)
 
 class BaseModel(Model):
     class Meta:
@@ -25,10 +27,11 @@ class Proposal(BaseModel):
     reviewed_by_BET_date = DateTimeField(null = True)
     approved_by_BPs = BooleanField()
     approved_by_BPs_date = DateTimeField(null = True)
+    review = BooleanField()
+    review_date = DateTimeField(null = True)
+    finish = BooleanField()
+    finish_date = DateTimeField(null = True)
     timestamp = DateTimeField(default=datetime.now)
-
-
-
 
 db.connect()
 db.create_tables([Proposal])
