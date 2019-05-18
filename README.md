@@ -1,6 +1,7 @@
 # BOS Ecosystem Program (Referendum & WPS)
-[Proposal Structure Example](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example.md)   
-[Referendum Deployment Procedure](https://github.com/boscore/referendum/blob/master/Execution_Procedure.md)
+- [Proposal Structure Example](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example.md)   
+- [Deployment Procedure](https://github.com/boscore/referendum/blob/master/Deployment_Procedure.md)
+- [Execution Procedure](https://github.com/boscore/referendum/blob/master/Execution_Procedure.md)
 
 # 1. Background
 
