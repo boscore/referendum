@@ -21,5 +21,5 @@ Details:  https://www.boscore.io/en/team.html
 * Prospering the EOSIO Ecosystem
 
 
-# More Detals:
+# More Details:
 [BOS Ecosystem Program(Referendum & WPS).md](https://github.com/boscore/Documentation/blob/master/Referendum_WPS/BOS%20Ecosystem%20Program(Referendum%20%26%20WPS).md)
