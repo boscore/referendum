@@ -1,7 +1,7 @@
 # BOS生态系统计划（公民投票和WPS）
-[提案结构范例](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example_cn.md)   
-[Deployment Procedure](https://github.com/boscore/referendum/blob/master/Deployment_Procedure.md)   
-[Execution Procedure](https://github.com/boscore/referendum/blob/master/Execution_Procedure.md)  
+- [提案结构范例](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example_cn.md)   
+- [Deployment Procedure](https://github.com/boscore/referendum/blob/master/Deployment_Procedure.md)   
+- [Execution Procedure](https://github.com/boscore/referendum/blob/master/Execution_Procedure.md)  
 
 ## 1.  背景
 
