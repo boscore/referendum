@@ -9,8 +9,6 @@ alias bosc= "eosc -u https://api.boscore.io"
 
 ## 1. Proposal Submission and Referendum ([eosio.forum](https://github.com/boscore/referendum/tree/master/contracts/eosio.forum))
 
-![img](https://uploader.shimo.im/f/K0qO5RiIfVoFNxbU.png!thumbnail)       
-
 
 Proposer proposes proposal
 ```
@@ -44,8 +42,6 @@ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDA
 
 
 ## 3. BET/BPs Review and Approve ([escrow.bos](https://github.com/boscore/referendum/tree/master/contracts/escrow.bos))
-
-![img](https://uploader.shimo.im/f/0YbGxhOpqG4U5ObT.png)       
 
 
 
