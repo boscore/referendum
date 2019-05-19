@@ -276,9 +276,10 @@ bosc multisig propose pursonchen22 createforum create_eosioforum.json --request-
 bosc multisig propose pursonchen22 createaudito create_auditorbos.json --request-producers
 ```
 
+### 2.3 BP REVIEW
+eosc multisig review <PROPOSER> <PROPOSAL_NAME>
 
-
-### 2.3 BP APPROVE
+### 2.4 BP APPROVE
 
 ```shell
 bosc multisig approve pursonchen22 createbetbos <BP ACCOUNT>
@@ -289,7 +290,7 @@ bosc multisig approve pursonchen22 createaudito <BP ACCOUNT>
 
 
 
-### 2.4  multisig exec proposal
+### 2.5  multisig exec proposal
 
 ```shell
 bosc multisig exec pursonchen22 createbetbos pursonchen22
