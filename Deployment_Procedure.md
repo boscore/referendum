@@ -277,8 +277,9 @@ bosc multisig propose pursonchen22 createaudito create_auditorbos.json --request
 ```
 
 ### 2.3 BP REVIEW
-eosc multisig review <PROPOSER> <PROPOSAL_NAME>
-
+```shell
+bosc multisig review <PROPOSER> <PROPOSAL_NAME>
+```
 ### 2.4 BP APPROVE
 
 ```shell
