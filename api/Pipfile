@@ -8,7 +8,6 @@ pysqlite3 = "*"
 
 [packages]
 flask = "*"
-lxml = "*"
 eospy = "*"
 Flask = "*"
 peewee = "*"
@@ -16,8 +15,6 @@ gunicorn = "*"
 supervisor = "*"
 libeospy = "*"
 psycopg2-binary = "*"
-pandas = "*"
-numpy = "*"
 
 [requires]
 python_version = "3.7"

@@ -5,9 +5,6 @@ from utils import *
 import json
 from init_db import *
 from urllib.request import urlopen
-import requests
-from lxml import etree
-import csv
 
 # constants
 BOS_URLS = [
@@ -18,9 +15,6 @@ BOS_URLS = [
 
 TALLY_API = "https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json"
 VOTE_TOTAL_API = "https://s3.amazonaws.com/bos.referendum/referendum/summaries/latest.json"
-BOS_TEST_NET_EX = "https://bos-test.eosx.io/"
-BOS_NET_EX = "https://bos.eospark.com/"
-EOSX_VOTE_TOTAL_XPATH = u'//*[@id="__layout"]/div/div[2]/div[2]/div/div/div[5]/div/span/span/text()'
 
 BP_TOTAL_VOTES = 311193750652
 
@@ -87,14 +81,6 @@ def jsoninfo():
 	except Exception as err:
 		logger.error(err)
 	# get Voted Total
-	# page = requests.get(BOS_TEST_NET_EX)
-	# try:
-	# 	page = requests.get(BOS_NET_EX)
-	# 	tree =  etree.HTML(page.content.lower().decode('utf-8'))
-	# 	vote_total_from_web = tree.xpath(EOSX_VOTE_TOTAL_XPATH)
-	# 	logger.info(str(vote_total_from_web))
-	# except Exception as err:
-	# 	logger.error(err)
 	#iterater the current proposals
 	for proposal in proposals:
 		proposal_item = proposals[proposal]
