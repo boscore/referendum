@@ -73,7 +73,11 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 `referendum::voters` (voters table for all `eosio.forum` voters)
 
-- https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json
+- https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json
+
+`referendum::summaries` (aggregated statistics useful for UI's)
+
+- https://s3.amazonaws.com/bos.referendum/referendum/summaries/latest.json
 
 #### `eosio.forum` (eosio.forum)
 
