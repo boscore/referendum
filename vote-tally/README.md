@@ -67,6 +67,14 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 - https://s3.amazonaws.com/bos.referendum/referendum/proxies/latest.json
 
+`referendum::delband` (self delegated bandwidth amount for all `eosio.forum` voters)
+
+- https://s3.amazonaws.com/bos.referendum/referendum/delband/latest.json
+
+`referendum::voters` (voters table for all `eosio.forum` voters)
+
+- https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json
+
 #### `eosio.forum` (eosio.forum)
 
 `eosio.forum::vote` (all votes)
@@ -79,10 +87,6 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 #### `eosio` (voting weights)
 
-`eosio::voters` (complete voters table)
+`eosio::voters` (entire voters table)
 
 - https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json
-
-`eosio::delband` (self delegated bandwidth amount for all `eosio.forum` voters)
-
-- https://s3.amazonaws.com/bos.referendum/eosio/delband/latest.json
