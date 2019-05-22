@@ -16,12 +16,13 @@ BOS_URLS = [
 		,'https://api-bos.eospacex.com'
 		]
 
-TALLY_API = "https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json"
+TALLY_API = "https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json"
+VOTE_TOTAL_API = "https://s3.amazonaws.com/bos.referendum/referendum/summaries/latest.json"
 BOS_TEST_NET_EX = "https://bos-test.eosx.io/"
 BOS_NET_EX = "https://bos.eospark.com/"
 EOSX_VOTE_TOTAL_XPATH = u'//*[@id="__layout"]/div/div[2]/div[2]/div/div/div[5]/div/span/span/text()'
 
-BP_TOTAL_VOTES = 14620687
+BP_TOTAL_VOTES = 311193750652
 
 # util func
 def test_net_is_working(urls):
@@ -65,10 +66,17 @@ def jsoninfo():
 	logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
 	ce = Cleos(url=BOS_URLS[url_index])
 
+	
 	# BP_TOTAL_VOTES = float(int(ce.get_table('eosio','eosio','global')['rows'][0]['total_activated_stake'])/10000)
-	csv_file = csv.reader(open('sum.csv','r'))
-	for s in csv_file:
-		BP_TOTAL_VOTES = int(s[0])
+	# csv_file = csv.reader(open('sum.csv','r'))
+	# for s in csv_file:
+	# 	BP_TOTAL_VOTES  
+	try:
+		rawtext = urlopen(VOTE_TOTAL_API, timeout=15).read()
+		NEW_BP_TOTAL_VOTES = json.loads(rawtext.decode('utf8'))['bp_votes']
+		BP_TOTAL_VOTES = int(NEW_BP_TOTAL_VOTES) if int(NEW_BP_TOTAL_VOTES) > 0 else BP_TOTAL_VOTES
+	except Exception as err:
+		logger.error(err)
 	print(BP_TOTAL_VOTES)
 	# try:
 		# get tally json file
