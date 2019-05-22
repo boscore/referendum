@@ -9,6 +9,7 @@ import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from 
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
+import { generateSummaries } from "./src/summaries";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
@@ -18,6 +19,7 @@ const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 // Global containers
 let votes: Vote[] = [];
 let voters: Voters[] = [];
+let eosioVoters: Voters[] = [];
 let proposals: Proposal[] = [];
 let votes_owner: Set<string> = new Set();
 let voters_owner: Set<string> = new Set();
@@ -31,7 +33,8 @@ async function syncEosio(head_block_num: number) {
     console.log(`syncEosio [head_block_num=${head_block_num}]`)
 
     // fetch `eosio` voters
-    const eosioVoters = await get_table_voters();
+    if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
+    else eosioVoters = filterVotersByVotes(await get_table_voters(), votes);
 
     const voters = filterVotersByVotes(eosioVoters, votes);
     voters_owner = new Set(voters.map((row) => row.owner));
@@ -95,6 +98,18 @@ async function calculateTallies(head_block_num: number) {
 }
 
 /**
+ * Calculate Summaries
+ */
+async function calculateSummaries(head_block_num: number) {
+    console.log(`calculateSummaries [head_block_num=${head_block_num}]`);
+
+    const summaries = generateSummaries(head_block_num, eosioVoters);
+
+    // Save JSON
+    save("referendum", "summaries", head_block_num, summaries);
+}
+
+/**
  * Save JSON file
  */
 function save(account: string, table: string, block_num: number, json: any) {
@@ -132,6 +147,7 @@ async function allTasks() {
     await syncEosio(head_block_num);
     await syncForum(head_block_num);
     await calculateTallies(head_block_num);
+    await calculateSummaries(head_block_num);
 }
 
 /**

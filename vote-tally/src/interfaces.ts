@@ -140,3 +140,14 @@ export interface CurrencyStats {
         issuer:     string;
     }
 }
+
+export interface Summaries {
+    /**
+     * Block Number used for Summaries calculations
+     */
+    block_num: number;
+    /**
+     * Total amount of BOS used to vote for Block Producers
+     */
+    bp_votes: number;
+}
