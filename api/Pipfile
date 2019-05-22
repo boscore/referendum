@@ -16,6 +16,8 @@ gunicorn = "*"
 supervisor = "*"
 libeospy = "*"
 psycopg2-binary = "*"
+pandas = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"

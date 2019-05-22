@@ -58,6 +58,7 @@ killasgroup=true
 $ vim /etc/crontab
 
 # add command
+23 30 * * * python3 /path/to/thisfolder/get_all_votes.py
 0 0 * * * curl localhost:8000/getJson >> /path/to/crontab.log 2>&1
 
 ```

@@ -5,3 +5,5 @@ peewee
 gunicorn
 supervisor
 psycopg2-binary
+pandas
+numpy

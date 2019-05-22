@@ -7,14 +7,13 @@ from init_db import *
 from urllib.request import urlopen
 import requests
 from lxml import etree
+import csv
 
 # constants
 BOS_URLS = [
-		'https://bostest.api.blockgo.vip'
-		,'http://bos-test.eoshenzhen.io:8888'
-		,'https://bos-testnet.eosphere.io'
-		,'https://api.bostest.alohaeos.com'
-		,'https://boscore.eosrio.io'
+		'https://api.boscore.io'
+		,'https://bos.eoshenzhen.io:9443'
+		,'https://api-bos.eospacex.com'
 		]
 
 TALLY_API = "https://s3.amazonaws.com/bostest.referendum/referendum/tallies/latest.json"
@@ -66,7 +65,10 @@ def jsoninfo():
 	logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
 	ce = Cleos(url=BOS_URLS[url_index])
 
-	BP_TOTAL_VOTES = float(int(ce.get_table('eosio','eosio','global')['rows'][0]['total_activated_stake'])/10000)
+	# BP_TOTAL_VOTES = float(int(ce.get_table('eosio','eosio','global')['rows'][0]['total_activated_stake'])/10000)
+	csv_file = csv.reader(open('sum.csv','r'))
+	for s in csv_file:
+		BP_TOTAL_VOTES = int(s[0])
 	print(BP_TOTAL_VOTES)
 	# try:
 		# get tally json file
@@ -306,7 +308,8 @@ def review(proposal_name):
 				resp.headers['Access-Control-Allow-Origin'] = '*'
 				return resp
 		else:
-			resp = flask.Response(json.dumps({"result":"not exited"}), mimetype='application/json')
+			resp = flask.Response(json.dumps(
+				{"result": "not existed"}), mimetype='application/json')
 			resp.headers['Access-Control-Allow-Origin'] = '*'
 			return resp
 	except Exception as err:
@@ -324,7 +327,7 @@ def finish(proposal_name):
 		# the proposal exists
 		if propos > 0:
 			propos2 = Proposal.get(Proposal.name == proposal_name)
-			if propos2.approved_by_vote == 1 and propos2.approved_by_BET == 1:
+			if propos2.approved_by_vote == 1 and propos2.review == 1:
 				nrow = (Proposal.update(
 							finish = 1
 							, finish_date = datetime.now()
