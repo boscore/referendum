@@ -147,7 +147,16 @@ export interface Summaries {
      */
     block_num: number;
     /**
-     * Total amount of BOS used to vote for Block Producers
+     * Total amount of staked BOS used to vote for Block Producers
      */
     bp_votes: number;
+    /**
+     * Total amount of staked BOS used to vote for Block Producers by voters (vote weights by individual voters)
+     * > If Proxy has staked BOS, that staked amount will be counted towards `bp_producers_votes `
+     */
+    bp_producers_votes;
+    /**
+     * Total amount of proxied staked BOS used to vote for Block Producers (vote weight to proxies)
+     */
+    bp_proxy_votes;
 }
