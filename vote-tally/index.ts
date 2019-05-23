@@ -34,7 +34,7 @@ async function syncEosio(head_block_num: number) {
 
     // fetch `eosio` voters
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
-    else eosioVoters = filterVotersByVotes(await get_table_voters(), votes);
+    else eosioVoters = await get_table_voters();
 
     const voters = filterVotersByVotes(eosioVoters, votes);
     voters_owner = new Set(voters.map((row) => row.owner));
