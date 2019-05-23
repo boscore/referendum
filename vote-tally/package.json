@@ -1,0 +1,33 @@
+{
+  "private": true,
+  "name": "bos-referendum-vote-tally",
+  "version": "0.1.0",
+  "description": "BOS Referendum - Vote Tally",
+  "main": "index.js",
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BOS-Nation/bos-referendum-tally.git"
+  },
+  "author": "Denis Carriere <denis@eosnation.io>",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.441.0",
+    "cron": "^1.7.0",
+    "dapp-client": "^0.3.0",
+    "dotenv": "^7.0.0",
+    "isomorphic-fetch": "^2.2.1",
+    "load-json-file": "^5.3.0",
+    "write-json-file": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/cron": "^1.7.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/node": "^11.13.6",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.2"
+  }
+}
