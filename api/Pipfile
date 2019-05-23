@@ -8,7 +8,6 @@ pysqlite3 = "*"
 
 [packages]
 flask = "*"
-lxml = "*"
 eospy = "*"
 Flask = "*"
 peewee = "*"

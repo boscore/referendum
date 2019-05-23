@@ -253,13 +253,13 @@ alias bosc="eosc -u https://bos.eoshenzhen.io:9443"
 ```
 
 ```shell
-bosc -u https://bos.eoshenzhen.io:9443 system newaccount eosio bet.bos --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_betbos.json --auth-file bet.bos.yml
+bosc system newaccount eosio bet.bos --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_betbos.json --auth-file bet.bos.yml
 
-bosc -u https://bos.eoshenzhen.io:9443 system newaccount eosio escrow.bos --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_escrowbos.json --auth-filer escrow.bos.yml
+bosc system newaccount eosio escrow.bos --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_escrowbos.json --auth-filer escrow.bos.yml
 
-bosc -u https://bos.eoshenzhen.io:9443 system newaccount eosio eosio.forum --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_eosioforum.json --auth-file eosio.forum.yml
+bosc system newaccount eosio eosio.forum --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_eosioforum.json --auth-file eosio.forum.yml
 
-bosc -u https://bos.eoshenzhen.io:9443 system newaccount eosio bet.bos --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_auditorbos.json --auth-file auditor.bos.yml
+bosc system newaccount eosio bet.bos --stake-net "10.0000 BOS" --stake-cpu "10.0000 BOS" --transfer --buy-ram-kbytes 100 --skip-sign --expiration 604800 --write-transaction create_auditorbos.json --auth-file auditor.bos.yml
 ```
 
 
@@ -267,18 +267,20 @@ bosc -u https://bos.eoshenzhen.io:9443 system newaccount eosio bet.bos --stake-n
 ### 2.2 multisig propose_trx
 
 ```shell
-bosc -u https://bos.eoshenzhen.io:9443 multisig propose pursonchen22 createbetbos create_betbos.json --request-producers
+bosc multisig propose pursonchen22 createbetbos create_betbos.json --request-producers
 
-bosc -u https://bos.eoshenzhen.io:9443 multisig propose pursonchen22 createescrow create_escrowbos.json --request-producers
+bosc multisig propose pursonchen22 createescrow create_escrowbos.json --request-producers
 
-bosc -u https://bos.eoshenzhen.io:9443 multisig propose pursonchen22 createforum create_eosioforum.json --request-producers
+bosc multisig propose pursonchen22 createforum create_eosioforum.json --request-producers
 
-bosc -u https://bos.eoshenzhen.io:9443 multisig propose pursonchen22 createaudito create_auditorbos.json --request-producers
+bosc multisig propose pursonchen22 createaudito create_auditorbos.json --request-producers
 ```
 
-
-
-### 2.3 BP APPROVE
+### 2.3 BP REVIEW
+```shell
+bosc multisig review <PROPOSER> <PROPOSAL_NAME>
+```
+### 2.4 BP APPROVE
 
 ```shell
 bosc multisig approve pursonchen22 createbetbos <BP ACCOUNT>
@@ -289,7 +291,7 @@ bosc multisig approve pursonchen22 createaudito <BP ACCOUNT>
 
 
 
-### 2.4  multisig exec proposal
+### 2.5  multisig exec proposal
 
 ```shell
 bosc multisig exec pursonchen22 createbetbos pursonchen22
