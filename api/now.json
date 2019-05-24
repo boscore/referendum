@@ -7,5 +7,6 @@
   "routes": [{ "src": "(.*)", "dest": "index.py" }],
   "env": {
     "DB_PWD": "@my-db-pw"
-  }
+  },
+  "alias": ["api.boswps.io"]
 }

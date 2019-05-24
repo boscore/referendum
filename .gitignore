@@ -2,3 +2,5 @@
 *.abi
 .vscode
 .idea
+.history
+.DS_Store

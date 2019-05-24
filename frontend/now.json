@@ -5,5 +5,6 @@
   "routes": [
     { "handle": "filesystem" },
     { "src": ".*", "dest": "/index.html" }
-  ]
+  ],
+  "alias": ["www.boswps.io", "boswps.io"]
 }

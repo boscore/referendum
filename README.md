@@ -1,4 +1,5 @@
 # BOS Ecosystem Program (Referendum & WPS)
+[中文版本](./README_cn.md)
 - [Proposal Structure Example](https://github.com/boscore/referendum/blob/master/Proposal%20Structure%20Example.md)   
 - [Deployment Procedure](https://github.com/boscore/referendum/blob/master/Deployment_Procedure.md)
 - [Execution Procedure](https://github.com/boscore/referendum/blob/master/Execution_Procedure.md)
@@ -22,4 +23,5 @@ Details:  https://www.boscore.io/en/team.html
 
 
 # More Details:
-[BOS Ecosystem Program(Referendum & WPS).md](https://github.com/boscore/Documentation/blob/master/Referendum_WPS/BOS%20Ecosystem%20Program(Referendum%20%26%20WPS).md)
+- English: [BOS Ecosystem Program(Referendum & WPS).md](https://github.com/boscore/Documentation/blob/master/Referendum_WPS/BOS%20Ecosystem%20Program(Referendum%20%26%20WPS).md)
+- Chinese: [Referendum_WPS/BOS生态基金方案.md](https://github.com/boscore/Documentation/blob/master/Referendum_WPS/BOS生态基金方案(含公投%26WPS).md)

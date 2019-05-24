@@ -14,14 +14,14 @@ If an elected auditor resigns via the `withdrawcand` during a period a new candi
 > Once candidate is nominated, BOS users can now vote for that candidate to become a BOS auditor.
 
 ```
-$ eosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
-$ eosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>@active
+$ bosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
+$ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>@active
 ```
 
 ### Vote for Auditor Candidate
 
 ```
-$ eosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
+$ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
 ```
 
 ### Withdraw Candidate & Unstake
@@ -29,8 +29,8 @@ $ eosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDI
 > A Candidate must `withdrawcand` to be allowed to `unstake` any BOS assets that was sent to `auditor.bos`.
 
 ```
-$ eosc tx create auditor.bos withdrawcand '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
-$ eosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
+$ bosc tx create auditor.bos withdrawcand '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
+$ bosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
 ```
 
 ### Resign as Auditor
@@ -38,7 +38,7 @@ $ eosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
 > Removes elected auditor from `auditor.bos@auditors`
 
 ```
-$ eosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
+$ bosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
 ```
 
 ### Start Auditor Tenure (Election)
@@ -46,7 +46,7 @@ $ eosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
 > `auditor.bos@auditors` permission will `updateauth` with candidates with the highest votes
 
 ```bash
-$ eosc tx create auditor.bos newtenure '{"message":"newtenure for auditor.bos"}' -p auditor.bos@active
+$ bosc tx create auditor.bos newtenure '{"message":"newtenure for auditor.bos"}' -p auditor.bos@active
 ```
 
 ### Fire Auditor
@@ -54,7 +54,7 @@ $ eosc tx create auditor.bos newtenure '{"message":"newtenure for auditor.bos"}'
 > Removes Auditor from `auditor.bos@auditors` authority
 
 ```bash
-$ eosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p auditor.bos@active
+$ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p auditor.bos@active
 ```
 
 ### Resign as Auditor
@@ -62,7 +62,7 @@ $ eosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p audi
 > Removes Auditor from `auditor.bos@auditors` authority
 
 ```bash
-$ eosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
+$ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
 ```
 
 ## Tables
