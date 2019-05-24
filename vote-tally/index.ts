@@ -51,10 +51,13 @@ async function syncEosio(head_block_num: number) {
     const stats = generateEosioStats(head_block_num, eosioVoters);
 
     // Save JSON
-    save("eosio", "voters", head_block_num, eosioVoters);
+    save("eosio", "voters", head_block_num, eosioVoters, false);
     save("eosio", "stats", head_block_num, stats);
     save("referendum", "voters", head_block_num, voters);
     save("referendum", "delband", head_block_num, delband);
+
+    // Prevent memory leaks
+    eosioVoters = [];
 }
 
 /**
@@ -107,16 +110,18 @@ async function calculateTallies(head_block_num: number) {
 /**
  * Save JSON file
  */
-function save(account: string, table: string, block_num: number, json: any) {
+function save(account: string, table: string, block_num: number, json: any, check_exists=true) {
     const filepath = path.join(basepath, account, table, block_num + ".json");
     const latest = path.join(basepath, account, table, "latest.json");
 
     // Prevent saving if `latest.json` is the same as [json]
-    if (fs.existsSync(latest)) {
-        const latestJson = load.sync(latest);
-        if (createHash(latestJson) === createHash(json)) {
-            console.log(`JSON already exists ${account}/${table}/${block_num}.json`);
-            return
+    if (check_exists) {
+        if (fs.existsSync(latest)) {
+            const latestJson = load.sync(latest);
+            if (createHash(latestJson) === createHash(json)) {
+                console.log(`JSON already exists ${account}/${table}/${block_num}.json`);
+                return
+            }
         }
     }
 
@@ -124,8 +129,11 @@ function save(account: string, table: string, block_num: number, json: any) {
     console.log(`saving JSON ${account}/${table}/${block_num}.json`);
     write.sync(filepath, json);
     write.sync(latest, json);
+    saveS3(account, table, block_num, json);
+}
 
-    // Save to AWS S3 bucket
+// Save to AWS S3 bucket
+function saveS3(account: string, table: string, block_num: number, json: any) {
     uploadS3(`${account}/${table}/${block_num}.json`, json);
     uploadS3(`${account}/${table}/latest.json`, json);
 }
