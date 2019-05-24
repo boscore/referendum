@@ -9,7 +9,7 @@ import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from 
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
-import { generateSummaries } from "./src/summaries";
+import { generateEosioStats } from "./src/stats";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
@@ -45,12 +45,14 @@ async function syncEosio(head_block_num: number) {
     const owners_without_stake = disjoint(votes_owner, voters_owner)
     delband = await get_table_delband(owners_without_stake);
 
-    // Calculate Summaries
+    // Calculate EOSIO Stats
     // `eosioVoters` cannot be stored globaly since it will cause memory leaks
-    await calculateSummaries(eosioVoters, head_block_num);
+    console.log(`calculateEosioStats [head_block_num=${head_block_num}]`);
+    const stats = generateEosioStats(head_block_num, eosioVoters);
 
     // Save JSON
     save("eosio", "voters", head_block_num, eosioVoters);
+    save("eosio", "stats", head_block_num, stats);
     save("referendum", "voters", head_block_num, voters);
     save("referendum", "delband", head_block_num, delband);
 }
@@ -100,18 +102,6 @@ async function calculateTallies(head_block_num: number) {
     save("referendum", "accounts", head_block_num, accounts);
     save("referendum", "proxies", head_block_num, proxies);
     save("referendum", "tallies", head_block_num, tallies);
-}
-
-/**
- * Calculate Summaries
- */
-async function calculateSummaries(eosioVoters: Voters[], head_block_num: number) {
-    console.log(`calculateSummaries [head_block_num=${head_block_num}]`);
-
-    const summaries = generateSummaries(head_block_num, eosioVoters);
-
-    // Save JSON
-    save("referendum", "summaries", head_block_num, summaries);
 }
 
 /**

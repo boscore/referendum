@@ -75,10 +75,6 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 - https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json
 
-`referendum::summaries` (aggregated statistics useful for UI's)
-
-- https://s3.amazonaws.com/bos.referendum/referendum/summaries/latest.json
-
 #### `eosio.forum` (eosio.forum)
 
 `eosio.forum::vote` (all votes)
@@ -94,3 +90,7 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 `eosio::voters` (entire voters table)
 
 - https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json
+
+`eosio::stats` (aggregated EOSIO statistics useful for UI's)
+
+- https://s3.amazonaws.com/bos.referendum/eosio/stats/latest.json
