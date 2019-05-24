@@ -36,7 +36,7 @@ async function syncEosio(head_block_num: number) {
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
     else eosioVoters = await get_table_voters();
 
-    const voters = filterVotersByVotes(eosioVoters, votes);
+    voters = filterVotersByVotes(eosioVoters, votes);
     voters_owner = new Set(voters.map((row) => row.owner));
 
     // Retrieve `staked` from accounts that have not yet voted for BPs
