@@ -53,7 +53,7 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 - [https://s3.amazonaws.com/bos.referendum/{scope}/{table}/{block_num}.json](https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json)
 
-#### `referendum` (tally)
+### `referendum` (tally)
 
 `referendum::tallies` (tallies for `eosio.forum` voters)
 
@@ -75,7 +75,7 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 - https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json
 
-#### `eosio.forum` (eosio.forum)
+### `eosio.forum` (eosio.forum)
 
 `eosio.forum::vote` (all votes)
 
@@ -85,7 +85,7 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 - https://s3.amazonaws.com/bos.referendum/eosio.forum/proposal/latest.json
 
-#### `eosio` (voting weights)
+### `eosio` (voting weights)
 
 `eosio::voters` (entire voters table)
 
