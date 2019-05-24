@@ -144,8 +144,8 @@ async function quickTasks() {
 async function allTasks() {
     const {head_block_num} = await rpc.get_info()
     await syncToken(head_block_num);
-    await syncEosio(head_block_num);
     await syncForum(head_block_num);
+    await syncEosio(head_block_num);
     await calculateTallies(head_block_num);
     await calculateSummaries(head_block_num);
 }
