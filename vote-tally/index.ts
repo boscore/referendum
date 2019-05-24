@@ -51,10 +51,10 @@ async function syncEosio(head_block_num: number) {
     const stats = generateEosioStats(head_block_num, eosioVoters);
 
     // Save JSON
-    save("eosio", "voters", head_block_num, eosioVoters, false);
-    save("eosio", "stats", head_block_num, stats);
-    save("referendum", "voters", head_block_num, voters);
-    save("referendum", "delband", head_block_num, delband);
+    await save("eosio", "voters", head_block_num, eosioVoters, false);
+    await save("eosio", "stats", head_block_num, stats);
+    await save("referendum", "voters", head_block_num, voters);
+    await save("referendum", "delband", head_block_num, delband);
 
     // Prevent memory leaks
     eosioVoters = [];
@@ -110,7 +110,7 @@ async function calculateTallies(head_block_num: number) {
 /**
  * Save JSON file
  */
-function save(account: string, table: string, block_num: number, json: any, check_exists=true) {
+async function save(account: string, table: string, block_num: number, json: any, check_exists=true) {
     const filepath = path.join(basepath, account, table, block_num + ".json");
     const latest = path.join(basepath, account, table, "latest.json");
 
@@ -129,13 +129,13 @@ function save(account: string, table: string, block_num: number, json: any, chec
     console.log(`saving JSON ${account}/${table}/${block_num}.json`);
     write.sync(filepath, json);
     write.sync(latest, json);
-    saveS3(account, table, block_num, json);
+    await saveS3(account, table, block_num, json);
 }
 
 // Save to AWS S3 bucket
-function saveS3(account: string, table: string, block_num: number, json: any) {
-    uploadS3(`${account}/${table}/${block_num}.json`, json);
-    uploadS3(`${account}/${table}/latest.json`, json);
+async function saveS3(account: string, table: string, block_num: number, json: any) {
+    await uploadS3(`${account}/${table}/${block_num}.json`, json);
+    await uploadS3(`${account}/${table}/latest.json`, json);
 }
 
 async function quickTasks() {
