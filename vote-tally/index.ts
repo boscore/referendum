@@ -19,7 +19,7 @@ const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 // Global containers
 let votes: Vote[] = [];
 let voters: Voters[] = [];
-let eosioVoters: Voters[] = [];
+// `eosioVoters` cannot be stored globaly since it will cause memory leaks
 let proposals: Proposal[] = [];
 let votes_owner: Set<string> = new Set();
 let voters_owner: Set<string> = new Set();
@@ -33,6 +33,7 @@ async function syncEosio(head_block_num: number) {
     console.log(`syncEosio [head_block_num=${head_block_num}]`)
 
     // fetch `eosio` voters
+    let eosioVoters: Voters[] = [];
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
     else eosioVoters = await get_table_voters();
 
@@ -43,6 +44,10 @@ async function syncEosio(head_block_num: number) {
     // only `delband` from missing eosio.forum voters should be fetched
     const owners_without_stake = disjoint(votes_owner, voters_owner)
     delband = await get_table_delband(owners_without_stake);
+
+    // Calculate Summaries
+    // `eosioVoters` cannot be stored globaly since it will cause memory leaks
+    await calculateSummaries(eosioVoters, head_block_num);
 
     // Save JSON
     save("eosio", "voters", head_block_num, eosioVoters);
@@ -100,7 +105,7 @@ async function calculateTallies(head_block_num: number) {
 /**
  * Calculate Summaries
  */
-async function calculateSummaries(head_block_num: number) {
+async function calculateSummaries(eosioVoters: Voters[], head_block_num: number) {
     console.log(`calculateSummaries [head_block_num=${head_block_num}]`);
 
     const summaries = generateSummaries(head_block_num, eosioVoters);
@@ -147,7 +152,6 @@ async function allTasks() {
     await syncForum(head_block_num);
     await syncEosio(head_block_num);
     await calculateTallies(head_block_num);
-    await calculateSummaries(head_block_num);
 }
 
 /**
