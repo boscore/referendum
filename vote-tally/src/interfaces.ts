@@ -141,7 +141,7 @@ export interface CurrencyStats {
     }
 }
 
-export interface Summaries {
+export interface EosioStats {
     /**
      * Block Number used for Summaries calculations
      */

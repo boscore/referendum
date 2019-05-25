@@ -9,7 +9,7 @@ import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from 
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
 import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
-import { generateSummaries } from "./src/summaries";
+import { generateEosioStats } from "./src/stats";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
@@ -19,7 +19,7 @@ const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 // Global containers
 let votes: Vote[] = [];
 let voters: Voters[] = [];
-let eosioVoters: Voters[] = [];
+// `eosioVoters` cannot be stored globaly since it will cause memory leaks
 let proposals: Proposal[] = [];
 let votes_owner: Set<string> = new Set();
 let voters_owner: Set<string> = new Set();
@@ -33,10 +33,11 @@ async function syncEosio(head_block_num: number) {
     console.log(`syncEosio [head_block_num=${head_block_num}]`)
 
     // fetch `eosio` voters
+    let eosioVoters: Voters[] = [];
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
     else eosioVoters = await get_table_voters();
 
-    const voters = filterVotersByVotes(eosioVoters, votes);
+    voters = filterVotersByVotes(eosioVoters, votes);
     voters_owner = new Set(voters.map((row) => row.owner));
 
     // Retrieve `staked` from accounts that have not yet voted for BPs
@@ -44,10 +45,19 @@ async function syncEosio(head_block_num: number) {
     const owners_without_stake = disjoint(votes_owner, voters_owner)
     delband = await get_table_delband(owners_without_stake);
 
+    // Calculate EOSIO Stats
+    // `eosioVoters` cannot be stored globaly since it will cause memory leaks
+    console.log(`calculateEosioStats [head_block_num=${head_block_num}]`);
+    const stats = generateEosioStats(head_block_num, eosioVoters);
+
     // Save JSON
-    save("eosio", "voters", head_block_num, eosioVoters);
-    save("referendum", "voters", head_block_num, voters);
-    save("referendum", "delband", head_block_num, delband);
+    await save("eosio", "voters", head_block_num, eosioVoters, false);
+    await save("eosio", "stats", head_block_num, stats);
+    await save("referendum", "voters", head_block_num, voters);
+    await save("referendum", "delband", head_block_num, delband);
+
+    // Prevent memory leaks
+    eosioVoters = [];
 }
 
 /**
@@ -98,30 +108,20 @@ async function calculateTallies(head_block_num: number) {
 }
 
 /**
- * Calculate Summaries
- */
-async function calculateSummaries(head_block_num: number) {
-    console.log(`calculateSummaries [head_block_num=${head_block_num}]`);
-
-    const summaries = generateSummaries(head_block_num, eosioVoters);
-
-    // Save JSON
-    save("referendum", "summaries", head_block_num, summaries);
-}
-
-/**
  * Save JSON file
  */
-function save(account: string, table: string, block_num: number, json: any) {
+async function save(account: string, table: string, block_num: number, json: any, check_exists=true) {
     const filepath = path.join(basepath, account, table, block_num + ".json");
     const latest = path.join(basepath, account, table, "latest.json");
 
     // Prevent saving if `latest.json` is the same as [json]
-    if (fs.existsSync(latest)) {
-        const latestJson = load.sync(latest);
-        if (createHash(latestJson) === createHash(json)) {
-            console.log(`JSON already exists ${account}/${table}/${block_num}.json`);
-            return
+    if (check_exists) {
+        if (fs.existsSync(latest)) {
+            const latestJson = load.sync(latest);
+            if (createHash(latestJson) === createHash(json)) {
+                console.log(`JSON already exists ${account}/${table}/${block_num}.json`);
+                return
+            }
         }
     }
 
@@ -129,10 +129,13 @@ function save(account: string, table: string, block_num: number, json: any) {
     console.log(`saving JSON ${account}/${table}/${block_num}.json`);
     write.sync(filepath, json);
     write.sync(latest, json);
+    await saveS3(account, table, block_num, json);
+}
 
-    // Save to AWS S3 bucket
-    uploadS3(`${account}/${table}/${block_num}.json`, json);
-    uploadS3(`${account}/${table}/latest.json`, json);
+// Save to AWS S3 bucket
+async function saveS3(account: string, table: string, block_num: number, json: any) {
+    await uploadS3(`${account}/${table}/${block_num}.json`, json);
+    await uploadS3(`${account}/${table}/latest.json`, json);
 }
 
 async function quickTasks() {
@@ -144,10 +147,9 @@ async function quickTasks() {
 async function allTasks() {
     const {head_block_num} = await rpc.get_info()
     await syncToken(head_block_num);
-    await syncEosio(head_block_num);
     await syncForum(head_block_num);
+    await syncEosio(head_block_num);
     await calculateTallies(head_block_num);
-    await calculateSummaries(head_block_num);
 }
 
 /**

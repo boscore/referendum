@@ -1,6 +1,6 @@
-import { Voters, Summaries } from "./interfaces";
+import { Voters, EosioStats } from "./interfaces";
 
-export function generateSummaries(head_block_num: number, voters: Voters[]): Summaries {
+export function generateEosioStats(head_block_num: number, voters: Voters[]): EosioStats {
     let bp_votes = 0;
     let bp_producers_votes = 0;
     let bp_proxy_votes = 0;
