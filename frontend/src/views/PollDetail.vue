@@ -167,7 +167,6 @@
               <p>{{this.proposal ? this.proposal.stats.votes.accounts : 0}} accounts</p>
               <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at, new Date().toString()) : 0}} days since poll started</p>
               <p>{{(this.proposal.stats.staked.total / 100 / this.proposal.stats.currency_supply).toFixed(2)}}% participation</p>
-              <p>{{this.proposal ? this.yesLeadPercent : 0}}% YES lead over NO</p>
             </div>
           </div>
           <div class="card">
@@ -495,15 +494,6 @@ export default {
         return 0
       } else {
         return Number((100 * this.proposal.stats.staked[0] / this.proposal.stats.staked.total).toFixed(1))
-      }
-    },
-    yesLeadPercent () {
-      if (!this.proposal.stats.staked[0]) {
-        return 100
-      } else if (!this.proposal.stats.staked[1]) {
-        return 0
-      } else {
-        return this.calcPercent(this.proposal.stats.staked[1] - this.proposal.stats.staked[0], this.proposal.stats.staked[1]).toFixed(0)
       }
     },
     scatter () {
