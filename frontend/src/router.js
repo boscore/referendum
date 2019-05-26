@@ -5,7 +5,7 @@ import Auditor from './views/Auditor.vue'
 import CreateProposal from './views/CreateProposal.vue'
 import PollDetail from './views/PollDetail.vue'
 import RegisterAuditor from './views/RegisterAuditor.vue'
-import SignConstitution from './views/SignConstitution.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -29,11 +29,6 @@ export default new Router({
       path: '/auditor/register',
       name: 'register',
       component: RegisterAuditor
-    },
-    {
-      path: '/auditor/constitution',
-      name: 'constitution',
-      component: SignConstitution
     },
     {
       path: '/poll_detail',

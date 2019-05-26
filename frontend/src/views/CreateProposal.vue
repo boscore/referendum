@@ -24,9 +24,9 @@
             <label slot="label">Number of Tokens Request(BOS)</label>
             <el-input max="1000000" @change="formatIncentives(form.incentives)" v-model="form.incentives"></el-input>
           </el-form-item>
-          <el-form-item prop="receipt">
+          <el-form-item prop="receiptor">
             <label slot="label">Receipt account</label>
-            <el-input v-model="form.receipt"></el-input>
+            <el-input v-model="form.receiptor"></el-input>
           </el-form-item>
           <el-form-item prop="content">
             <label slot="label">Content (support Markdown)</label>
@@ -125,7 +125,7 @@ export default {
         title: '',
         content: '',
         expiry: '',
-        receipt: this.proposer,
+        receiptor: this.proposer,
         incentives: '0.0000',
         type: 'referendum-v1'
       },
@@ -148,7 +148,7 @@ export default {
         incentives: [
           { required: true, validator: checkIncentives, trigger: 'blur' }
         ],
-        receipt: [
+        receiptor: [
           { required: true, message: 'please input receipt account of incentives', trigger: 'blur' }
         ]
       }
@@ -187,7 +187,9 @@ export default {
             expires_at: this.form.expiry,
             proposal_json: JSON.stringify({
               content: this.form.content,
-              type: this.form.type
+              type: this.form.type,
+              incentives: this.form.incentives,
+              receiptor: this.form.receiptor
             })
           }
           const transactionOptions = {
@@ -226,8 +228,9 @@ export default {
               Message({
                 showClose: true,
                 type: 'error',
-                message: 'Create ERROR' + String(e)
+                message: 'Create ERROR:' + e.message
               })
+              console.log(e)
               // MessageBox.alert(e, 'ERROR', {
               //   confirmButtonText: 'OK'
               // })
