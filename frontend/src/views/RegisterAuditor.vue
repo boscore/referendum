@@ -160,8 +160,9 @@ export default {
         Message({
           showClose: true,
           type: 'error',
-          message: 'Stake ERROR' + String(e)
+          message: 'Stake ERROR' + e.message
         })
+        console.log(e)
       }
     },
     getConfig () {
@@ -245,8 +246,9 @@ export default {
               Message({
                 showClose: true,
                 type: 'error',
-                message: 'Register ERROR' + String(e)
+                message: 'Register ERROR' + e.message
               })
+              console.log(e)
             })
         } else {
           return false

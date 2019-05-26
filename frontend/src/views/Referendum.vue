@@ -406,8 +406,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: String(e)
+            message: 'Error: ' + e.message
           })
+          console.log(e)
         })
     },
     claimRewards () {
@@ -435,8 +436,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: 'Expired ERROR' + String(e)
+            message: 'Claim ERROR: ' + e.message
           })
+          console.log(e)
         })
     },
     expireProp (proposal) {
@@ -466,8 +468,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: 'Expired ERROR' + String(e)
+            message: 'Expired ERROR:' + e.message
           })
+          console.log(e)
           // MessageBox.alert(e, 'ERROR', {
           //   confirmButtonText: 'OK'
           // })

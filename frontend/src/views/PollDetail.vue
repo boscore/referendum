@@ -614,9 +614,10 @@ export default {
         this.propLoading = false
         Message({
           showClose: true,
-          message: 'Get Proposal ERROR\n' + String(e),
+          message: 'Get Proposal ERROR:' + e.message,
           type: 'error'
         })
+        console.log(e)
       })
     },
     getProducers () {
@@ -630,6 +631,7 @@ export default {
           message: 'Get Producers ERROR\n' + String(e),
           type: 'error'
         })
+        console.log(e)
         // MessageBox.alert(e, 'Get Producers ERROR', {
         //   confirmButtonText: 'OK'
         // })
@@ -741,9 +743,10 @@ export default {
           }).catch(e => {
             Message({
               showClose: true,
-              message: 'Vote ERROR\n' + String(e),
+              message: 'Vote ERROR:' + e.message,
               type: 'error'
             })
+            console.log(e)
             // MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
             //   confirmButtonText: 'OK'
             // })
@@ -779,9 +782,10 @@ export default {
         }).catch(e => {
           Message({
             showClose: true,
-            message: 'Unvote ERROR\n' + String(e),
+            message: 'Unvote ERROR: ' + e.message,
             type: 'error'
           })
+          console.log(e)
           // MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
           //   confirmButtonText: 'OK'
           // })
