@@ -278,6 +278,7 @@ export default {
         this.getCandidates()
       }).catch(e => {
         this.candidateLoading = false
+        console.log(e)
         // MessageBox.alert(e, 'ERROR.\n', {
         //   confirmButtonText: 'OK'
         // })
@@ -306,6 +307,7 @@ export default {
             try {
               inform.bio = JSON.parse(inform.bio)
             } catch (e) {
+              console.log('json invalid')
             }
             candidate.inform = inform.bio
             candidate.isSelected = false
@@ -320,9 +322,10 @@ export default {
         this.candidateLoading = false
         Message({
           showClose: true,
-          message: 'Get candidates ERROR.\n' + String(e),
+          message: 'Get candidates ERROR: ' + e.message,
           type: 'error'
         })
+        console.log(e)
         // MessageBox.alert(e, 'ERROR.\n', {
         //   confirmButtonText: 'OK'
         // })
@@ -358,9 +361,10 @@ export default {
         this.auditorLoading = false
         Message({
           showClose: true,
-          message: 'Get auditors ERROR.\n' + String(e),
+          message: 'Get auditors ERROR: ' + e.message,
           type: 'error'
         })
+        console.log(e)
         // MessageBox.alert(e, 'ERROR.\n', {
         //   confirmButtonText: 'OK'
         // })
@@ -483,8 +487,9 @@ export default {
             Message({
               showClose: true,
               type: 'error',
-              message: 'Vote ERROR.\n' + String(e)
+              message: 'Vote ERROR:' + e.message
             })
+            console.log(e)
             // MessageBox.alert(e, 'ERROR.\n.\n', {
             //   confirmButtonText: 'OK'
             // })
@@ -509,8 +514,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: 'Stake ERROR.\n' + String(e)
+            message: 'Stake ERROR:' + e.message
           })
+          console.log(e)
           // MessageBox.alert(e, 'ERROR.\n.\n', {
           //   confirmButtonText: 'OK'
           // })
@@ -548,8 +554,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: 'Unstake ERROR.\n' + String(e)
+            message: 'Unstake ERROR: ' + e.message
           })
+          console.log(e)
           // MessageBox.alert(e, 'ERROR.\n.\n', {
           //   confirmButtonText: 'OK'
           // })
@@ -586,8 +593,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: 'Be active ERROR.\n' + String(e)
+            message: 'Be active ERROR: ' + e.message
           })
+          console.log(e)
           // MessageBox.alert(e, 'ERROR.\n', {
           //   confirmButtonText: 'OK'
           // })
@@ -624,8 +632,9 @@ export default {
           Message({
             showClose: true,
             type: 'error',
-            message: 'Be inactive ERROR.\n' + String(e)
+            message: 'Be inactive ERROR: ' + e.message
           })
+          console.log(e)
         })
     },
     showUpdate () {
@@ -666,8 +675,9 @@ export default {
               Message({
                 showClose: true,
                 type: 'error',
-                message: 'Update BIO ERROR.\n' + String(e)
+                message: 'Update BIO ERROR: ' + e.message
               })
+              console.log(e)
               // MessageBox.alert(e, 'ERROR.\n', {
               //   confirmButtonText: 'OK'
               // })
