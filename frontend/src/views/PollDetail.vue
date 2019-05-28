@@ -323,9 +323,9 @@ export default {
       }
     },
     votes () { // votes for this proposal
-      let allVotes = this.$store.state.votes || localStorage.getItem('votes')
-      let allAccounts = this.$store.state.accounts || localStorage.getItem('accounts')
-      let allProxies = this.$store.state.proxies || localStorage.getItem('proxies')
+      let allVotes = this.$store.state.votes
+      let allAccounts = this.$store.state.accounts
+      let allProxies = this.$store.state.proxies
       if (allVotes && allAccounts && allProxies) {
         if (typeof allVotes === 'string') {
           allVotes = JSON.parse(allVotes)
@@ -737,6 +737,9 @@ export default {
               message: `Your vote  has been cast on ${this.proposalName}, data will be updated some time later`,
               type: 'success'
             })
+            this.$store.dispatch('getAccounts')
+            this.$store.dispatch('getVotes')
+            this.$store.dispatch('getProxies')
             // MessageBox.alert(`Your vote has been cast on ${this.proposalName}`, '', {
             //   confirmButtonText: 'OK'
             // })
@@ -776,6 +779,9 @@ export default {
             message: `Your unvote on ${this.proposalName} was successful, data will be updated some time later`,
             type: 'success'
           })
+          this.$store.dispatch('getAccounts')
+          this.$store.dispatch('getVotes')
+          this.$store.dispatch('getProxies')
           // MessageBox.alert(`Your unvote on ${this.proposalName} was successful, data will be updated some time later`, '', {
           //   confirmButtonText: 'OK'
           // })
@@ -812,6 +818,14 @@ export default {
       if (this.showVotersNum > this.votes.length) {
         this.showVotersNum = this.votes.length
       }
+    }
+  },
+  watch: {
+    $route () {
+      this.getProposal()
+      this.$store.dispatch('getAccounts')
+      this.$store.dispatch('getVotes')
+      this.$store.dispatch('getProxies')
     }
   }
 }

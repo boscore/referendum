@@ -82,7 +82,6 @@ export default new Vuex.Store({
       axios.get(API_URL.API_GET_ALL_ACCOUNTS).then(res => {
         if (res.status === 200) {
           commit('setAccounts', { accounts: res.data })
-          localStorage.setItem('accounts', JSON.stringify(res.data))
         }
       })
     },
@@ -90,7 +89,6 @@ export default new Vuex.Store({
       axios.get(API_URL.API_GET_ALL_PROXIES).then(res => {
         if (res.status === 200) {
           commit('setProxies', { proxies: res.data })
-          localStorage.setItem('proxies', JSON.stringify(res.data))
         }
       })
     },
@@ -108,7 +106,6 @@ export default new Vuex.Store({
               vote.vote_json = null
             }
           })
-          localStorage.setItem('votes', JSON.stringify(res.data))
           commit('setVotes', { votes: res.data })
         }
       })
