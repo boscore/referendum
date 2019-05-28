@@ -23,11 +23,19 @@ export default {
     Footer,
     NavMenu
   },
+  data () {
+    return {
+      interval: null
+    }
+  },
   created () {
-    this.$store.dispatch('getAccounts')
+    this.interval = setInterval((() => {
+      this.$store.dispatch('getAccounts')
+      this.$store.dispatch('getVotes')
+      this.$store.dispatch('getProxies')
+      console.log('getinfo')
+    })(), 60000)
     this.$store.dispatch('getProposals')
-    this.$store.dispatch('getVotes')
-    this.$store.dispatch('getProxies')
     if (this.timer) clearTimeout(this.timer)
     this.timer = setTimeout(() => {
       ScatterJS.scatter.connect('BOSCore-Referendum').then(connected => {
@@ -42,6 +50,9 @@ export default {
     window.onresize = () => {
       this.$store.dispatch('setScreenWidth', { screenWidth: document.body.clientWidth })
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.interval)
   },
   methods: {
   }

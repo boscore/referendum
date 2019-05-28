@@ -27,7 +27,6 @@
           </div>
         </div>
         <el-tabs v-model="activeTab">
-          <!-- <el-tab-pane label="Search" name="search"></el-tab-pane> -->
           <!-- 我的提案 -->
           <el-tab-pane label="My proposals" name="proposals">
             <div v-loading="actionLoading" class="card" style="margin: 10px 0px">
@@ -155,6 +154,18 @@
               <img style="width:100%" src="@/assets/proposal_flow.png" />
             </div>
           </el-tab-pane>
+          <el-tab-pane label="How to vote" name="tutorial">
+            <div class="card tutorial">
+              <p>1. Set Scatter networks</p>
+              <img src="@/assets/images/tutorial-1.png"/>
+              <p>2. Add your key</p>
+              <img src="@/assets/images/tutorial-2.png"/>
+              <p>3. Then link your account</p>
+              <img src="@/assets/images/tutorial-3.png"/>
+              <p>4. Login and send your vote to a proposal </p>
+              <img src="@/assets/images/tutorial-4.png"/>
+            </div>
+          </el-tab-pane>
         </el-tabs>
         <div class="clear-float">
             <h1 class="title" style="float:left">Discover Polls</h1>
@@ -256,8 +267,8 @@ export default {
       searchBy: ''
     }
   },
-  async created () {
-    await this.getProposals()
+  async mounted () {
+    await this.$store.dispatch('getProposals')
   },
   computed: {
     scatter () {
@@ -484,9 +495,6 @@ export default {
       }
       return false
     },
-    getProposals () {
-      this.$store.dispatch('getProposals')
-    },
     getIdentity () { // scatter认证
       const requiredFields = {
         accounts: [ NETWORK ]
@@ -505,6 +513,11 @@ export default {
     },
     forgetIdentity () {
       this.scatter.forgetIdentity()
+    }
+  },
+  watch: {
+    $route () {
+      this.$store.dispatch('getProposals')
     }
   }
 }
@@ -567,6 +580,16 @@ export default {
   display flex
   flex-wrap wrap
   justify-content flex-end
+.tutorial
+  text-align left
+  img
+    display block
+    width 80%
+    margin auto
+@media only screen and (max-width 700px)
+  .tutorial
+    img
+      width 100%
 @media only screen and (max-width 450px)
   .prop-card
     margin 25px 0

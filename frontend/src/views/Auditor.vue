@@ -481,6 +481,7 @@ export default {
               type: 'success',
               message: 'Your vote has been cast on candidates'
             })
+            this.getAllInfo()
             this.removeAllCand()
           }).catch(e => {
             this.actionLoading = false
@@ -684,6 +685,13 @@ export default {
             })
         }
       })
+    }
+  },
+  watch: {
+    $route () {
+      this.getAllInfo()
+      this.getConfig()
+      this.getPendingStake()
     }
   }
 }
