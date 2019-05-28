@@ -10,7 +10,7 @@ function dateConvert (date) {
     }
     return n
   }
-  return `${newDate.getFullYear()}-${formatNumber(newDate.getMonth())}-${formatNumber(newDate.getDate())} ${formatNumber(newDate.getHours())}:${formatNumber(newDate.getMinutes())}`
+  return `${newDate.getFullYear()}-${formatNumber(newDate.getMonth() + 1)}-${formatNumber(newDate.getDate())} ${formatNumber(newDate.getHours())}:${formatNumber(newDate.getMinutes())}`
 }
 
 function toThousands (num) {
