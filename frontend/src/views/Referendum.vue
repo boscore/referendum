@@ -194,6 +194,7 @@
               :desc="prop.proposal.proposal_json.content || ''"
               :votes="prop.stats.staked"
               :staked="prop.stats.staked.total"
+              :expired="isExpired(prop.proposal.expires_at)"
               class="prop-card"></PropCard>
           </div>
         </div>
@@ -261,7 +262,7 @@ export default {
           label: 'Ongoing'
         }
       ],
-      filterBy: ['poll', 'referendum', 'expired', 'ongoing'],
+      filterBy: ['poll', 'referendum', 'ongoing'],
       sortBy: 'MostVoted',
       searchText: '',
       searchBy: ''

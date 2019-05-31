@@ -17,7 +17,16 @@ function toThousands (num) {
   return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
 }
 
+function isExpired (exporiesAt) {
+  let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
+  let expiry = new Date(exporiesAt).getTime()
+  if (expiry < now) {
+    return true
+  }
+  return false
+}
 export default {
   dateConvert,
-  toThousands
+  toThousands,
+  isExpired
 }
