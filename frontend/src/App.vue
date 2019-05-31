@@ -23,22 +23,36 @@ export default {
     Footer,
     NavMenu
   },
+  data () {
+    return {
+      interval: null
+    }
+  },
   created () {
-    this.$store.dispatch('getAccounts')
+    this.interval = setInterval((() => {
+      this.$store.dispatch('getAccounts')
+      this.$store.dispatch('getVotes')
+      this.$store.dispatch('getProxies')
+      console.log('getinfo')
+    })(), 60000)
     this.$store.dispatch('getProposals')
-    this.$store.dispatch('getVotes')
-    this.$store.dispatch('getProxies')
-    ScatterJS.scatter.connect('BOSCore-Referendum').then(connected => {
-      if (!connected) return false
-      // 有scatter
-      this.$store.dispatch('setScatter', { scatter: ScatterJS.scatter })
-    })
+    if (this.timer) clearTimeout(this.timer)
+    this.timer = setTimeout(() => {
+      ScatterJS.scatter.connect('BOSCore-Referendum').then(connected => {
+        if (!connected) return false
+        // 有scatter
+        this.$store.dispatch('setScatter', { scatter: ScatterJS.scatter })
+      })
+    }, 1000)
   },
   mounted () {
     this.$store.dispatch('setScreenWidth', { screenWidth: document.body.clientWidth })
     window.onresize = () => {
       this.$store.dispatch('setScreenWidth', { screenWidth: document.body.clientWidth })
     }
+  },
+  beforeDestroy () {
+    clearInterval(this.interval)
   },
   methods: {
   }

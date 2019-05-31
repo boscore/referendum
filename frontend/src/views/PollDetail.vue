@@ -323,9 +323,9 @@ export default {
       }
     },
     votes () { // votes for this proposal
-      let allVotes = this.$store.state.votes || localStorage.getItem('votes')
-      let allAccounts = this.$store.state.accounts || localStorage.getItem('accounts')
-      let allProxies = this.$store.state.proxies || localStorage.getItem('proxies')
+      let allVotes = this.$store.state.votes
+      let allAccounts = this.$store.state.accounts
+      let allProxies = this.$store.state.proxies
       if (allVotes && allAccounts && allProxies) {
         if (typeof allVotes === 'string') {
           allVotes = JSON.parse(allVotes)
@@ -465,7 +465,9 @@ export default {
           if (proposals[key].proposal.proposer === this.proposal.proposal.proposer &&
           proposals[key].proposal.proposal_name !== this.proposal.proposal.proposal_name) {
             if (related.length < 2) {
-              related.push(proposals[key])
+              if (!this.$util.isExpired(proposals[key].proposal.expires_at)) {
+                related.push(proposals[key])
+              }
             }
           }
         })
@@ -590,10 +592,16 @@ export default {
   },
   methods: {
     getProposal () {
-      this.$axios.get(API_URL.API_GET_PROPOSAL + '/' + this.proposalName).then(res => {
-        if (res.status === 200) {
+      fetch(API_URL.API_GET_PROPOSAL + '/' + this.proposalName)
+        .then(res => {
+          if (res.status !== 200) {
+            console.log(res.statusText)
+          }
+          return res.json()
+        })
+        .then(res => {
           this.propLoading = false
-          this.proposal = res.data
+          this.proposal = res
           if (this.proposal.approved_by_vote && !this.proposal.approved_by_BET && this.proposal.reviewed_by_BET_date && this.proposal.reviewed_by_BET_date !== 'None') {
             const start = new Date(this.proposal.reviewed_by_BET_date).getTime()
             const end = new Date().getTime()
@@ -609,33 +617,38 @@ export default {
           } catch (e) {
             console.log(e)
           }
-        }
-      }).catch(e => {
-        this.propLoading = false
-        Message({
-          showClose: true,
-          message: 'Get Proposal ERROR:' + e.message,
-          type: 'error'
+        }).catch(e => {
+          this.propLoading = false
+          Message({
+            showClose: true,
+            message: 'Get Proposal ERROR:' + e.message,
+            type: 'error'
+          })
+          console.log(e)
         })
-        console.log(e)
-      })
     },
     getProducers () {
-      this.$axios.get(API_URL.API_GET_PRODUCERS).then(res => {
-        if (res.status === 200) {
-          this.producers = res.data.producer
-        }
-      }).catch(e => {
-        Message({
-          showClose: true,
-          message: 'Get Producers ERROR\n' + String(e),
-          type: 'error'
+      fetch(API_URL.API_GET_PRODUCERS)
+        .then(res => {
+          if (res.status !== 200) {
+            console.log(res.statusText)
+          }
+
+          return res.json()
         })
-        console.log(e)
+        .then(res => {
+          this.producers = res.producer
+        }).catch(e => {
+          Message({
+            showClose: true,
+            message: 'Get Producers ERROR\n' + String(e),
+            type: 'error'
+          })
+          console.log(e)
         // MessageBox.alert(e, 'Get Producers ERROR', {
         //   confirmButtonText: 'OK'
         // })
-      })
+        })
     },
     getAuditors () {
       // const tableOptions = new FormData()
@@ -737,6 +750,9 @@ export default {
               message: `Your vote  has been cast on ${this.proposalName}, data will be updated some time later`,
               type: 'success'
             })
+            this.$store.dispatch('getAccounts')
+            this.$store.dispatch('getVotes')
+            this.$store.dispatch('getProxies')
             // MessageBox.alert(`Your vote has been cast on ${this.proposalName}`, '', {
             //   confirmButtonText: 'OK'
             // })
@@ -776,6 +792,9 @@ export default {
             message: `Your unvote on ${this.proposalName} was successful, data will be updated some time later`,
             type: 'success'
           })
+          this.$store.dispatch('getAccounts')
+          this.$store.dispatch('getVotes')
+          this.$store.dispatch('getProxies')
           // MessageBox.alert(`Your unvote on ${this.proposalName} was successful, data will be updated some time later`, '', {
           //   confirmButtonText: 'OK'
           // })
@@ -812,6 +831,14 @@ export default {
       if (this.showVotersNum > this.votes.length) {
         this.showVotersNum = this.votes.length
       }
+    }
+  },
+  watch: {
+    $route () {
+      this.getProposal()
+      this.$store.dispatch('getAccounts')
+      this.$store.dispatch('getVotes')
+      this.$store.dispatch('getProxies')
     }
   }
 }

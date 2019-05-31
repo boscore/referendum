@@ -10,14 +10,23 @@ function dateConvert (date) {
     }
     return n
   }
-  return `${newDate.getFullYear()}-${formatNumber(newDate.getMonth())}-${formatNumber(newDate.getDate())} ${formatNumber(newDate.getHours())}:${formatNumber(newDate.getMinutes())}`
+  return `${newDate.getFullYear()}-${formatNumber(newDate.getMonth() + 1)}-${formatNumber(newDate.getDate())} ${formatNumber(newDate.getHours())}:${formatNumber(newDate.getMinutes())}`
 }
 
 function toThousands (num) {
   return (num || 0).toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,')
 }
 
+function isExpired (exporiesAt) {
+  let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
+  let expiry = new Date(exporiesAt).getTime()
+  if (expiry < now) {
+    return true
+  }
+  return false
+}
 export default {
   dateConvert,
-  toThousands
+  toThousands,
+  isExpired
 }
