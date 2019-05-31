@@ -57,6 +57,10 @@ export default {
     staked: {
       type: [Number, String],
       default: 0
+    },
+    expired: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -65,9 +69,15 @@ export default {
   },
   computed: {
     cardTopClass () {
-      return {
-        'card-top-referendum': this.type.search('referendum') !== -1,
-        'card-top-poll': this.type.search('referendum') === -1
+      if (this.expired) {
+        return {
+          'card-top-expired': true
+        }
+      } else {
+        return {
+          'card-top-referendum': this.type.search('referendum') !== -1,
+          'card-top-poll': this.type.search('referendum') === -1
+        }
       }
     },
     cardTagClass () {
@@ -160,6 +170,8 @@ p
     display -webkit-box !important
     -webkit-box-orient vertical
     -webkit-line-clamp: 3
+.card-top-expired
+  background-image linear-gradient(-179deg, #85929E 0%, #ABB2B9 100%)
 .card-top-referendum
   background-image linear-gradient(-179deg, #317EE3 0%, #59A9EC 100%)
 .card-top-poll
