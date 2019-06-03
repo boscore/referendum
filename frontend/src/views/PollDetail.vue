@@ -613,9 +613,18 @@ export default {
             }
           }
           try {
-            this.proposal.proposal.proposal_json = JSON.parse(this.proposal.proposal.proposal_json)
+            this.proposal.proposal.proposal_json = JSON.parse(this.$util.transSpecialChar(this.proposal.proposal.proposal_json))
           } catch (e) {
             console.log(e)
+            this.proposal.proposal.proposal_json = {
+              type: '',
+              content: ' '
+            }
+            Message({
+              showClose: true,
+              message: 'proposal_json ERROR',
+              type: 'error'
+            })
           }
         }).catch(e => {
           this.propLoading = false
