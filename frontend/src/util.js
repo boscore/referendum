@@ -29,7 +29,8 @@ export default {
   dateConvert,
   toThousands,
   isExpired,
-  transSpecialChar
+  transSpecialChar,
+  unTransSpecialChar
 }
 
 function transSpecialChar (json) {
@@ -39,6 +40,17 @@ function transSpecialChar (json) {
     json = json.replace(/\t/g, '\\t')
     json = json.replace(/\\/g, '\\\\')
     json = json.replace(/\\"/g, '\\\\"')
+  }
+  return json
+}
+
+function unTransSpecialChar (json) {
+  if (json !== undefined && json !== '' && json !== 'null') {
+    json = json.replace(/\\r/g, '\r')
+    json = json.replace(/\\n/g, '\n')
+    json = json.replace(/\\t/g, '\t')
+    json = json.replace(/\\\\/g, '\\')
+    json = json.replace(/\\\\"/g, '\\"')
   }
   return json
 }

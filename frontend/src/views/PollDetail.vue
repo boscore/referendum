@@ -614,6 +614,7 @@ export default {
           }
           try {
             this.proposal.proposal.proposal_json = JSON.parse(this.$util.transSpecialChar(this.proposal.proposal.proposal_json))
+            this.proposal.proposal.proposal_json.content = this.$util.unTransSpecialChar(this.proposal.proposal.proposal_json.content)
           } catch (e) {
             console.log(e)
             this.proposal.proposal.proposal_json = {
@@ -916,8 +917,18 @@ export default {
     color: #507DFE;
 .prop-content
   overflow-wrap break-word
+  >>> h1
+    color #507DFE
   >>> h2
-    color: #507DFE;
+    color #507DFE
+  >>> h3
+    color #507DFE
+  >>> h4
+    color #507DFE
+  >>> h5
+    color #507DFE
+  >>> h6
+    color #507DFE
   >>> p
     font-family: Roboto-Regular;
     font-size: 18px;
