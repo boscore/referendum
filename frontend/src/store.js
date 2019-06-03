@@ -63,6 +63,7 @@ export default new Vuex.Store({
             try {
               if (res[key].proposal.proposal_json) {
                 res[key].proposal.proposal_json = JSON.parse(util.transSpecialChar(res[key].proposal.proposal_json))
+                res[key].proposal.proposal_json.content = util.unTransSpecialChar(res[key].proposal.proposal_json.content)
               } else {
                 res[key].proposal.proposal_json = {
                   type: '',
@@ -121,6 +122,7 @@ export default new Vuex.Store({
             if (vote.vote_json) {
               try {
                 vote.vote_json = JSON.parse(util.transSpecialChar(vote.vote_json))
+                vote.vote_json.comment = util.unTransSpecialChar(vote.vote_json.comment)
               } catch (e) {
                 console.log(e)
                 console.log(vote.voter + 'invalid vote_json')
