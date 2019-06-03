@@ -613,7 +613,7 @@ export default {
             }
           }
           try {
-            this.proposal.proposal.proposal_json = JSON.parse(this.proposal.proposal.proposal_json)
+            this.proposal.proposal.proposal_json = JSON.parse(this.$util.transSpecialChar(this.proposal.proposal.proposal_json))
           } catch (e) {
             console.log(e)
           }
