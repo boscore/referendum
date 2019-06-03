@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { API_URL } from '@/assets/constants.js'
+import util from '@/util.js'
 
 Vue.use(Vuex)
 
@@ -61,7 +62,7 @@ export default new Vuex.Store({
           Object.keys(res).forEach(key => {
             try {
               if (res[key].proposal.proposal_json) {
-                res[key].proposal.proposal_json = JSON.parse(res[key].proposal.proposal_json)
+                res[key].proposal.proposal_json = JSON.parse(util.transSpecialChar(res[key].proposal.proposal_json))
               } else {
                 res[key].proposal.proposal_json = {
                   type: '',
@@ -69,7 +70,8 @@ export default new Vuex.Store({
                 }
               }
             } catch (e) {
-              console.log('invalid proposal_json')
+              console.log(e)
+              console.log(key + ' invalid proposal_json')
               res[key].proposal.proposal_json = {
                 type: '',
                 content: ''
@@ -118,9 +120,10 @@ export default new Vuex.Store({
           res.forEach(vote => {
             if (vote.vote_json) {
               try {
-                vote.vote_json = JSON.parse(vote.vote_json)
+                vote.vote_json = JSON.parse(util.transSpecialChar(vote.vote_json))
               } catch (e) {
-                console.log('invalid vote_json')
+                console.log(e)
+                console.log(vote.voter + 'invalid vote_json')
               }
             } else {
               vote.vote_json = null

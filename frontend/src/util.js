@@ -28,5 +28,17 @@ function isExpired (exporiesAt) {
 export default {
   dateConvert,
   toThousands,
-  isExpired
+  isExpired,
+  transSpecialChar
+}
+
+function transSpecialChar (json) {
+  if (json !== undefined && json !== '' && json !== 'null') {
+    json = json.replace(/\r/g, '\\r')
+    json = json.replace(/\n/g, '\\n')
+    json = json.replace(/\t/g, '\\t')
+    json = json.replace(/\\/g, '\\\\')
+    json = json.replace(/\\"/g, '\\\\"')
+  }
+  return json
 }
