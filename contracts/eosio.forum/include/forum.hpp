@@ -76,7 +76,7 @@ class [[eosio::contract("forum")]] forum : public eosio::contract {
         void cancel(
             const name proposer,
             const name proposal_name,
-            uint64_t max_count
+            const uint64_t max_count
         );
 
     private:

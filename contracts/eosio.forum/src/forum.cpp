@@ -217,12 +217,17 @@ void forum::extend(
  *
  * `proposal` & `votes` will be removed
  */
-void forum::cancel(const name proposer, const name proposal_name, uint64_t max_count) {
+void forum::cancel(const name proposer, const name proposal_name, const uint64_t max_count) {
+    // Only `proposer` is authorized to cancel a proposal prior to expiration
     require_auth(proposer);
-    proposals proposal_table(_self, _self.value);
 
+    // Check if proposal already exists
+    proposals proposal_table(_self, _self.value);
     auto itr = proposal_table.find(proposal_name.value);
     check(itr != proposal_table.end(), "proposal does not exist");
+
+    // Enforce `max_count` to be high enough to prevent vote manipulation using the of cancel action
+    check( max_count <= 500, "max_count must be equal or greater than 500");
 
     votes vote_table(_self, _self.value);
     auto index = vote_table.template get_index<"byproposal"_n>();
@@ -233,6 +238,7 @@ void forum::cancel(const name proposer, const name proposal_name, uint64_t max_c
     auto lower_itr = index.lower_bound(vote_key_lower_bound);
     auto upper_itr = index.upper_bound(vote_key_upper_bound);
 
+    // Iterate over votes and delete rows in `votes` table
     uint64_t count = 0;
     while (count < max_count && lower_itr != upper_itr) {
         lower_itr = index.erase(lower_itr);
