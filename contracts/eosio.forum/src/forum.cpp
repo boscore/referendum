@@ -227,7 +227,7 @@ void forum::cancel(const name proposer, const name proposal_name, const uint64_t
     check(itr != proposal_table.end(), "proposal does not exist");
 
     // Enforce `max_count` to be high enough to prevent vote manipulation using the of cancel action
-    check( max_count <= 500, "max_count must be equal or greater than 500");
+    check( max_count >= 500, "max_count must be equal or greater than 500");
 
     votes vote_table(_self, _self.value);
     auto index = vote_table.template get_index<"byproposal"_n>();
