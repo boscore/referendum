@@ -222,7 +222,7 @@ void forum::cancel(const name proposer, const name proposal_name, uint64_t max_c
     proposals proposal_table(_self, _self.value);
 
     auto itr = proposal_table.find(proposal_name.value);
-    check(itr == proposal_table.end(), "proposal does not exist");
+    check(itr != proposal_table.end(), "proposal does not exist");
 
     votes vote_table(_self, _self.value);
     auto index = vote_table.template get_index<"byproposal"_n>();
