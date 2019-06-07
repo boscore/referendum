@@ -30,7 +30,7 @@ void forum::propose(
     proposals proposal_table(_self, _self.value);
     check(proposal_table.find(proposal_name.value) == proposal_table.end(), "proposal with same name already exists.");
 
-    proposal_table.emplace(proposer, [&](auto& row) {
+    proposal_table.emplace(_self, [&](auto& row) {
         row.proposal_name = proposal_name;
         row.proposer = proposer;
         row.title = title;
@@ -50,7 +50,7 @@ void forum::expire(const name proposal_name) {
     auto proposer = itr->proposer;
     require_auth(proposer);
 
-    proposal_table.modify(itr, proposer, [&](auto& row) {
+    proposal_table.modify(itr, eosio::same_payer, [&](auto& row) {
         row.expires_at = current_time_point_sec();
     });
 }
@@ -188,6 +188,72 @@ void forum::status(const name account, const string& content) {
     }
 }
 
+void forum::extend(
+    const name proposer,
+    const name proposal_name,
+    const time_point_sec expires_at
+) {
+    require_auth(proposer);
+    check(expires_at > current_time_point_sec(), "expires_at must be a value in the future.");
+
+    // Not a perfect assertion since we are not doing real date computation, but good enough for our use case
+    time_point_sec max_expires_at = current_time_point_sec() + SIX_MONTHS_IN_SECONDS;
+    check(expires_at <= max_expires_at, "expires_at must be within 6 months from now.");
+
+    // Check if `proposal_name` already exists
+    proposals proposal_table(_self, _self.value);
+    auto proposal_itr = proposal_table.find( proposal_name.value );
+    check( proposal_itr != proposal_table.end(), "Could not find proposal with that name" );
+    check( expires_at > proposal_itr->expires_at, "expires_at must be greater than current expiry.");
+    check( proposal_itr->proposer == proposer, "proposer does not match original proposer of proposal_name");
+
+    // Modify `proposals` table with lock boolean (true/false)
+    proposal_table.modify(proposal_itr, eosio::same_payer, [&](auto & row) {
+        row.expires_at = expires_at;
+    });
+}
+
+/**
+ * Cancel proposal using the authorization from the {{ proposer }}
+ *
+ * `proposal` & `votes` will be removed
+ */
+void forum::cancel(const name proposer, const name proposal_name, const uint64_t max_count) {
+    require_auth(proposer);
+
+    // Check if proposal already exists
+    proposals proposal_table(_self, _self.value);
+    auto proposal_itr = proposal_table.find(proposal_name.value);
+    check(proposal_itr != proposal_table.end(), "proposal does not exist");
+
+    // Only original `proposer` of `proposal_name` is authorized to cancel a proposal prior to expiration
+    check( proposal_itr->proposer == proposer, "proposer does not match original proposer of proposal_name");
+
+    // Enforce `max_count` to be high enough to prevent vote manipulation using the of cancel action
+    check( max_count >= 500, "max_count must be equal or greater than 500");
+
+    votes vote_table(_self, _self.value);
+    auto index = vote_table.template get_index<"byproposal"_n>();
+
+    auto vote_key_lower_bound = compute_by_proposal_key(proposal_name, name(0x0000000000000000));
+    auto vote_key_upper_bound = compute_by_proposal_key(proposal_name, name(0xFFFFFFFFFFFFFFFF));
+
+    auto lower_itr = index.lower_bound(vote_key_lower_bound);
+    auto upper_itr = index.upper_bound(vote_key_upper_bound);
+
+    // Iterate over votes and delete rows in `votes` table
+    uint64_t count = 0;
+    while (count < max_count && lower_itr != upper_itr) {
+        lower_itr = index.erase(lower_itr);
+        count++;
+    }
+
+    // Let's delete the actual proposal if we deleted all votes and the proposal still exists
+    if (lower_itr == upper_itr && proposal_itr != proposal_table.end()) {
+        proposal_table.erase(proposal_itr);
+    }
+}
+
 /// Helpers
 
 void forum::update_status(
@@ -197,13 +263,13 @@ void forum::update_status(
 ) {
     auto itr = status_table.find(account.value);
     if (itr == status_table.end()) {
-        status_table.emplace(account, [&](auto& row) {
+        status_table.emplace(_self, [&](auto& row) {
             row.account = account;
             row.updated_at = current_time_point_sec();
             updater(row);
         });
     } else {
-        status_table.modify(itr, account, [&](auto& row) {
+        status_table.modify(itr, eosio::same_payer, [&](auto& row) {
             row.updated_at = current_time_point_sec();
             updater(row);
         });
@@ -221,7 +287,7 @@ void forum::update_vote(
 
     auto itr = index.find(vote_key);
     if (itr == index.end()) {
-        vote_table.emplace(voter, [&](auto& row) {
+        vote_table.emplace(_self, [&](auto& row) {
             row.id = vote_table.available_primary_key();
             row.proposal_name = proposal_name;
             row.voter = voter;
@@ -229,7 +295,7 @@ void forum::update_vote(
             updater(row);
         });
     } else {
-        index.modify(itr, voter, [&](auto& row) {
+        index.modify(itr, eosio::same_payer, [&](auto& row) {
             row.updated_at = current_time_point_sec();
             updater(row);
         });

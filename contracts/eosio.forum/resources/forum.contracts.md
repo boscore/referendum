@@ -92,3 +92,14 @@ If I, {{ voter }}, am registered as a proxy and am casting votes on behalf of ot
 
 I, {{ voter }}, stipulate I have not and will not accept anything of value in exchange for this `vote`, on penalty of confiscation of these tokens, and other penalties.
 
+<h1 class="contract">extend</h1>
+
+## Description
+
+`extend` is used to extend the {{ expires_at }} timestamp value of a {{ proposal_name }} authorized by the {{ proposer }}.
+
+<h1 class="contract">cancel</h1>
+
+## Description
+
+`cancel` is used to cancel a {{ proposal_name }} authorized by the {{ proposer }}.
