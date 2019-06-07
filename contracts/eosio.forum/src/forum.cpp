@@ -205,6 +205,7 @@ void forum::extend(
     auto proposal_itr = proposal_table.find( proposal_name.value );
     check( proposal_itr != proposal_table.end(), "Could not find proposal with that name" );
     check( expires_at > proposal_itr->expires_at, "expires_at must be greater than current expiry.");
+    check( proposal_itr->proposer == proposer, "proposer does not match original proposer of proposal_name");
 
     // Modify `proposals` table with lock boolean (true/false)
     proposal_table.modify(proposal_itr, eosio::same_payer, [&](auto & row) {
@@ -218,13 +219,15 @@ void forum::extend(
  * `proposal` & `votes` will be removed
  */
 void forum::cancel(const name proposer, const name proposal_name, const uint64_t max_count) {
-    // Only `proposer` is authorized to cancel a proposal prior to expiration
     require_auth(proposer);
 
     // Check if proposal already exists
     proposals proposal_table(_self, _self.value);
-    auto itr = proposal_table.find(proposal_name.value);
-    check(itr != proposal_table.end(), "proposal does not exist");
+    auto proposal_itr = proposal_table.find(proposal_name.value);
+    check(proposal_itr != proposal_table.end(), "proposal does not exist");
+
+    // Only original `proposer` of `proposal_name` is authorized to cancel a proposal prior to expiration
+    check( proposal_itr->proposer == proposer, "proposer does not match original proposer of proposal_name");
 
     // Enforce `max_count` to be high enough to prevent vote manipulation using the of cancel action
     check( max_count >= 500, "max_count must be equal or greater than 500");
@@ -246,8 +249,8 @@ void forum::cancel(const name proposer, const name proposal_name, const uint64_t
     }
 
     // Let's delete the actual proposal if we deleted all votes and the proposal still exists
-    if (lower_itr == upper_itr && itr != proposal_table.end()) {
-        proposal_table.erase(itr);
+    if (lower_itr == upper_itr && proposal_itr != proposal_table.end()) {
+        proposal_table.erase(proposal_itr);
     }
 }
 
