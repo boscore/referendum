@@ -30,7 +30,7 @@ void forum::propose(
     proposals proposal_table(_self, _self.value);
     check(proposal_table.find(proposal_name.value) == proposal_table.end(), "proposal with same name already exists.");
 
-    proposal_table.emplace(proposer, [&](auto& row) {
+    proposal_table.emplace(_self, [&](auto& row) {
         row.proposal_name = proposal_name;
         row.proposer = proposer;
         row.title = title;
@@ -50,7 +50,7 @@ void forum::expire(const name proposal_name) {
     auto proposer = itr->proposer;
     require_auth(proposer);
 
-    proposal_table.modify(itr, proposer, [&](auto& row) {
+    proposal_table.modify(itr, eosio::same_payer, [&](auto& row) {
         row.expires_at = current_time_point_sec();
     });
 }
@@ -253,13 +253,13 @@ void forum::update_status(
 ) {
     auto itr = status_table.find(account.value);
     if (itr == status_table.end()) {
-        status_table.emplace(account, [&](auto& row) {
+        status_table.emplace(_self, [&](auto& row) {
             row.account = account;
             row.updated_at = current_time_point_sec();
             updater(row);
         });
     } else {
-        status_table.modify(itr, account, [&](auto& row) {
+        status_table.modify(itr, eosio::same_payer, [&](auto& row) {
             row.updated_at = current_time_point_sec();
             updater(row);
         });
@@ -277,7 +277,7 @@ void forum::update_vote(
 
     auto itr = index.find(vote_key);
     if (itr == index.end()) {
-        vote_table.emplace(voter, [&](auto& row) {
+        vote_table.emplace(_self, [&](auto& row) {
             row.id = vote_table.available_primary_key();
             row.proposal_name = proposal_name;
             row.voter = voter;
@@ -285,7 +285,7 @@ void forum::update_vote(
             updater(row);
         });
     } else {
-        index.modify(itr, voter, [&](auto& row) {
+        index.modify(itr, eosio::same_payer, [&](auto& row) {
             row.updated_at = current_time_point_sec();
             updater(row);
         });
