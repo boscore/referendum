@@ -204,6 +204,7 @@ void forum::extend(
     proposals proposal_table(_self, _self.value);
     auto proposal_itr = proposal_table.find( proposal_name.value );
     check( proposal_itr != proposal_table.end(), "Could not find proposal with that name" );
+    check( expires_at > proposal_itr->expires_at, "expires_at must be greater than current expiry.");
 
     // Modify `proposals` table with lock boolean (true/false)
     proposal_table.modify(proposal_itr, eosio::same_payer, [&](auto & row) {
