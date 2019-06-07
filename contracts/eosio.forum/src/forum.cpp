@@ -211,6 +211,39 @@ void forum::extend(
     });
 }
 
+/**
+ * Cancel proposal using the authorization from the {{ proposer }}
+ *
+ * `proposal` & `votes` will be removed
+ */
+void forum::cancel(const name proposer, const name proposal_name, uint64_t max_count) {
+    require_auth(proposer);
+    proposals proposal_table(_self, _self.value);
+
+    auto itr = proposal_table.find(proposal_name.value);
+    check(itr == proposal_table.end(), "proposal does not exist");
+
+    votes vote_table(_self, _self.value);
+    auto index = vote_table.template get_index<"byproposal"_n>();
+
+    auto vote_key_lower_bound = compute_by_proposal_key(proposal_name, name(0x0000000000000000));
+    auto vote_key_upper_bound = compute_by_proposal_key(proposal_name, name(0xFFFFFFFFFFFFFFFF));
+
+    auto lower_itr = index.lower_bound(vote_key_lower_bound);
+    auto upper_itr = index.upper_bound(vote_key_upper_bound);
+
+    uint64_t count = 0;
+    while (count < max_count && lower_itr != upper_itr) {
+        lower_itr = index.erase(lower_itr);
+        count++;
+    }
+
+    // Let's delete the actual proposal if we deleted all votes and the proposal still exists
+    if (lower_itr == upper_itr && itr != proposal_table.end()) {
+        proposal_table.erase(itr);
+    }
+}
+
 /// Helpers
 
 void forum::update_status(
