@@ -188,6 +188,29 @@ void forum::status(const name account, const string& content) {
     }
 }
 
+void forum::extend(
+    const name proposer,
+    const name proposal_name,
+    const time_point_sec expires_at
+) {
+    require_auth(proposer);
+    check(expires_at > current_time_point_sec(), "expires_at must be a value in the future.");
+
+    // Not a perfect assertion since we are not doing real date computation, but good enough for our use case
+    time_point_sec max_expires_at = current_time_point_sec() + SIX_MONTHS_IN_SECONDS;
+    check(expires_at <= max_expires_at, "expires_at must be within 6 months from now.");
+
+    // Check if `proposal_name` already exists
+    proposals proposal_table(_self, _self.value);
+    auto proposal_itr = proposal_table.find( proposal_name.value );
+    check( proposal_itr != proposal_table.end(), "Could not find proposal with that name" );
+
+    // Modify `proposals` table with lock boolean (true/false)
+    proposal_table.modify(proposal_itr, eosio::same_payer, [&](auto & row) {
+        row.expires_at = expires_at;
+    });
+}
+
 /// Helpers
 
 void forum::update_status(

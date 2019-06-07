@@ -65,6 +65,13 @@ class [[eosio::contract("forum")]] forum : public eosio::contract {
         [[eosio::action]]
         void status(const name account, const string& content);
 
+        [[eosio::action]]
+        void extend(
+            const name proposer,
+            const name proposal_name,
+            const time_point_sec expires_at
+        );
+
     private:
         // 3 days in seconds (Computation: 3 days * 24 hours * 60 minutes * 60 seconds)
         constexpr static uint32_t FREEZE_PERIOD_IN_SECONDS = 3 * 24 * 60 * 60;
