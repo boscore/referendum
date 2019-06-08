@@ -40,13 +40,13 @@ void auditorbos::modifyVoteWeights(name voter, vector<name> newVotes) {
 
     // Find voter's voting info
     auto voters_itr = _voters.find(voter.value);
-    check(voters_itr != _voters.end(), "voter must be voting for any number of block producers or a proxy");
+    check(voters_itr != _voters.end(), "ERR::VOTEAUDITOR_INVALID_VOTER_INFO::voter must be voting for any number of block producers or a proxy");
 
     // Get voter's staked weight
     int64_t vote_weight = voters_itr->staked;
 
     // Prevent voters with 0 staked balance from voting
-    check(vote_weight > 0, "voter must have a staked balance");
+    check(vote_weight > 0, "ERR::VOTEAUDITOR_INVALID_STAKE::voter must have a staked balance");
 
     // Find a vote that has been cast by this voter previously.
     auto existingVote = votes_cast_by_members.find(voter.value);
