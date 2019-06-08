@@ -4,6 +4,7 @@
 #include <eosiolib/time.hpp>
 
 #include "external_types.hpp"
+#include "voter_info.hpp"
 
 #define _STRINGIZE(x) #x
 #define STRINGIZE(x) _STRINGIZE(x)
@@ -206,6 +207,7 @@ private: // Variables used throughout the other actions.
     votes_table votes_cast_by_members;
     bios_table candidate_bios;
     contr_state _currentState;
+    voter_table _voters;
 
 public:
 
@@ -215,7 +217,8 @@ public:
             votes_cast_by_members(_self, _self.value),
             candidate_bios(_self, _self.value),
             config_singleton(_self, _self.value),
-            contract_state(_self, _self.value) {
+            contract_state(_self, _self.value),
+            _voters( "eosio"_n, "eosio"_n.value ) {
 
         _currentState = contract_state.get_or_default(contr_state());
     }
