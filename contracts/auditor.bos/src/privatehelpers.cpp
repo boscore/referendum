@@ -34,27 +34,21 @@ void auditorbos::modifyVoteWeights(name voter, vector<name> newVotes) {
     // This could be optimised with set diffing to avoid remove then add for unchanged votes. - later
     eosio::print("Modify vote weights: ", voter, "\n");
 
-    uint64_t asset_name = configs().lockupasset.symbol.code().raw();
-    int64_t vote_weight = 0; //ac->balance.amount;
+    check( is_account( voter ), "voter account does not exist" );
+
+    // To track previous votes weights
     int64_t old_weight = 0;
     vector<name> oldVotes = {};
 
-    //Find all cases of delegated bandwidth and sum them up
-    del_bandwidth_table delband(name("eosio"), voter.value);
-    auto stake = delband.begin();
+    // Find voter's voting info
+    auto voters_itr = _voters.find(voter.value);
+    check(voters_itr != _voters.end(), "voter must be voting for any number of block producers or a proxy");
 
-    while(stake != delband.end()) {
-        vote_weight += stake->net_weight.amount;
-        vote_weight += stake->cpu_weight.amount;
-        stake++;
-    }
+    // Get voter's staked weight
+    int64_t vote_weight = voters_itr->staked;
 
-    // Add any liquid balance
-    // accounts accountstable(name(TOKEN_CONTRACT), voter.value);
-    // const auto ac = accountstable.find(asset_name);
-    // if (ac != accountstable.end()) {
-    //     vote_weight += ac->balance.amount;
-    // }
+    // Prevent voters with 0 staked balance from voting
+    check(vote_weight > 0, "voter must have a staked balance");
 
     // Find a vote that has been cast by this voter previously.
     auto existingVote = votes_cast_by_members.find(voter.value);
