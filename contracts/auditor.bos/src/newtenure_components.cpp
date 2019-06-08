@@ -105,27 +105,32 @@ void auditorbos::newtenure(string message) {
     // Get the max supply of the lockup asset token (eg. BOS)
     auto tokenStats = stats(name(TOKEN_CONTRACT), config.lockupasset.symbol.code().raw()).begin();
 
-    uint64_t max_supply = tokenStats->supply.amount;
+    uint64_t active_supply = tokenStats->supply.amount;
 
     print("\nRead stats");
 
-    double percent_of_current_voter_engagement =
-            double(_currentState.total_weight_of_votes) / double(max_supply) * 100.0;
+    int64_t total_weight_of_votes = _currentState.total_weight_of_votes;
+    double percent_of_current_voter_engagement = double(total_weight_of_votes) / double(active_supply) * 100.0;
 
-    eosio::print("\n\nToken max supply: ", max_supply, " total votes so far: ", _currentState.total_weight_of_votes);
-    eosio::print("\n\nNeed inital engagement of: ", config.initial_vote_quorum_percent, "% to start the Audit Cycle.");
-    eosio::print("\n\nToken supply: ", max_supply * 0.0001, " total votes so far: ", _currentState.total_weight_of_votes * 0.0001);
-    eosio::print("\n\nNeed initial engagement of: ", config.initial_vote_quorum_percent, "% to start the Audit Cycle..");
-    eosio::print("\n\nNeed ongoing engagement of: ", config.vote_quorum_percent,
+    // Divide uint32_t by 10 to add an extra decimal which allows for lower vote quorum threshold
+    // example: Active Supply 1B / vote quorum 1 = 1M tokens as threshold
+    double initial_vote_quorum_percent = double(config.initial_vote_quorum_percent) / 10;
+    double vote_quorum_percent = double(config.vote_quorum_percent) / 10;
+
+    eosio::print("\n\nToken active supply: ", active_supply, " total votes so far: ", total_weight_of_votes);
+    eosio::print("\n\nNeed inital engagement of: ", initial_vote_quorum_percent, "% to start the Audit Cycle.");
+    eosio::print("\n\nToken supply: ", active_supply * 0.0001, " total votes so far: ", total_weight_of_votes * 0.0001);
+    eosio::print("\n\nNeed initial engagement of: ", initial_vote_quorum_percent, "% to start the Audit Cycle..");
+    eosio::print("\n\nNeed ongoing engagement of: ", vote_quorum_percent,
                  "% to allow new periods to trigger after initial activation.");
     eosio::print("\n\nPercent of current voter engagement: ", percent_of_current_voter_engagement, "\n\n");
 
     check(_currentState.met_initial_votes_threshold == true ||
-                 percent_of_current_voter_engagement > config.initial_vote_quorum_percent,
+                 percent_of_current_voter_engagement > initial_vote_quorum_percent,
                  "ERR::NEWTENURE_VOTER_ENGAGEMENT_LOW_ACTIVATE::Voter engagement is insufficient to activate the Audit Cycle..");
     _currentState.met_initial_votes_threshold = true;
 
-    check(percent_of_current_voter_engagement > config.vote_quorum_percent,
+    check(percent_of_current_voter_engagement > vote_quorum_percent,
                  "ERR::NEWTENURE_VOTER_ENGAGEMENT_LOW_PROCESS::Voter engagement is insufficient to process a new period");
 
     // Set auditors for the next period.
