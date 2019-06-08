@@ -34,8 +34,6 @@ void auditorbos::modifyVoteWeights(name voter, vector<name> newVotes) {
     // This could be optimised with set diffing to avoid remove then add for unchanged votes. - later
     eosio::print("Modify vote weights: ", voter, "\n");
 
-    check( is_account( voter ), "voter account does not exist" );
-
     // To track previous votes weights
     int64_t old_weight = 0;
     vector<name> oldVotes = {};

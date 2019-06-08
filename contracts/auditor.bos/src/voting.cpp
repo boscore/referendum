@@ -19,19 +19,13 @@ void auditorbos::voteauditor(name voter, vector<name> newvotes) {
 
 
 void auditorbos::refreshvote(name voter) {
-    // Anyone can refresh vote
+    // any account can refresh vote
     // background processes will typically execute this action
-
-    // if (configs().authaccount == name{0}) {
-    //     require_auth(_self);
-    // } else {
-    //     require_auth(configs().authaccount);
-    // }
 
     // Find a vote that has been cast by this voter previously.
     auto existingVote = votes_cast_by_members.find(voter.value);
-    if (existingVote != votes_cast_by_members.end()) {
-        //new votes is same as old votes, will just apply the deltas
-        modifyVoteWeights(voter, existingVote->candidates);
-    }
+    check( existingVote != votes_cast_by_members.end(), "ERR::VOTEAUDITOR_VOTER_NOT_FOUND::Voter could not be found.");
+
+    // new votes is same as old votes, will just apply the deltas
+    modifyVoteWeights(voter, existingVote->candidates);
 }
