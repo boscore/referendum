@@ -1,3 +1,16 @@
+import { MessageBox as MbMessageBox } from 'mint-ui'
+import { MessageBox } from 'element-ui'
+
+export default {
+  alert,
+  dateConvert,
+  errorFormat,
+  toThousands,
+  isExpired,
+  isPC,
+  transSpecialChar,
+  unTransSpecialChar
+}
 
 function dateConvert (date) {
   // convert date to current time zone
@@ -24,15 +37,6 @@ function isExpired (exporiesAt) {
     return true
   }
   return false
-}
-export default {
-  dateConvert,
-  errorFormat,
-  toThousands,
-  isExpired,
-  isPC,
-  transSpecialChar,
-  unTransSpecialChar
 }
 
 function transSpecialChar (json) {
@@ -82,4 +86,16 @@ function errorFormat (e) {
     }
   }
   return error
+}
+
+function alert (title, msg) {
+  if (isPC()) {
+    MessageBox.alert(msg, title, {
+      confirmButtonText: 'OK'
+    })
+  } else {
+    MbMessageBox.alert(msg, title, {
+      confirmButtonText: 'OK'
+    })
+  }
 }

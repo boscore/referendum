@@ -32,14 +32,14 @@
             <label slot="label">Content (support Markdown)</label>
             <el-input v-model="form.content" type="textarea" :rows="10"></el-input>
           </el-form-item>
-          <el-form-item prop="expiry">
+          <!-- <el-form-item prop="expiry">
             <label slot="label">Expiry(UTC)</label>
             <el-date-picker
               type="datetime"
               value-format="yyyy-MM-ddThh:mm:ss"
               placeholder="expiry date"
               v-model="form.expiry"></el-date-picker>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item prop="type">
             <label slot="label">Type</label>
             <el-select v-model="form.type">
@@ -65,26 +65,26 @@
 
 <script>
 import Eos from 'eosjs'
-import { NETWORK } from '@/assets/constants.js'
+import { NETWORK, EOSFORUM } from '@/assets/constants.js'
 import { Message } from 'element-ui'
 export default {
   name: 'CreateProposal',
   data () {
-    const checkExpiryDate = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('Please choose proposal expiry date'))
-      } else {
-        let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
-        let expiry = new Date(value).getTime()
-        if (expiry < now) {
-          return callback(new Error('Expiry date shouldn\'t be earlier than now(UTC)'))
-        } else if ((expiry - now) > (1000 * 60 * 60 * 24 * 180)) {
-          return callback(new Error('Expiry date shouldn\'t be later than 6 months in the future'))
-        } else {
-          callback()
-        }
-      }
-    }
+    // const checkExpiryDate = (rule, value, callback) => {
+    //   if (!value) {
+    //     return callback(new Error('Please choose proposal expiry date'))
+    //   } else {
+    //     let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
+    //     let expiry = new Date(value).getTime()
+    //     if (expiry < now) {
+    //       return callback(new Error('Expiry date shouldn\'t be earlier than now(UTC)'))
+    //     } else if ((expiry - now) > (1000 * 60 * 60 * 24 * 180)) {
+    //       return callback(new Error('Expiry date shouldn\'t be later than 6 months in the future'))
+    //     } else {
+    //       callback()
+    //     }
+    //   }
+    // }
     const checkIncentives = (rule, value, callback) => {
       if (value === '') {
         return callback(new Error('Please input a number of incentives'))
@@ -124,7 +124,7 @@ export default {
         name: '',
         title: '',
         content: '',
-        expiry: '',
+        // expiry: '',
         receiptor: this.proposer,
         incentives: '0.0000',
         type: 'referendum-v1'
@@ -139,9 +139,9 @@ export default {
         content: [
           { required: true, message: 'please input proposal content', trigger: 'blur' }
         ],
-        expiry: [
-          { required: true, validator: checkExpiryDate, trigger: 'blur' }
-        ],
+        // expiry: [
+        //   { required: true, validator: checkExpiryDate, trigger: 'blur' }
+        // ],
         type: [
           { message: 'please choose proposal type', trigger: 'blur' }
         ],
@@ -184,7 +184,7 @@ export default {
             proposer: account.name,
             proposal_name: this.form.name,
             title: this.form.title,
-            expires_at: this.form.expiry,
+            // expires_at: this.form.expiry,
             proposal_json: JSON.stringify({
               content: this.form.content,
               type: this.form.type,
@@ -194,7 +194,7 @@ export default {
           }
           const transactionOptions = {
             actions: [{
-              account: 'eosio.forum',
+              account: EOSFORUM,
               name: 'propose',
               authorization: [{
                 actor: account.name,

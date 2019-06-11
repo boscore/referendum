@@ -88,6 +88,11 @@ export default new Vuex.Store({
           }
           commit('setProposals', { proposals: res })
         })
+        .catch(e => {
+          console.log(e)
+          let error = util.errorFormat(e)
+          util.alert('Get proposals Error: ', error.message)
+        })
     },
     getAccounts ({ commit, dispatch }, payload) {
       fetch(API_URL.API_GET_ALL_ACCOUNTS)
@@ -100,6 +105,11 @@ export default new Vuex.Store({
         .then(res => {
           commit('setAccounts', { accounts: res })
         })
+        .catch(e => {
+          console.log(e)
+          let error = util.errorFormat(e)
+          util.alert('Get accounts Error:', error.message)
+        })
     },
     getProxies ({ commit, dispatch }, payload) {
       fetch(API_URL.API_GET_ALL_PROXIES)
@@ -111,6 +121,11 @@ export default new Vuex.Store({
         })
         .then(res => {
           commit('setProxies', { proxies: res })
+        })
+        .catch(e => {
+          console.log(e)
+          let error = util.errorFormat(e)
+          util.alert('Get proxies Error:', error.message)
         })
     },
     getVotes ({ commit, dispatch }, payload) {
@@ -136,6 +151,11 @@ export default new Vuex.Store({
             }
           })
           commit('setVotes', { votes: res })
+        })
+        .catch(e => {
+          console.log(e)
+          let error = util.errorFormat(e)
+          util.alert('Get Votes Error: ', error.message)
         })
     }
   }

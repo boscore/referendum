@@ -12,8 +12,8 @@
         <p>
           <span class="proposal-info">{{`${proposal.proposal.proposal_name} by ${proposal.proposal.proposer} `}}</span>
           <br v-if="!$store.state.isPC"/>
-          <span style="margin: 0 5px">{{$util.dateConvert(proposal.proposal.expires_at)}} </span>
-          <span>{{proposal.proposal.proposal_json.type || 'unknown'}} </span>
+          <!-- <span style="margin: 0 5px">{{$util.dateConvert(proposal.proposal.expires_at)}} </span> -->
+          <span style="margin-left: 10px">{{proposal.proposal.proposal_json.type || 'unknown'}} </span>
         </p>
         <div v-if="$store.state.isPC" style="margin-bottom:30px">
           <div
@@ -105,14 +105,17 @@
             <h2>Poll Status</h2>
             <el-progress :stroke-width="10" class="pass-percent" :percentage="agreePercent"></el-progress>
             <el-progress :stroke-width="10" class="dissent-percent" :percentage="rejectPercent"></el-progress>
-            <el-progress :stroke-width="10" class="abstain-percent" :percentage="abstainPercent"></el-progress>
-            <p>{{$util.toThousands((this.proposal.stats.staked.total / 10000).toFixed(0))}} BOS voted</p>
+            <!-- <el-progress :stroke-width="10" class="abstain-percent" :percentage="abstainPercent"></el-progress> -->
+            <div style="margin:15px 0">
+              <p style="margin: 0">{{$util.toThousands((this.proposal.stats.staked.total / 10000).toFixed(0))}} BOS voted</p>
+              <el-progress :stroke-width="10" class="voted-percent" :percentage="votedPercent"></el-progress>
+            </div>
             <div class="scatter-panel">
               <div v-if="scatter">
-                <div v-if="$util.isExpired(proposal.proposal.expires_at)">
+                <!-- <div v-if="$util.isExpired(proposal.proposal.expires_at)">
                   This proposal is expired
-                </div>
-                <div v-else-if="!scatter.identity" @click="getIdentity" class="button">
+                </div> -->
+                <div v-if="!scatter.identity" @click="getIdentity" class="button">
                   Link Scatter to vote
                 </div>
                 <div v-else>
@@ -165,7 +168,7 @@
               <h3 v-if="this.proposal.approved_by_vote">Meet the conditions {{this.proposal.meet_conditions_days}} Days</h3>
               <p>{{this.proposal ? this.proposal.stats.votes.accounts : 0}} accounts</p>
               <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at, new Date().toString()) : 0}} days since poll started</p>
-              <p>{{(this.proposal.stats.staked.total / this.votesOfBP * 100).toFixed(2)}}% of BP votes</p>
+              <!-- <p>{{(this.proposal.stats.staked.total / this.votesOfBP * 100).toFixed(2)}}% of BP votes</p> -->
             </div>
           </div>
           <div class="card">
@@ -206,7 +209,7 @@ import marked from 'marked'
 import Eos from 'eosjs'
 import { MessageBox as MbMessageBox } from 'mint-ui'
 import { MessageBox } from 'element-ui'
-import { NETWORK, API_URL, NODE_ENDPOINT } from '@/assets/constants.js'
+import { NETWORK, API_URL, NODE_ENDPOINT, EOSFORUM } from '@/assets/constants.js'
 import IEcharts from 'vue-echarts-v3/src/lite.js'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/component/tooltip'
@@ -463,9 +466,9 @@ export default {
           if (proposals[key].proposal.proposer === this.proposal.proposal.proposer &&
           proposals[key].proposal.proposal_name !== this.proposal.proposal.proposal_name) {
             if (related.length < 2) {
-              if (!this.$util.isExpired(proposals[key].proposal.expires_at)) {
-                related.push(proposals[key])
-              }
+              // if (!this.$util.isExpired(proposals[key].proposal.expires_at)) {
+              related.push(proposals[key])
+              // }
             }
           }
         })
@@ -495,6 +498,9 @@ export default {
       } else {
         return Number((100 * this.proposal.stats.staked[0] / this.proposal.stats.staked.total).toFixed(1))
       }
+    },
+    votedPercent () {
+      return Number((this.proposal.stats.staked.total / this.votesOfBP * 100).toFixed(1))
     },
     scatter () {
       return this.$store.state.scatter
@@ -553,7 +559,7 @@ export default {
         id: '',
         meet_conditions_days: 0,
         proposal: {
-          expires_at: '',
+          // expires_at: '',
           created_at: '',
           title: '',
           proposer: '',
@@ -748,7 +754,7 @@ export default {
         }
         const transactionOptions = {
           actions: [{
-            account: 'eosio.forum',
+            account: EOSFORUM,
             name: 'vote',
             authorization: [{
               actor: this.account.name,
@@ -785,7 +791,7 @@ export default {
       }
       const transactionOptions = {
         actions: [{
-          account: 'eosio.forum',
+          account: EOSFORUM,
           name: 'unvote',
           authorization: [{
             actor: account.name,
@@ -879,6 +885,11 @@ export default {
       color #F4D03F
     .el-progress-bar__inner
       background-image linear-gradient(270deg, #F7DC6F 0%, #F1C40F 100%)
+  .voted-percent
+     .el-progress__text
+      color #3498DB
+    .el-progress-bar__inner
+      background-image linear-gradient(270deg, #5DADE2 0%, #3498DB 100%)
 
 </style>
 
@@ -994,6 +1005,7 @@ export default {
     p
       font-size 16px
   .proposal-info
+    display inline-block
     font-size 18px
-    margin 0 5px
+    margin 5px 0
 </style>

@@ -40,27 +40,27 @@
                          <span>{{$util.dateConvert(scope.row.created_at)}}</span>
                        </template>
                     </el-table-column>
-                    <el-table-column sortable label="Expire">
+                    <!-- <el-table-column sortable label="Expire">
                       <template slot-scope="scope">
                          <span>{{$util.dateConvert(scope.row.expires_at)}}</span>
                        </template>
-                    </el-table-column>
-                    <el-table-column>
+                    </el-table-column> -->
+                    <!-- <el-table-column>
                       <template slot-scope="scope">
                         <el-button v-if="!isExpired(scope.row.expires_at)" type="danger" @click="expireProp(scope.row.proposal_name)">Expire</el-button>
                         <label v-else>Expired</label>
                       </template>
-                    </el-table-column>
+                    </el-table-column> -->
                     <el-table-column>
                       <template slot-scope="scope">
                         <el-dropdown trigger="click">
-                          <el-button>
-                            options<i class="el-icon-arrow-down el-icon--right"></i>
-                          </el-button>
+                          <span>
+                            <i style="font-size: 20px" class="el-icon-setting"></i>
+                          </span>
                           <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item type="primary" @click="console.log('extend')">
+                            <!-- <el-dropdown-item type="primary" @click="console.log('extend')">
                               <p  @click="openPicker(scope.row.proposal_name)">Extend</p>
-                            </el-dropdown-item>
+                            </el-dropdown-item> -->
                             <el-dropdown-item type="primary" >
                               <p @click="cancelProp(scope.row.proposal_name)">Cancel </p>
                             </el-dropdown-item>
@@ -84,7 +84,7 @@
                 </a>
               </div>
             </div>
-            <mt-datetime-picker
+            <!-- <mt-datetime-picker
               ref="picker"
               type="datetime"
               :startDate="new Date()"
@@ -113,7 +113,7 @@
                   extendVisible = false
                   }">Confirm</el-button>
               </span>
-            </el-dialog>
+            </el-dialog> -->
           </el-tab-pane>
           <!-- 我的投票 -->
           <el-tab-pane label="My votes" name="votes">
@@ -233,7 +233,7 @@
               :desc="prop.proposal.proposal_json.content || ''"
               :votes="prop.stats.staked"
               :staked="prop.stats.staked.total"
-              :expired="isExpired(prop.proposal.expires_at)"
+              :expired="false"
               class="prop-card"></PropCard>
           </div>
         </div>
@@ -247,7 +247,7 @@
 import { MessageBox as MbMessageBox } from 'mint-ui'
 import { MessageBox } from 'element-ui'
 import Eos from 'eosjs'
-import { NETWORK, API_URL } from '@/assets/constants.js'
+import { NETWORK, API_URL, EOSFORUM } from '@/assets/constants.js'
 import PropCard from '@/components/PropCard.vue'
 export default {
   name: 'Referendum',
@@ -273,15 +273,15 @@ export default {
         {
           value: 'OldestFirst',
           label: 'Oldest First'
-        },
-        {
-          value: 'ExpiresFirst',
-          label: 'Expires First'
-        },
-        {
-          value: 'ExpiresLast',
-          label: 'Expires Last'
         }
+        // {
+        //   value: 'ExpiresFirst',
+        //   label: 'Expires First'
+        // },
+        // {
+        //   value: 'ExpiresLast',
+        //   label: 'Expires Last'
+        // }
       ],
       filterOptions: [
         {
@@ -291,21 +291,21 @@ export default {
         {
           value: 'referendum',
           label: 'Referendum'
-        },
+        }
         // {
         //   value: 'approved',
         //   label: 'Approved'
         // },
-        {
-          value: 'expired',
-          label: 'Expired'
-        },
-        {
-          value: 'ongoing',
-          label: 'Ongoing'
-        }
+        // {
+        //   value: 'expired',
+        //   label: 'Expired'
+        // },
+        // {
+        //   value: 'ongoing',
+        //   label: 'Ongoing'
+        // }
       ],
-      filterBy: ['poll', 'referendum', 'ongoing'],
+      filterBy: ['poll', 'referendum'],
       sortBy: 'MostVoted',
       searchText: '',
       searchBy: ''
@@ -339,7 +339,7 @@ export default {
             referendum: false,
             approved: false,
             expired: false,
-            ongoing: false
+            ongoing: true
           }
           this.filterBy.forEach(filter => {
             if (filter === 'poll') { // 暂时把不是referendum的认为是poll
@@ -518,7 +518,7 @@ export default {
       const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
       const transactionOptions = {
         actions: [{
-          account: 'eosforumdapp',
+          account: EOSFORUM,
           name: 'cancel',
           authorization: [{
             actor: account.name,
@@ -526,8 +526,7 @@ export default {
           }],
           data: {
             proposer: account.name,
-            proposal_name: proposal,
-            max_count: 0
+            proposal_name: proposal
           }
         }]
       }
@@ -555,41 +554,41 @@ export default {
           // })
         })
     },
-    expireProp (proposal) {
-      this.actionLoading = true
-      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
-      const transactionOptions = {
-        actions: [{
-          account: 'eosio.forum',
-          name: 'expire',
-          authorization: [{
-            actor: account.name,
-            permission: account.authority
-          }],
-          data: { proposal_name: proposal }
-        }]
-      }
-      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
-        .then(res => {
-          this.actionLoading = false
-          this.alert('Success', `Expired ${proposal}`)
-          // Message({
-          //   showClose: true,
-          //   type: 'success',
-          //   message: `Expired ${proposal}`
-          // })
-        }).catch(e => {
-          this.actionLoading = false
-          let error = this.$util.errorFormat(e)
-          this.alert('Error', 'Expired ERROR:' + error.message)
-          // Message({
-          //   showClose: true,
-          //   type: 'error',
-          //   message: 'Expired ERROR:' + e.message
-          // })
-          console.log(e)
-        })
-    },
+    // expireProp (proposal) {
+    //   this.actionLoading = true
+    //   const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+    //   const transactionOptions = {
+    //     actions: [{
+    //       account: 'eosio.forum',
+    //       name: 'expire',
+    //       authorization: [{
+    //         actor: account.name,
+    //         permission: account.authority
+    //       }],
+    //       data: { proposal_name: proposal }
+    //     }]
+    //   }
+    //   this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+    //     .then(res => {
+    //       this.actionLoading = false
+    //       this.alert('Success', `Expired ${proposal}`)
+    //       // Message({
+    //       //   showClose: true,
+    //       //   type: 'success',
+    //       //   message: `Expired ${proposal}`
+    //       // })
+    //     }).catch(e => {
+    //       this.actionLoading = false
+    //       let error = this.$util.errorFormat(e)
+    //       this.alert('Error', 'Expired ERROR:' + error.message)
+    //       // Message({
+    //       //   showClose: true,
+    //       //   type: 'error',
+    //       //   message: 'Expired ERROR:' + e.message
+    //       // })
+    //       console.log(e)
+    //     })
+    // },
     openPicker (proposal) {
       this.extendPropName = proposal
       if (this.$store.state.isPC) {
