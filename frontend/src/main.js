@@ -6,8 +6,12 @@ import './plugins/element.js'
 import VueI18n from 'vue-i18n'
 import messages from '@/language'
 import '@/assets/common.styl'
+import 'mint-ui/lib/style.css'
 import axios from 'axios'
 import util from '@/util.js'
+import { DatetimePicker } from 'mint-ui'
+
+Vue.component(DatetimePicker.name, DatetimePicker)
 
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios

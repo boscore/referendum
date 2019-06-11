@@ -1,14 +1,21 @@
 module.exports = {
-  "presets": [
-    "@vue/app"
+  'presets': [
+    '@vue/app',
+    ['es2015', { 'modules': false }]
   ],
-  "plugins": [
+  'plugins': [
     [
-      "component",
+      'component',
       {
-        "libraryName": "element-ui",
-        "styleLibraryName": "theme-chalk"
+        'libraryName': 'element-ui',
+        'styleLibraryName': 'theme-chalk'
       }
-    ]
+    ],
+    ['component', [
+      {
+        'libraryName': 'mint-ui',
+        'style': true
+      }
+    ]]
   ]
 }

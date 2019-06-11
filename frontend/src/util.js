@@ -1,4 +1,4 @@
-// date String
+
 function dateConvert (date) {
   // convert date to current time zone
   const diff = new Date().getTimezoneOffset()
@@ -27,8 +27,10 @@ function isExpired (exporiesAt) {
 }
 export default {
   dateConvert,
+  errorFormat,
   toThousands,
   isExpired,
+  isPC,
   transSpecialChar,
   unTransSpecialChar
 }
@@ -53,4 +55,31 @@ function unTransSpecialChar (json) {
     json = json.replace(/\\\\"/g, '\\"')
   }
   return json
+}
+
+function isPC () {
+  const userAgentInfo = navigator.userAgent
+  const Agents = ['Android', 'iPhone', 'SymbianOS', 'Windows Phone', 'iPad', 'iPod']
+  let flag = true
+  for (let i = 0; i < Agents.length; i++) {
+    if (userAgentInfo.indexOf(Agents[i]) > 0) {
+      flag = false
+      break
+    }
+  }
+  return flag
+}
+
+function errorFormat (e) {
+  let error = e
+  if (typeof e === 'string') {
+    try {
+      error = JSON.parse(e)
+    } catch (jsonError) {
+      error = {
+        message: e
+      }
+    }
+  }
+  return error
 }

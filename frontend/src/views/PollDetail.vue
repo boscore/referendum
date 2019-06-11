@@ -10,11 +10,12 @@
         <h2 v-if="CDToAuditor > 0" style="color: #E74C3C">The countdown to auditors giving opinions ends in {{CDToAuditor}} days</h2>
         <h2 v-if="CDToBP > 0" style="color: #E74C3C">The countdown to BPs voting ends in {{CDToBP}} days</h2>
         <p>
-          <span>{{`${proposal.proposal.proposal_name} by ${proposal.proposal.proposer} `}}</span>
+          <span class="proposal-info">{{`${proposal.proposal.proposal_name} by ${proposal.proposal.proposer} `}}</span>
+          <br v-if="!$store.state.isPC"/>
           <span style="margin: 0 5px">{{$util.dateConvert(proposal.proposal.expires_at)}} </span>
           <span>{{proposal.proposal.proposal_json.type || 'unknown'}} </span>
         </p>
-        <div style="margin-bottom:30px">
+        <div v-if="$store.state.isPC" style="margin-bottom:30px">
           <div
             class="radio-button"
             @click="activeButton = 'desc'"
@@ -41,13 +42,13 @@
             Comments
           </div>
         </div>
-        <div style="overflow:auto;border-radius: 8px;margin-bottom: 22px">
-        <el-steps style="background: #fff;min-width:500px;margin-bottom: 0"  class="card" :active="activeStep" simple finish-status="success" process-status="finish">
-          <el-step title="Vote"></el-step>
-          <el-step title="Develop"></el-step>
-          <el-step title="Review"></el-step>
-          <el-step title="Finish"></el-step>
-        </el-steps>
+        <div ref="steps" style="overflow:auto;border-radius: 8px;margin-bottom: 22px">
+          <el-steps  style="background: #fff;min-width:500px;margin-bottom: 0"  class="card" :active="activeStep" simple finish-status="success" process-status="finish">
+            <el-step ref="stepItem" title="Vote"></el-step>
+            <el-step title="Develop"></el-step>
+            <el-step title="Review"></el-step>
+            <el-step title="Finish"></el-step>
+          </el-steps>
         </div>
       <el-container v-loading="propLoading">
         <el-main class="main">
@@ -70,19 +71,17 @@
             </div>
           </div>
           <div
-            style="text-align: center; overflow: auto"
             v-if="votes.length"
             v-loading="chartLoading"
-            class="card"
+            class="chart-card card"
             ref="stats">
             <h3>Votes by vote size</h3>
-          <div style="min-width:600px;height:500px">
+            <div class="chart-panel">
 
-            <IEcharts
-              ref="chart"
-
-              :option="chartOption"
-            ></IEcharts>
+              <IEcharts
+                ref="chart"
+                :option="chartOption"
+              ></IEcharts>
             </div>
           </div>
 
@@ -110,7 +109,7 @@
             <p>{{$util.toThousands((this.proposal.stats.staked.total / 10000).toFixed(0))}} BOS voted</p>
             <div class="scatter-panel">
               <div v-if="scatter">
-                <div v-if="isExpired(proposal.proposal.expires_at)">
+                <div v-if="$util.isExpired(proposal.proposal.expires_at)">
                   This proposal is expired
                 </div>
                 <div v-else-if="!scatter.identity" @click="getIdentity" class="button">
@@ -166,7 +165,7 @@
               <h3 v-if="this.proposal.approved_by_vote">Meet the conditions {{this.proposal.meet_conditions_days}} Days</h3>
               <p>{{this.proposal ? this.proposal.stats.votes.accounts : 0}} accounts</p>
               <p>{{this.proposal ? this.calcDays(this.proposal.proposal.created_at, new Date().toString()) : 0}} days since poll started</p>
-              <p>{{(this.proposal.stats.staked.total / 100 / this.proposal.stats.currency_supply).toFixed(2)}}% participation</p>
+              <p>{{(this.proposal.stats.staked.total / this.votesOfBP * 100).toFixed(2)}}% of BP votes</p>
             </div>
           </div>
           <div class="card">
@@ -205,7 +204,8 @@
 <script>
 import marked from 'marked'
 import Eos from 'eosjs'
-import { Message } from 'element-ui'
+import { MessageBox as MbMessageBox } from 'mint-ui'
+import { MessageBox } from 'element-ui'
 import { NETWORK, API_URL, NODE_ENDPOINT } from '@/assets/constants.js'
 import IEcharts from 'vue-echarts-v3/src/lite.js'
 import 'echarts/lib/chart/pie'
@@ -262,6 +262,9 @@ export default {
       if (this.votes) {
         this.votes.forEach(vote => {
           let label = true
+          if (!this.$store.state.isPC) {
+            label = false
+          }
           if (vote.vote !== 1 && vote.vote !== 0) {
             return
           }
@@ -287,21 +290,16 @@ export default {
         })
       }
       return {
-        // grid: {
-        //   left: 200,
-        //   right: 100,
-        //   top: 1000,
-        //   containLabel: true
-        // },
         tooltip: {
           trigger: 'item',
-          formatter: '{b} : {c} BOS ({d}%)'
+          formatter: '{b} : {c} BOS ({d}%)',
+          position: this.$store.state.isPC ? null : ['10px', '100px']
         },
         series: [
           {
             type: 'pie',
             radius: '65%',
-            center: ['50%', '50%'],
+            center: this.$store.state.isPC ? ['50%', '50%'] : ['50%', '100px'],
             selectedMode: 'single',
             data: data,
             label: {
@@ -535,6 +533,7 @@ export default {
       title: 'Should EOS tokens sent to eosio.ramfee and eosio.names accounts in the future be allocated to REX?',
       activeButton: 'desc',
       auditorsList: [],
+      votesOfBP: 1, // cunrrent active votes of BP election
       CDToBP: -1,
       CDToAuditor: -1,
       voteActionParams: {
@@ -589,8 +588,21 @@ export default {
     })
     this.getProducers()
     this.getAuditors()
+    this.getTotalStake()
+    this.$refs['steps'].scrollLeft += this.$refs['steps'].scrollWidth * this.activeStep / 4
   },
   methods: {
+    alert (title, msg) {
+      if (this.$store.state.isPC) {
+        MessageBox.alert(msg, title, {
+          confirmButtonText: 'OK'
+        })
+      } else {
+        MbMessageBox.alert(msg, title, {
+          confirmButtonText: 'OK'
+        })
+      }
+    },
     getProposal () {
       fetch(API_URL.API_GET_PROPOSAL + '/' + this.proposalName)
         .then(res => {
@@ -621,19 +633,13 @@ export default {
               type: '',
               content: ' '
             }
-            Message({
-              showClose: true,
-              message: 'proposal_json ERROR',
-              type: 'error'
-            })
+            let error = this.$util.errorFormat(e)
+            this.alert('Error', 'proposal_json ERROR:' + error.message)
           }
         }).catch(e => {
           this.propLoading = false
-          Message({
-            showClose: true,
-            message: 'Get Proposal ERROR:' + e.message,
-            type: 'error'
-          })
+          let error = this.$util.errorFormat(e)
+          this.alert('Error', 'Get Proposal ERROR:' + error.message)
           console.log(e)
         })
     },
@@ -649,11 +655,13 @@ export default {
         .then(res => {
           this.producers = res.producer
         }).catch(e => {
-          Message({
-            showClose: true,
-            message: 'Get Producers ERROR\n' + String(e),
-            type: 'error'
-          })
+          let error = this.$util.errorFormat(e)
+          this.alert('Error', 'Get Producers ERROR:' + error.message)
+          // Message({
+          //   showClose: true,
+          //   message: 'Get Producers ERROR\n' + String(e),
+          //   type: 'error'
+          // })
           console.log(e)
         // MessageBox.alert(e, 'Get Producers ERROR', {
         //   confirmButtonText: 'OK'
@@ -685,20 +693,10 @@ export default {
         // MessageBox.alert(e, 'Get Auditors ERROR', {
         //   confirmButtonText: 'OK'
         // })
-          Message({
-            showClose: true,
-            message: 'Get Auditors ERROR\n' + String(e),
-            type: 'error'
-          })
+          console.log(e)
+          let error = this.$util.errorFormat(e)
+          this.alert('Error', 'Get Auditors ERROR:' + error.message)
         })
-    },
-    isExpired (exporiesAt) {
-      let now = new Date().getTime() + (new Date().getTimezoneOffset() * 60 * 1000)
-      let expiry = new Date(exporiesAt).getTime()
-      if (expiry < now) {
-        return true
-      }
-      return false
     },
     getIdentity () {
       const requiredFields = {
@@ -708,6 +706,22 @@ export default {
         // console.log(this.scatter.identity)
         this.$store.dispatch('setScatter', { scatter: this.scatter })
       })
+    },
+    getTotalStake () {
+      let body = { 'json': true, 'scope': 'eosio', 'code': 'eosio', 'table': 'global', 'limit': 500 }
+      let config = {
+        body: JSON.stringify(body),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        }
+      }
+      fetch(NODE_ENDPOINT + '/v1/chain/get_table_rows', config).then(res => res.json())
+        .then(res => {
+          this.votesOfBP = res.rows[0].total_activated_stake
+        }).catch(e => {
+          console.log(e)
+        })
     },
     calcDays (start, end) {
       let startDay = new Date(start)
@@ -723,20 +737,9 @@ export default {
     },
     sendVote () {
       if (this.voteActionParams.vote === -1) {
-        // MessageBox.alert('Please choose your vote', '', {
-        //   confirmButtonText: 'OK'
-        // })
-        Message({
-          showClose: true,
-          message: 'Please choose your vote',
-          type: 'warning'
-        })
+        this.alert('Warning', 'Please choose your vote')
       } else if (this.myComment === '' && (this.isAuditor || this.isBP)) {
-        Message({
-          showClose: true,
-          message: 'Please write your opinion of this proposal',
-          type: 'warning'
-        })
+        this.alert('Warning', 'Please write your opinion of this proposal')
       } else {
         this.voteActionParams.voter = this.account.name
         this.voteActionParams.proposal_name = this.proposalName
@@ -756,10 +759,8 @@ export default {
         }
         this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
           .then(res => {
-            Message({
-              message: `Your vote  has been cast on ${this.proposalName}, data will be updated some time later`,
-              type: 'success'
-            })
+            let message = `Your vote  has been cast on ${this.proposalName}, data will be updated some time later`
+            this.alert('Success', message)
             this.$store.dispatch('getAccounts')
             this.$store.dispatch('getVotes')
             this.$store.dispatch('getProxies')
@@ -767,11 +768,8 @@ export default {
             //   confirmButtonText: 'OK'
             // })
           }).catch(e => {
-            Message({
-              showClose: true,
-              message: 'Vote ERROR:' + e.message,
-              type: 'error'
-            })
+            let error = this.$util.errorFormat(e)
+            this.alert('Error', 'Vote ERROR:' + error.message)
             console.log(e)
             // MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
             //   confirmButtonText: 'OK'
@@ -798,10 +796,8 @@ export default {
       }
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(res => {
-          Message({
-            message: `Your unvote on ${this.proposalName} was successful, data will be updated some time later`,
-            type: 'success'
-          })
+          let message = `Your unvote on ${this.proposalName} was successful, data will be updated some time later`
+          this.alert('Success', 'Vote ERROR:' + message)
           this.$store.dispatch('getAccounts')
           this.$store.dispatch('getVotes')
           this.$store.dispatch('getProxies')
@@ -809,11 +805,8 @@ export default {
           //   confirmButtonText: 'OK'
           // })
         }).catch(e => {
-          Message({
-            showClose: true,
-            message: 'Unvote ERROR: ' + e.message,
-            type: 'error'
-          })
+          let error = this.$util.errorFormat(e)
+          this.alert('Error', 'Unvote ERROR:' + error.message)
           console.log(e)
           // MessageBox.alert(JSON.parse(e).error.name, 'ERROR', {
           //   confirmButtonText: 'OK'
@@ -849,6 +842,9 @@ export default {
       this.$store.dispatch('getAccounts')
       this.$store.dispatch('getVotes')
       this.$store.dispatch('getProxies')
+    },
+    activeStep (newValue, oldValue) {
+      this.$refs['steps'].scrollLeft += this.$refs['stepItem'].width * newValue
     }
   }
 }
@@ -892,6 +888,12 @@ export default {
   padding 20px 0
   text-align left
   color: #507DFE;
+.chart-card
+  text-align: center
+  overflow: auto
+.chart-panel
+  min-width:600px
+  height:500px
 .header
   h1
     font-family: Roboto-Medium;
@@ -899,7 +901,7 @@ export default {
     letter-spacing: 0;
   h2
     font-family: Roboto-Medium;
-    font-size: 26px;
+    font-size: 24px;
   p
     font-family: Roboto-Regular;
     font-size: 18px;
@@ -948,12 +950,6 @@ export default {
   color: #FFFFFF;
   letter-spacing: 0;
   text-align: center;
-.card
-  padding 22px 34px
-  background: #FCFDFF;
-  box-shadow: 0 2px 4px 0 #B0D9FF;
-  border-radius: 8px;
-  margin-bottom 22px
 .radio-button
   height 24px
   min-width 103px
@@ -984,5 +980,20 @@ export default {
     padding 0
   .radio-button
     margin-bottom 5px
-
+@media only screen and (max-width 450px)
+  .chart-card
+    height 300px
+    overflow hidden
+  .chart-panel
+    min-width:200px
+  .header
+    h1
+      font-size 24px
+    h2
+      font-size 20px
+    p
+      font-size 16px
+  .proposal-info
+    font-size 18px
+    margin 0 5px
 </style>

@@ -14,7 +14,8 @@ export default new Vuex.Store({
     votes: null,
     proposals: null,
     proxies: null,
-    screenWidth: -1
+    screenWidth: -1,
+    isPC: true
   },
   mutations: {
     setScatter (state, payload) {
@@ -37,6 +38,9 @@ export default new Vuex.Store({
     },
     setScreenWidth (state, payload) {
       state.screenWidth = payload.screenWidth
+    },
+    setIsPC (state, payload) {
+      state.isPC = payload.isPC
     }
   },
   actions: {

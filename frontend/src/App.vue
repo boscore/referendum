@@ -29,6 +29,7 @@ export default {
     }
   },
   created () {
+    this.$store.commit('setIsPC', { isPC: this.$util.isPC() })
     this.interval = setInterval((() => {
       this.$store.dispatch('getAccounts')
       this.$store.dispatch('getVotes')

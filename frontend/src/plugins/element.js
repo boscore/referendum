@@ -8,6 +8,9 @@ import {
   CollapseItem,
   DatePicker,
   Dialog,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
   Footer,
   Form,
   FormItem,
@@ -41,6 +44,10 @@ Vue.use(Loading)
 
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+
+Vue.use(Dropdown)
+Vue.use(DropdownMenu)
+Vue.use(DropdownItem)
 
 Vue.use(Progress)
 

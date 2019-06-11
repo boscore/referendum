@@ -17,6 +17,7 @@
     "eosjs": "^16.0.9",
     "http2": "^3.3.7",
     "marked": "^0.6.2",
+    "mint-ui": "^2.2.13",
     "scatterjs-core": "^2.7.17",
     "scatterjs-plugin-eosjs": "^1.5.1",
     "vue": "^2.6.6",
