@@ -51,48 +51,50 @@
             </div>
           </div>
         </div>
-        <div v-if="myCandidate && !myAuditor" class="card">
-          <h1>You are a candidate</h1>
-          <p>Votes: {{(myCandidate.total_votes / 10000).toFixed(4)}}</p>
-          <p>Staked: {{myCandidate.locked_tokens}}</p>
-          <div v-if="myCandidate.is_active">
-            <p>you are active for elections</p>
-            <div @click="inactive" class="vote-button vote-button-active">Be inactive</div>
-          </div>
-          <div v-else >
-            <p>you are inactive for elections</p>
-            <div v-if="myCandidate.locked_tokens !== '0.0000 BOS' || pendingStake">
-              <div @click="active" class="vote-button vote-button-active">Be active</div>
-              <div @click="unstake" class="vote-button vote-button-active">Unstake</div>
+        <div v-if="$store.state.isPC">
+          <div v-if="myCandidate && !myAuditor" class="card">
+            <h1>You are a candidate</h1>
+            <p>Votes: {{(myCandidate.total_votes / 10000).toFixed(4)}}</p>
+            <p>Staked: {{myCandidate.locked_tokens}}</p>
+            <div v-if="myCandidate.is_active">
+              <p>you are active for elections</p>
+              <div @click="inactive" class="vote-button vote-button-active">Be inactive</div>
             </div>
-            <div v-else @click="stake" class="vote-button vote-button-active">Stake</div>
+            <div v-else >
+              <p>you are inactive for elections</p>
+              <div v-if="myCandidate.locked_tokens !== '0.0000 BOS' || pendingStake">
+                <div @click="active" class="vote-button vote-button-active">Be active</div>
+                <div @click="unstake" class="vote-button vote-button-active">Unstake</div>
+              </div>
+              <div v-else @click="stake" class="vote-button vote-button-active">Stake</div>
+            </div>
+            <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
           </div>
-          <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
-        </div>
-        <div v-else-if="myAuditor" class="card">
-          <h1>You are a auditor</h1>
-          <p>Votes: {{(myAuditor.total_votes / 10000).toFixed(4)}}</p>
-          <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
-        </div>
-        <div v-else-if="scatter">
-          <div v-if="!scatter.identity" class="button square-button"
-            @click="getIdentity"
-          >
-            Pair Scatter
+          <div v-else-if="myAuditor" class="card">
+            <h1>You are a auditor</h1>
+            <p>Votes: {{(myAuditor.total_votes / 10000).toFixed(4)}}</p>
+            <div @click="showUpdate" class="vote-button vote-button-active">Update info</div>
           </div>
-          <router-link v-else :to="{path: '/auditor/register'}">
-            <div class="button square-button"
-              v-if="!candidateLoading && !auditorLoading"
+          <div v-else-if="scatter">
+            <div v-if="!scatter.identity" class="button square-button"
+              @click="getIdentity"
             >
-              Register as Candidate
+              Pair Scatter
             </div>
-          </router-link>
-        </div>
-        <div v-else>
-          <!-- <p>Scatter is required!</p> -->
-          <a target="blank" href="https://get-scatter.com/">
-            <div class="button square-button">Get Scatter</div>
-          </a>
+            <router-link v-else :to="{path: '/auditor/register'}">
+              <div class="button square-button"
+                v-if="!candidateLoading && !auditorLoading"
+              >
+                Register as Candidate
+              </div>
+            </router-link>
+          </div>
+          <div v-else>
+            <!-- <p>Scatter is required!</p> -->
+            <a target="blank" href="https://get-scatter.com/">
+              <div class="button square-button">Get Scatter</div>
+            </a>
+          </div>
         </div>
       </el-aside>
     </el-container>

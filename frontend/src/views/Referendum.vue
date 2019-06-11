@@ -134,6 +134,11 @@
                          <span>{{$util.dateConvert(scope.row.updated_at)}}</span>
                        </template>
                     </el-table-column>
+                    <el-table-column>
+                      <template slot-scope="scope">
+                         <el-button type="danger" @click="unvote(scope.row.proposal_name)">Unvote</el-button>
+                       </template>
+                    </el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -533,7 +538,7 @@ export default {
       this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
         .then(res => {
           this.actionLoading = false
-          this.alert('Success', `Extend ${this.extendPropName}`)
+          this.alert('Success', `Canceled ${proposal}`)
           // Message({
           //   showClose: true,
           //   type: 'success',
@@ -542,7 +547,7 @@ export default {
         }).catch(e => {
           this.actionLoading = false
           let error = this.$util.errorFormat(e)
-          this.alert('Error', 'Extend ERROR:' + error.message)
+          this.alert('Error', 'Cancel ERROR:' + error.message)
           // Message({
           //   showClose: true,
           //   type: 'error',
@@ -552,6 +557,34 @@ export default {
           // MessageBox.alert(e, 'ERROR', {
           //   confirmButtonText: 'OK'
           // })
+        })
+    },
+    unvote (proposal) {
+      this.actionLoading = true
+      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+      const transactionOptions = {
+        actions: [{
+          account: EOSFORUM,
+          name: 'unvote',
+          authorization: [{
+            actor: account.name,
+            permission: account.authority
+          }],
+          data: {
+            voter: account.name,
+            proposal_name: proposal
+          }
+        }]
+      }
+      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+        .then(res => {
+          this.actionLoading = false
+          this.alert('Success', `Unvote ${proposal}`)
+        }).catch(e => {
+          this.actionLoading = false
+          let error = this.$util.errorFormat(e)
+          this.alert('Error', 'Unvote ERROR:' + error.message)
+          console.log(e)
         })
     },
     // expireProp (proposal) {
@@ -597,48 +630,48 @@ export default {
         this.$refs['picker'].open()
       }
     },
-    extendProp () {
-      this.actionLoading = true
-      const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
-      const transactionOptions = {
-        actions: [{
-          account: 'eosforumdapp',
-          name: 'extend',
-          authorization: [{
-            actor: account.name,
-            permission: account.authority
-          }],
-          data: {
-            proposer: 'icelandtest3',
-            proposal_name: 'icelandtestz',
-            expires_at: this.extendTime
-          }
-        }]
-      }
-      this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
-        .then(res => {
-          this.actionLoading = false
-          this.alert('Success', `Extend ${this.extendPropName}`)
-          // Message({
-          //   showClose: true,
-          //   type: 'success',
-          //   message: `Extend ${this.extendPropName}`
-          // })
-        }).catch(e => {
-          this.actionLoading = false
-          let error = this.$util.errorFormat(e)
-          this.alert('Error', 'Extend ERROR:' + error.message)
-          // Message({
-          //   showClose: true,
-          //   type: 'error',
-          //   message: 'Extend ERROR:' + e.message
-          // })
-          console.log(e)
-          // MessageBox.alert(e, 'ERROR', {
-          //   confirmButtonText: 'OK'
-          // })
-        })
-    },
+    // extendProp () {
+    //   this.actionLoading = true
+    //   const account = this.scatter.identity.accounts.find(x => x.blockchain === 'eos')
+    //   const transactionOptions = {
+    //     actions: [{
+    //       account: 'eosforumdapp',
+    //       name: 'extend',
+    //       authorization: [{
+    //         actor: account.name,
+    //         permission: account.authority
+    //       }],
+    //       data: {
+    //         proposer: 'icelandtest3',
+    //         proposal_name: 'icelandtestz',
+    //         expires_at: this.extendTime
+    //       }
+    //     }]
+    //   }
+    //   this.eos.transaction(transactionOptions, { blocksBehind: 3, expireSeconds: 30 })
+    //     .then(res => {
+    //       this.actionLoading = false
+    //       this.alert('Success', `Extend ${this.extendPropName}`)
+    //       // Message({
+    //       //   showClose: true,
+    //       //   type: 'success',
+    //       //   message: `Extend ${this.extendPropName}`
+    //       // })
+    //     }).catch(e => {
+    //       this.actionLoading = false
+    //       let error = this.$util.errorFormat(e)
+    //       this.alert('Error', 'Extend ERROR:' + error.message)
+    //       // Message({
+    //       //   showClose: true,
+    //       //   type: 'error',
+    //       //   message: 'Extend ERROR:' + e.message
+    //       // })
+    //       console.log(e)
+    //       // MessageBox.alert(e, 'ERROR', {
+    //       //   confirmButtonText: 'OK'
+    //       // })
+    //     })
+    // },
     setExtendTime (time) {
       function formatNumber (n) {
         if (n < 10) {
