@@ -12,8 +12,7 @@ void forum::propose(
     const name proposer,
     const name proposal_name,
     const string& title,
-    const string& proposal_json,
-    const time_point_sec& expires_at
+    const string& proposal_json
 ) {
     require_auth(proposer);
 
@@ -21,37 +20,15 @@ void forum::propose(
     check(title.size() < 1024, "title should be less than 1024 characters long.");
     VALIDATE_JSON(proposal_json, 32768);
 
-    check(expires_at > current_time_point_sec(), "expires_at must be a value in the future.");
-
-    // Not a perfect assertion since we are not doing real date computation, but good enough for our use case
-    time_point_sec max_expires_at = current_time_point_sec() + SIX_MONTHS_IN_SECONDS;
-    check(expires_at <= max_expires_at, "expires_at must be within 6 months from now.");
-
     proposals proposal_table(_self, _self.value);
     check(proposal_table.find(proposal_name.value) == proposal_table.end(), "proposal with same name already exists.");
 
-    proposal_table.emplace(proposer, [&](auto& row) {
+    proposal_table.emplace(_self, [&](auto& row) {
         row.proposal_name = proposal_name;
         row.proposer = proposer;
         row.title = title;
         row.proposal_json = proposal_json;
-        row.created_at = current_time_point_sec();
-        row.expires_at = expires_at;
-    });
-}
-
-void forum::expire(const name proposal_name) {
-    proposals proposal_table(_self, _self.value);
-    auto itr = proposal_table.find(proposal_name.value);
-
-    check(itr != proposal_table.end(), "proposal not found.");
-    check(!itr->is_expired(), "proposal is already expired.");
-
-    auto proposer = itr->proposer;
-    require_auth(proposer);
-
-    proposal_table.modify(itr, proposer, [&](auto& row) {
-        row.expires_at = current_time_point_sec();
+        row.created_at = current_time_point();
     });
 }
 
@@ -65,8 +42,6 @@ void forum::vote(
 
     proposals proposal_table(_self, _self.value);
     auto& row = proposal_table.get(proposal_name.value, "proposal_name does not exist.");
-
-    check(!row.is_expired(), "cannot vote on an expired proposal.");
 
     VALIDATE_JSON(vote_json, 8192);
 
@@ -83,10 +58,6 @@ void forum::unvote(const name voter, const name proposal_name) {
     proposals proposal_table(_self, _self.value);
     auto& row = proposal_table.get(proposal_name.value, "proposal_name does not exist.");
 
-    if (row.is_expired()) {
-        check(row.can_be_cleaned_up(), "cannot unvote on an expired proposal within its freeze period.");
-    }
-
     votes vote_table(_self, _self.value);
 
     auto index = vote_table.template get_index<"byproposal"_n>();
@@ -96,44 +67,6 @@ void forum::unvote(const name voter, const name proposal_name) {
     check(itr != index.end(), "no vote exists for this proposal_name/voter pair.");
 
     vote_table.erase(*itr);
-}
-
-/**
- * This method does **not** require any authorization, here is the reasoning for that.
- *
- * This method allows anyone to clean a proposal if the proposal is either expired or does
- * not exist anymore. This exact case can only happen either by itself (the proposal has reached
- * its expiration time) or by the a proposer action (`expire`). In either case, 3 days must elapse before calling `clnproposal`.
- *
- * In all cases it's ok to let anyone clean the votes since there is no more "use"
- * for the proposal nor the votes.
- */
-void forum::clnproposal(const name proposal_name, uint64_t max_count) {
-    proposals proposal_table(_self, _self.value);
-
-    auto itr = proposal_table.find(proposal_name.value);
-    check(itr == proposal_table.end() || itr->can_be_cleaned_up(),
-                 "proposal must not exist or be expired for at least 3 days prior to running clnproposal.");
-
-    votes vote_table(_self, _self.value);
-    auto index = vote_table.template get_index<"byproposal"_n>();
-
-    auto vote_key_lower_bound = compute_by_proposal_key(proposal_name, name(0x0000000000000000));
-    auto vote_key_upper_bound = compute_by_proposal_key(proposal_name, name(0xFFFFFFFFFFFFFFFF));
-
-    auto lower_itr = index.lower_bound(vote_key_lower_bound);
-    auto upper_itr = index.upper_bound(vote_key_upper_bound);
-
-    uint64_t count = 0;
-    while (count < max_count && lower_itr != upper_itr) {
-        lower_itr = index.erase(lower_itr);
-        count++;
-    }
-
-    // Let's delete the actual proposal if we deleted all votes and the proposal still exists
-    if (lower_itr == upper_itr && itr != proposal_table.end()) {
-        proposal_table.erase(itr);
-    }
 }
 
 void forum::post(
@@ -188,6 +121,45 @@ void forum::status(const name account, const string& content) {
     }
 }
 
+/**
+ * Cancel proposal using the authorization from the {{ proposer }}
+ *
+ * `proposal` & `votes` will be removed
+ */
+void forum::cancel(const name proposer, const name proposal_name) {
+    require_auth(proposer);
+
+    // Check if proposal already exists
+    proposals proposal_table(_self, _self.value);
+    auto proposal_itr = proposal_table.find(proposal_name.value);
+    check(proposal_itr != proposal_table.end(), "proposal does not exist");
+
+    // Only original `proposer` of `proposal_name` is authorized to cancel a proposal prior to expiration
+    check( proposal_itr->proposer == proposer, "proposer does not match original proposer of proposal_name");
+
+    votes vote_table(_self, _self.value);
+    auto index = vote_table.template get_index<"byproposal"_n>();
+
+    auto vote_key_lower_bound = compute_by_proposal_key(proposal_name, name(0x0000000000000000));
+    auto vote_key_upper_bound = compute_by_proposal_key(proposal_name, name(0xFFFFFFFFFFFFFFFF));
+
+    auto lower_itr = index.lower_bound(vote_key_lower_bound);
+    auto upper_itr = index.upper_bound(vote_key_upper_bound);
+
+    // Iterate over votes and delete rows in `votes` table
+    // To prevent maximum CPU limit errors, only 1500 votes can be removed per `cancel` action
+    uint64_t count = 0;
+    while (count < 1500 && lower_itr != upper_itr) {
+        lower_itr = index.erase(lower_itr);
+        count++;
+    }
+
+    // Let's delete the actual proposal if we deleted all votes and the proposal still exists
+    if (lower_itr == upper_itr && proposal_itr != proposal_table.end()) {
+        proposal_table.erase(proposal_itr);
+    }
+}
+
 /// Helpers
 
 void forum::update_status(
@@ -197,14 +169,14 @@ void forum::update_status(
 ) {
     auto itr = status_table.find(account.value);
     if (itr == status_table.end()) {
-        status_table.emplace(account, [&](auto& row) {
+        status_table.emplace(_self, [&](auto& row) {
             row.account = account;
-            row.updated_at = current_time_point_sec();
+            row.updated_at = current_time_point();
             updater(row);
         });
     } else {
-        status_table.modify(itr, account, [&](auto& row) {
-            row.updated_at = current_time_point_sec();
+        status_table.modify(itr, eosio::same_payer, [&](auto& row) {
+            row.updated_at = current_time_point();
             updater(row);
         });
     }
@@ -221,16 +193,16 @@ void forum::update_vote(
 
     auto itr = index.find(vote_key);
     if (itr == index.end()) {
-        vote_table.emplace(voter, [&](auto& row) {
+        vote_table.emplace(_self, [&](auto& row) {
             row.id = vote_table.available_primary_key();
             row.proposal_name = proposal_name;
             row.voter = voter;
-            row.updated_at = current_time_point_sec();
+            row.updated_at = current_time_point();
             updater(row);
         });
     } else {
-        index.modify(itr, voter, [&](auto& row) {
-            row.updated_at = current_time_point_sec();
+        index.modify(itr, eosio::same_payer, [&](auto& row) {
+            row.updated_at = current_time_point();
             updater(row);
         });
     }
