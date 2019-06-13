@@ -86,7 +86,7 @@ def jsoninfo():
 		proposal_item = proposals[proposal]
 		vote_key = proposal_item['stats']['votes']
 		stake_key = proposal_item['stats']['staked']
-		staked_total = float(int(proposal_item['stats']['staked']['total'])/10000) if 'total' in stake_key else 0
+		staked_total = float(int(proposal_item['stats']['staked']['total'])) if 'total' in stake_key else 0
 		vote_total = proposal_item['stats']['votes']['total'] if  'total' in vote_key else 0
 		vote_yes = proposal_item['stats']['votes']['1'] if  '1' in vote_key else 0
 		vote_no = proposal_item['stats']['votes']['0'] if '0' in vote_key else 0
