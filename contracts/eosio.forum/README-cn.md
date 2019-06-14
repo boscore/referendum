@@ -132,6 +132,7 @@ constexpr static uint32_t FREEZE_PERIOD_IN_SECONDS = 2; // NEVER MERGE LIKE THIS
 以下列表是可有的操作：
 
 - [propose](#action-propose)（提案）
+- [cancel](#action-cancel)
 - [vote](#action-vote)（投票）
 - [unvote](#action-unvote)（撤销投票）
 - [post](#action-post)（发布帖子）
