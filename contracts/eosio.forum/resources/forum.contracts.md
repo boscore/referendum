@@ -1,30 +1,3 @@
-<h1 class="contract">clnproposal</h1>
-
-## Description
-
-This action is used to clear the RAM being used to store all information related to
-{{ proposal_name }}. All associated votes must be cleared before {{ proposal_name }}
-can be cleared from the RAM of {{ proposer }}.
-
-This action can be called by any user, requiring no authorization.
-
-This action can only be called 72 hours after {{ expires_at }} has been reached.
-{{ expires_at }} is set at the moment that {{ proposal_name }} is created, and can
-only be updated by {{ proposer }}. This will allow time to compute a tally of all
-associated votes before it can be cleared.
-
-The user who calls `clnproposal` will pay the CPU and NET bandwidth required
-to process the action. They will need to specify `max_count` to ensure that the
-action can be processed within a single block's maximum allowable limits.
-
-<h1 class="contract">expire</h1>
-
-## Description
-
-`expire` can only be called by {{ proposer }}.
-
-`expire` is used to modify the value of `expires_at` to the current time at which the action is called. Once `expire` has been called, no more `vote` actions will be accepted for {{ proposal_name }}. {{ proposal_name }} can be cleared from RAM 72 hours after {{ proposer }} has called the `expire` action.
-
 <h1 class="contract">post</h1>
 
 ## Description
@@ -72,9 +45,6 @@ I, {{ poster }} understand that this action will not remove the message from cir
 `unvote` allows a user to remove their vote of {{ vote_value }} they have previously
 cast on {{ proposal_name }}.
 
-`unvote` will not function during the 72 hour period after
-{{ proposal_name }} has expired at {{ expires_at }}.
-
 The RAM that was used to store the vote shall be freed-up immediately
 after `unvote` has been called by {{ voter }}.
 
@@ -91,12 +61,6 @@ If I, {{ voter }}, am not the beneficial owner of these tokens, I stipulate I ha
 If I, {{ voter }}, am registered as a proxy and am casting votes on behalf of other users of the blockchain, I acknowledge that I am doing so on their behalf and that they may at any time withdraw their stake weight from my voting power by casting their own `vote` or removing my account as their proxy.
 
 I, {{ voter }}, stipulate I have not and will not accept anything of value in exchange for this `vote`, on penalty of confiscation of these tokens, and other penalties.
-
-<h1 class="contract">extend</h1>
-
-## Description
-
-`extend` is used to extend the {{ expires_at }} timestamp value of a {{ proposal_name }} authorized by the {{ proposer }}.
 
 <h1 class="contract">cancel</h1>
 
