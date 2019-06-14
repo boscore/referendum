@@ -28,33 +28,12 @@ vote value of `0` (negative vote) and you perform a second `vote` action on the 
 this time with a value of `1` (positive vote), your current vote for the proposal is now `1`.
 
 There is no decay once you have voted. Once you vote, it does not change, nor is it removed
-until you either call `unvote`, or the proposal has been cleaned up by the `clnproposal` action.
+until you either call `unvote`.
 
 Once a vote has been cast, a user can remove its vote via the `unvote` action.
 The `unvote` action is called using the voter's account and proposal's name. An `unvote`
 action completely removes your vote from the proposal and clears the RAM usage
 associated to that vote.
-
-While a proposal is still active a proposer can decide to manually expire it
-by calling the `expire` action which receives as its only argument the `proposal_name`.
-This amends the proposal's `expires_at` field to the current time instead of waiting for
-its original expiration date to be reached.
-
-Once a proposal is expired (be it manually or automatically if it passed its expiration date), the
-proposal enters a 3 day freeze period. Within this freeze period, the proposal is locked
-and no actions can be called on it (no vote changes, no vote removal (`unvote`) and no clean up).
-This is to allow a period where multiple tools can query the results for cross-verification.
-Once a proposal has ended its freeze period, it's now possible to clean it via the `clnproposal` action.
-The `clnproposal` action receives the `proposal_name` and a `max_count` value. `clnproposal` is done in
-batch, each batch removing an amount of votes on the proposal (received via the `max_count` variable).
-Once all votes are removed on a proposal, the proposal itself is removed.
-
-The clean proposal effectively reclaims all RAM consumed for votes and for the proposal itself. The
-RAM is thus given back to voters (for their votes) and to the proposer (for the proposal).
-
-The `clnproposal` action can be called by anybody, there are no restrictions. There is no risk since
-only expired proposals that have passed their freeze period can be cleaned. Thus, no issues can
-arise by cleaning proposals.
 
 ### Development
 
@@ -184,10 +163,9 @@ details about the status:
 Here is the list of possible actions:
 
 - [propose](#action-propose)
-- [expire](#action-expire)
+- [cancel](#action-cancel)
 - [vote](#action-vote)
 - [unvote](#action-unvote)
-- [clnproposal](#action-clnproposal)
 - [post](#action-post)
 - [unpost](#action-unpost)
 - [status](#action-status)
@@ -202,7 +180,6 @@ Propose a new proposal to the community.
 - `proposal_name` (type `name`) - The proposal's name, its ID among all proposals
 - `title` (type `string`) - The proposal's title (must be less than 1024 characters)
 - `proposal_json` (type `string`) - The proposal's JSON metadata, no specification yet, see [Proposal JSON Structure](#proposal-json-structure-guidelines)
-- `expires_at` (type `time_point_sec`) - The expiration date of the proposal, must be no later than 6 months in the future, ISO 8601 string format (in UTC) **without** a timezone modifier.
 
 ##### Rejections
 
@@ -210,12 +187,11 @@ Propose a new proposal to the community.
 - When `proposal_name` already exists
 - When `title` is longer than 1024 characters
 - When `proposal_json` JSON is invalid or too large (must be a JSON object and be less than 32768 characters)
-- When `expires_at` date is earlier than now or later than 6 months in the future
 
 ##### Example
 
 ```
-eosc tx create eosio.forum propose '{"proposer": "proposer1", "proposal_name": "example", "title": "The title, for list views", "proposal_json": "", "expires_at": "2019-01-30T17:03:20"}' -p proposer1@active
+eosc tx create eosio.forum propose '{"proposer": "proposer1", "proposal_name": "example", "title": "The title, for list views", "proposal_json": ""}' -p proposer1@active
 ```
 OR
 
@@ -257,12 +233,6 @@ Remove your current active vote, effectively reclaiming the stored RAM of the vo
 your vote will not count anymore (neither positively or negatively) on the current proposal's voting
 statistics.
 
-It's **not** possible to `unvote` on a proposal that is expired but within its freeze period of 3 days.
-If the proposal is expired and the freeze period has elapsed, it's possible to `unvote` on the proposal.
-To be nice to the community however, you should call [clnproposal](#action-clnproposal) until the proposal
-is fully cleaned up so that every vote will be removed and RAM will be freed for all voters.
-
-
 ##### Parameters
 
 - `voter` (type `name`) - The actual voter's account
@@ -272,7 +242,6 @@ is fully cleaned up so that every vote will be removed and RAM will be freed for
 
 - When missing signature of `voter`
 - When `proposal_name` does not exist
-- When `proposal_name` is expired but within its freeze period of 3 days
 
 ##### Example
 
@@ -284,74 +253,27 @@ OR
 eosc forum unvote voter1 example
 ```
 
-#### Action `expire`
+#### Action `cancel`
 
-Immediately expires a currently active proposal. The proposal can only be expired by the original proposer
-that created it. It's not valid to expire an already expired proposal.
+Is used to cancel a `proposal_name` authorized by the `proposer`.
 
 ##### Parameters
 
-- `proposal_name` (type `name`) - The proposal's name to expire
+- `proposer` (type `name`) - The original proposer
+- `proposal_name` (type `name`) - The proposal's name to cancel
 
 ##### Rejections
 
 - When missing signatures of proposal's `proposer`
 - When `proposal_name` does not exist
-- When `proposal_name` is already expired
 
 ##### Example
 
 ```
-eosc tx create eosio.forum expire '{"proposal_name": "example"}' -p proposer1@active
-```
-OR
-```
-eosc forum expire proposer1 example
+eosc tx create eosio.forum cancel '{"proposer": "proposer1", "proposal_name": "example"}' -p proposer1@active
 ```
 
 **Note** `proposer1` must be the same as the one that created initially the `example` proposal.
-
-#### Action `clnproposal`
-
-Clean a proposal from all its votes and the proposal itself once there are no more associated votes. The action
-works iteratively, receiving a `max_count` value. It removes as many as `max_count` votes. When there
-are no more votes, the proposal itself is deleted.
-
-This effectively clears all the RAM consumed for a proposal and all its votes. Call the action multiple
-times until all votes are removed.
-
-It's possible to clean a proposal only if it has expired and if its freeze period of 3 days has fully
-elapsed. Within the freeze period, the proposal is locked and no actions can be performed on it.
-Since only expired proposals can be cleaned, anybody can invoke this action, no authorization is required.
-Voters, proposers, or any community member is invited to call `clnproposal` to clean the RAM related to
-a proposal.
-
-**Note** Since a proposal can expire only by a manual action issued by the proposal's author or if it
-has passed its `expires_at` value, it's safe to be called by anybody since the proposal has effectively
-terminated its lifecycle.
-
-##### Parameters
-- `cleaner_account` (type `name`) - The account that CPU/NET will be charged to
-- `proposal_name` (type `name`) - The proposal's name to clean
-- `max_count` (type `uint64`) - The amount of votes to clean out in this batch
-
-##### Rejections
-
-- When `proposal_name` is not expired yet
-- When `proposal_name` is expired but within its freeze period of 3 days
-
-**Note** Giving a `max_count` that is too big increases the probability that the transaction
-fails due to excessive CPU usage. Find the sweet spot to avoid that.
-
-##### Example
-
-```
-eosc tx create eosio.forum clnproposal '{"proposal_name": "example", "max_count": 100}' -p voter1@active
-```
-OR
-```
-eosc forum clean-proposal [cleaner_account_name] example 100
-```
 
 #### Action `post`
 
@@ -457,7 +379,6 @@ eosc forum status voter2 ""
 - `title` (type `string`) - The proposal's title, a brief description of the proposal
 - `proposal_json` (type `string`) - The proposal's JSON metadata, no specification yet, see [Proposal JSON Structure Guidelines](#proposal-json-structure-guidelines)
 - `created_at` (type `time_point_sec`) - The date at which the proposal's was created, ISO 8601 string format (in UTC) **without** a timezone modifier.
-- `expires_at` (type `time_point_sec`) - The date at which the proposal's will expire, ISO 8601 string format (in UTC) **without** a timezone modifier.
 
 ##### Indexes
 - First (`1` type `name`) - Index by `proposal_name` field

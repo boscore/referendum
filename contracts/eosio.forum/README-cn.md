@@ -29,24 +29,6 @@
 使用选民的帐户和提案的名称来调用 `unvote` 命令。
 一个 `unvote` 命令就可以从提案中完全删除你的投票，并清除与该投票相关的RAM用量。
 
-提案处于活跃状态时，提议者可以手动使其过期。
-调用 `expire` 命令，它只有 `proposal_name` 这个参数。
-它可以将提案的 `expires_at` 字段修改为当前时间，而不是等待它原始的到期时间。
-
-提案过期后（无论是手动还是自动过期），进入3天的冻结期。
-在此冻结期内，该提案被锁定，并且不能调用任何操作（包括改投票、删除投票和清理）。
-这时间段是为了让多个工具可以查询结果以进行交叉验证的。
-一旦结束冻结期，可以通过 `clnproposal` 命令清理提案。
-`clnproposal` 命令接受 `proposal_name` 和 `max_count` 两个值。
-`clnproposal` 是按批处理的，每批删除的提案中一定数量的投票（`max_count` 变量可定义数量）。
-一旦提案中的所有投票都被删除，提案本身就会被删除。
-
-提案清理会有效地回收所有用于投票和提案本身的RAM。RAM将返还给选民（投票）和提议者（提案）。
-
-任何人都可以调用 `clnproposal` 命令，没有任何限制。
-这样是没有风险的，因为只有过了冻结期限的过期提案才能被清理。
-所以提案清理命令是可以放心用的。
-
 ### 开发
 
 需要的软件：
@@ -150,10 +132,8 @@ constexpr static uint32_t FREEZE_PERIOD_IN_SECONDS = 2; // NEVER MERGE LIKE THIS
 以下列表是可有的操作：
 
 - [propose](#action-propose)（提案）
-- [expire](#action-expire)（过期时间）
 - [vote](#action-vote)（投票）
 - [unvote](#action-unvote)（撤销投票）
-- [clnproposal](#action-clnproposal)（清除提案）
 - [post](#action-post)（发布帖子）
 - [unpost](#action-unpost)（撤销发布了的帖子）
 - [status](#action-status)（状态）
@@ -170,7 +150,6 @@ constexpr static uint32_t FREEZE_PERIOD_IN_SECONDS = 2; // NEVER MERGE LIKE THIS
 - `proposal_name` (type `name`) - 提案的名称，把它与其他提案区别开来的ID
 - `title` (type `string`) - 提案的标题 (必须少于1024个字符)
 - `proposal_json` (type `string`) - 提案的 JSON 元数据，还没有具体规格，请见[JSON结构指南](#json-structure-guidelines)
-- `expires_at` (type `time_point_sec`) - 提案的到期日期，不得超过6个月，ISO 8601字符串格式（UTC）**不含** 时区修饰符。
 
 ##### 拒绝情况
 
@@ -178,12 +157,11 @@ constexpr static uint32_t FREEZE_PERIOD_IN_SECONDS = 2; // NEVER MERGE LIKE THIS
 - 当 `proposal_name` 已经存在时
 - 当 `title` 超过1024个字符时
 - 当 `proposal_json` JSON无效或太大时（必须是JSON对象且小于32768个字符）
-- 当 `expires_at` 日期早于现在或晚于6个月之后时
 
 ##### 例如
 
 ```
-eosc tx create eosio.forum propose '{"proposer": "proposer1", "proposal_name": "example", "title": "The title, for list views", "proposal_json": "", "expires_at": "2019-01-30T17:03:20"}' -p proposer1@active
+eosc tx create eosio.forum propose '{"proposer": "proposer1", "proposal_name": "example", "title": "The title, for list views", "proposal_json": ""}' -p proposer1@active
 ```
 或
 
@@ -232,7 +210,7 @@ eosc forum vote voter1 example 0
 
 对于已过期且在其3天的冻结期的提案，是不可能 `unvote` 的。
 如果提案已过期且冻结期已过，则可以对提案进行 `unvote`。
-为了社区的利益，你应该调用 [clnproposal](#action-clnproposal) ，直到提案被完全清理、投票都被删除，以便RAM能被释放给所有选民。
+
 
 ##### 参数
 
@@ -257,74 +235,27 @@ eosc forum unvote voter1 example
 
 -------------------------
 
-#### Action `expire`
+#### Action `cancel`
 
-立即使当前活跃的提案到期。 只有提案的原创建者才能执行此操作，对已过期的提案无效。
+Is used to cancel a `proposal_name` authorized by the `proposer`.
 
-##### 参数
+##### Parameters
 
-- `proposal_name` (type `name`) - 想要使过期的提案名称
+- `proposer` (type `name`) - The original proposer
+- `proposal_name` (type `name`) - The proposal's name to cancel
 
-##### 拒绝情况
+##### Rejections
 
-- 当缺少原提案创建者的签名时
-- 当`proposal_name`不存在时
-- 当`proposal_name`已经过期时
+- When missing signatures of proposal's `proposer`
+- When `proposal_name` does not exist
 
-##### 例如
+##### Example
 
 ```
-eosc tx create eosio.forum expire '{"proposal_name": "example"}' -p proposer1@active
-```
-或
-```
-eosc forum expire proposer1 example
+eosc tx create eosio.forum cancel '{"proposer": "proposer1", "proposal_name": "example"}' -p proposer1@active
 ```
 
 **注意** `proposal1` 必须与当初 `example` 提案的创建者相同。
-
--------------------------
-
-#### Action `clnproposal`
-
-当没有更多相关投票的时候，可清理投票和提案本身。
-迭代性操作，接受 `max_count` 值。它删除 `max_count` 值的票数。
-当提案里不再有选票的时候，提案本身也会被删除。
-
-这可以有效清除提案及其所有投票所占用的RAM，多次调用操作直到所有选票都被删除。
-
-只有在提案过期，并且过了它的3天冻结期，提案才能被清除。在冻结期间，提案被锁定并且不接受任何操作。
-
-由于只有过期的提案可以被清理，任何人都可以调用此操作，无需授权。
-
-选民、提议者或任何社区成员都可以呼叫 `clnproposal` 命令来清理与提案相关的RAM。
-
-**注意**由于它仅通过提案作者发布的手动操作或者已经超过其 `expires_at` 的值而过期，
-因此，任何人都可以安全地调用，因为提案已经有效地终止了它的生命周期。
-
-##### 参数
-
-- `cleaner_account` (type `name`) - 支付CPU/网络带宽的账户
-- `proposal_name` (type `name`) - 要清除的提案
-- `max_count` (type `uint64`) - 批量清除的投票数
-
-##### 拒绝情况
-
-- 当`proposal_name`尚未过期时
-- 当`proposal_name`过期但在其3天冻结期内时
-
-**注意**给予 `max_count` 的值太大会增加此交易失败的概率，
-由于可能导致CPU使用率过高。 找到最佳点以避免这种情况。
-
-##### 例如
-
-```
-eosc tx create eosio.forum clnproposal '{"proposal_name": "example", "max_count": 100}' -p voter1@active
-```
-或
-```
-eosc forum clean-proposal [cleaner_account_name] example 100
-```
 
 -------------------------
 
@@ -442,7 +373,6 @@ eosc forum status voter2 ""
 - `title`（type`string`） - 提案的标题，提案的简要说明
 - `proposal_json`（type`tring`） - 元数据的JSON提议，尚无规范，请见[JSON结构指南](#json-structure-guidelines)
 - `created_at`（type` time_point_sec`） - 创建提案的日期，ISO 8601字符串格式（UTC）**不含**时区修饰符。
-- `expires_at`（type`time_point_sec`） - 提案过期的日期，ISO 8601字符串格式（UTC）**不含**时区修饰符。
 
 ##### 指数
 - 一号（`1` type `name`) - 按 `proposal_name` 字段索引
