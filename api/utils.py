@@ -12,9 +12,7 @@ def proposal_base_condition_ckeck(bp_votes = 0, staked_total = 10, yes = 0, no =
     VOTE_RATIO = 0.4
     YES_NO_RATIO = 1.5
     try:
-        if bp_votes * VOTE_RATIO <= staked_total and no == 0 and yes > 1.5:
-            return True
-        elif bp_votes * VOTE_RATIO <= staked_total and yes / no > YES_NO_RATIO:
+        if bp_votes * VOTE_RATIO <= staked_total and (no == 0 or yes / no > YES_NO_RATIO):
             return True
         else:
             return False
@@ -185,7 +183,7 @@ def round3(num):
 
 
 if __name__ == '__main__':
-    result = proposal_base_condition_ckeck(311193750652, 129469948578, 26, 1)
+    result = proposal_base_condition_ckeck(311193750652, 129469948578, 26, 0)
     print(result)
 
     result = auditor_base_condition_ckeck(100, 10, 7, 3)
