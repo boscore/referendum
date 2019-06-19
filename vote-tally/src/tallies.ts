@@ -1,5 +1,5 @@
 import { parseTokenString } from "./utils";
-import { Voters, Delband, Accounts, Vote, Proxies, Proposal, Tallies, Tally, Stats } from "./interfaces";
+import { Voters, Delband, Accounts, ForumVote, Proxies, Proposal, Tallies, Tally, Stats } from "./interfaces";
 
 function defaultAccount() {
     return {
@@ -44,7 +44,7 @@ export function countStaked(delband: Delband) {
     return cpu + net;
 }
 
-export function filterVotersByVotes(voters: Voters[], votes: Vote[]) {
+export function filterVotersByVotes(voters: Voters[], votes: ForumVote[]) {
     const results: Voters[] = [];
     const voted = new Set();
 
@@ -62,7 +62,7 @@ export function filterVotersByVotes(voters: Voters[], votes: Vote[]) {
     return results;
 }
 
-export function generateProxies(votes: Vote[], delband: Delband[], voters: Voters[]): Proxies {
+export function generateProxies(votes: ForumVote[], delband: Delband[], voters: Voters[]): Proxies {
     const accounts = generateAccounts(votes, delband, voters, false);
     const accountsProxies: any = generateAccounts(votes, delband, voters, true);
 
@@ -92,7 +92,7 @@ export function generateProxies(votes: Vote[], delband: Delband[], voters: Voter
     return accountsProxies;
 }
 
-export function generateAccounts(votes: Vote[], delband: Delband[], voters: Voters[], proxies = false): Accounts {
+export function generateAccounts(votes: ForumVote[], delband: Delband[], voters: Voters[], proxies = false): Accounts {
     const accounts: Accounts = {};
     const voted = new Set(); // track who has voted
 

@@ -4,10 +4,10 @@ import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { uploadS3 } from "./src/aws";
-import { Vote, Proposal, Voters, Delband } from "./src/interfaces";
-import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL } from "./src/config";
+import { ForumVote, Proposal, Voters, Delband, AuditorVotes } from "./src/interfaces";
+import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL, CONTRACT_AUDITOR } from "./src/config";
 import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
-import { get_table_voters, get_table_vote, get_table_proposal, get_table_delband } from "./src/get_tables";
+import { get_table_voters, get_forum_vote, get_table_proposal, get_table_delband, get_auditor_votes } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
 import { generateEosioStats } from "./src/stats";
 
@@ -17,14 +17,16 @@ const voters_latest = path.join(basepath, "eosio", "voters", "latest.json");
 const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 
 // Global containers
-let votes: Vote[] = [];
+let forum_votes: ForumVote[] = [];
+let auditor_votes: AuditorVotes[] = [];
 let voters: Voters[] = [];
+
 // `eosioVoters` cannot be stored globaly since it will cause memory leaks
 let proposals: Proposal[] = [];
 let votes_owner: Set<string> = new Set();
 let voters_owner: Set<string> = new Set();
 let delband: Delband[] = [];
-let currency_supply = null;
+let currency_supply: any = null;
 
 /**
  * Sync `eosio` tables
@@ -37,7 +39,7 @@ async function syncEosio(head_block_num: number) {
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
     else eosioVoters = await get_table_voters();
 
-    voters = filterVotersByVotes(eosioVoters, votes);
+    voters = filterVotersByVotes(eosioVoters, forum_votes);
     voters_owner = new Set(voters.map((row) => row.owner));
 
     // Retrieve `staked` from accounts that have not yet voted for BPs
@@ -67,15 +69,29 @@ async function syncForum(head_block_num: number) {
     console.log(`syncForum [head_block_num=${head_block_num}]`);
 
     // fetch `eosio.forum` votes
-    votes = await get_table_vote();
-    votes_owner = new Set(votes.map((row) => row.voter));
+    forum_votes = await get_forum_vote();
+    votes_owner = new Set(forum_votes.map((row) => row.voter));
 
     // fetch `eosio.forum` proposal
     proposals = await get_table_proposal();
 
     // Save JSON
-    save(CONTRACT_FORUM, "vote", head_block_num, votes);
+    save(CONTRACT_FORUM, "vote", head_block_num, forum_votes);
     save(CONTRACT_FORUM, "proposal", head_block_num, proposals);
+}
+
+/**
+ * Sync `auditor.bos` tables
+ */
+async function syncAuditor(head_block_num: number) {
+    console.log(`syncAuditor [head_block_num=${head_block_num}]`);
+
+    // fetch `auditor.bos` votes
+    auditor_votes = await get_auditor_votes();
+    votes_owner = new Set(auditor_votes.map((row) => row.voter));
+
+    // Save JSON
+    save(CONTRACT_AUDITOR, "votes", head_block_num, auditor_votes);
 }
 
 /**
@@ -97,8 +113,8 @@ async function syncToken(head_block_num: number) {
 async function calculateTallies(head_block_num: number) {
     console.log(`calculateTallies [head_block_num=${head_block_num}]`);
 
-    const accounts = generateAccounts(votes, delband, voters);
-    const proxies = generateProxies(votes, delband, voters);
+    const accounts = generateAccounts(forum_votes, delband, voters);
+    const proxies = generateProxies(forum_votes, delband, voters);
     const tallies = generateTallies(head_block_num, proposals, accounts, proxies, currency_supply);
 
     // Save JSON
@@ -146,6 +162,7 @@ async function quickTasks() {
 
 async function allTasks() {
     const {head_block_num} = await rpc.get_info()
+    await syncAuditor(head_block_num);
     await syncToken(head_block_num);
     await syncForum(head_block_num);
     await syncEosio(head_block_num);

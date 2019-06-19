@@ -1,12 +1,12 @@
 import { delay, parseTokenString } from "./utils";
-import { rpc, DELAY_MS, CONTRACT_FORUM } from "./config";
-import { Voters, Vote, Proposal, Delband } from "./interfaces";
+import { rpc, DELAY_MS, CONTRACT_FORUM, CONTRACT_AUDITOR } from "./config";
+import { Voters, ForumVote, AuditorVotes, Proposal, Delband } from "./interfaces";
 
 /**
  * Get Table `eosio::voters`
  */
 export async function get_table_voters() {
-    return get_tables<Voters>("eosio", "eosio", "voters", "owner", ["flags1", "reserved2", "reserved3"]);
+    return (await rpc.get_all_table_rows<Voters>("eosio", "eosio", "voters", "owner")).rows;
 }
 
 /**
@@ -29,50 +29,20 @@ export async function get_table_delband(scopes: Set<string>) {
 /**
  * Get Table `eosio.forum::vote`
  */
-export function get_table_vote() {
-    return get_tables<Vote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id");
+export async function get_forum_vote() {
+    return (await rpc.get_all_table_rows<ForumVote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id")).rows;
+}
+
+/**
+ * Get Table `auditor.bos::votes`
+ */
+export async function get_auditor_votes() {
+    return (await rpc.get_all_table_rows<AuditorVotes>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "votes", "voter")).rows;
 }
 
 /**
  * Get Table `eosio.forum::proposal`
  */
-export function get_table_proposal() {
-    return get_tables<Proposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name");
-}
-
-/**
- * Get Tables
- */
-export async function get_tables<T>(code: string, scope: string, table: string, lower_bound_key: string, delete_keys = []): Promise<T[]> {
-    let lower_bound = "";
-    const limit = 1500;
-    const rows = new Map<string, T>();
-
-    while (true) {
-        console.log(`get_table_rows [${code}::${scope}:${table}] size=${rows.size} lower=${lower_bound}`);
-        const response = await rpc.get_table_rows<T>(code, scope, table, {
-            json: true,
-            lower_bound,
-            limit,
-        });
-        for (const row of response.rows) {
-            // Delete extra fields
-            for (const key of delete_keys) {
-                delete row[key];
-            }
-
-            // Adding to Map removes duplicates entries
-            const key = row[lower_bound_key];
-            rows.set(key, row);
-
-            // Set lower bound
-            lower_bound = key;
-        }
-        // prevent hitting rate limits from API endpoints
-        await delay(DELAY_MS);
-
-        // end of table rows
-        if (response.more === false) break;
-    }
-    return Array.from(rows.values());
+export async function get_table_proposal() {
+    return (await rpc.get_all_table_rows<Proposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name")).rows;
 }

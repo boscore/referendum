@@ -1,6 +1,6 @@
 // import { JsonRpc } from "eosjs";
 import { DappClient as JsonRpc } from "dapp-client";
-import * as fetch from "isomorphic-fetch";
+const fetch = require("isomorphic-fetch");
 require('dotenv').config()
 
 if (!process.env.NODEOS_ENDPOINT) throw new Error("[NODEOS_ENDPOINT] is required as .env");
@@ -12,6 +12,7 @@ export const CHAIN = process.env.CHAIN;
 
 // Optional
 export const CONTRACT_FORUM = process.env.CONTRACT_FORUM || "eosio.forum";
+export const CONTRACT_AUDITOR = process.env.CONTRACT_AUDITOR || "auditor.bos";
 export const CONTRACT_TOKEN = process.env.CONTRACT_TOKEN || "eosio.token";
 export const TOKEN_SYMBOL = process.env.TOKEN_SYMBOL || "BOS";
 

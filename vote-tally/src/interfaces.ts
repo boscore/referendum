@@ -11,13 +11,20 @@ export interface Voters {
     reserved3: string;
 }
 
-export interface Vote {
+export interface ForumVote {
     id: number;
     proposal_name: string;
     voter: string;
     vote: number;
     vote_json: string;
     updated_at: string;
+}
+
+export interface AuditorVotes {
+    voter: string;
+    proxy: number;
+    weight: number;
+    candidates: string[];
 }
 
 export interface Proposal {
@@ -101,7 +108,7 @@ export interface Stats {
     };
 }
 
-export interface ProxiesVote extends Vote {
+export interface ProxiesVote extends ForumVote {
     staked_proxy: number;
 }
 
@@ -125,7 +132,7 @@ export interface Accounts {
      */
     [account_name: string]: {
         votes: {
-            [proposal_name: string]: Vote;
+            [proposal_name: string]: ForumVote;
         }
         staked: number;
         is_proxy: boolean;
@@ -154,9 +161,9 @@ export interface EosioStats {
      * Total amount of staked BOS used to vote for Block Producers by voters (vote weights by individual voters)
      * > If Proxy has staked BOS, that staked amount will be counted towards `bp_producers_votes `
      */
-    bp_producers_votes;
+    bp_producers_votes: number;
     /**
      * Total amount of proxied staked BOS used to vote for Block Producers (vote weight to proxies)
      */
-    bp_proxy_votes;
+    bp_proxy_votes: number;
 }
