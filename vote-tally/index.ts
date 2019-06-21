@@ -56,7 +56,7 @@ async function syncEosio(head_block_num: number) {
     // Calculate EOSIO Stats
     // `eosioVoters` cannot be stored globaly since it will cause memory leaks
     console.log(`calculateEosioStats [head_block_num=${head_block_num}]`);
-    const stats = generateEosioStats(head_block_num, eosioVoters);
+    const stats = generateEosioStats(head_block_num, eosioVoters, currency_supply);
 
     // Save JSON
     await save("eosio", "voters", head_block_num, eosioVoters, false);
@@ -152,7 +152,7 @@ async function calculateAuditorTallies(head_block_num: number) {
 
     const auditor_accounts = generateAuditorAccounts(auditor_votes, delband, voters);
     const auditor_proxies = generateAuditorProxies(auditor_votes, delband, voters);
-    const auditor_tallies = generateAuditorTallies(head_block_num, auditor_candidates, auditor_accounts, auditor_proxies, currency_supply);
+    const auditor_tallies = generateAuditorTallies(head_block_num, auditor_candidates, auditor_accounts, auditor_proxies);
 
     // Save JSON
     save("referendum", "auditor.accounts", head_block_num, auditor_accounts);

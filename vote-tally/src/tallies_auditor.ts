@@ -79,18 +79,18 @@ export function generateAuditorAccounts(votes: AuditorVote[], delband: EosioDelb
     return accounts;
 }
 
-export function generateAuditorTallies(block_num: number, candidates: AuditorCandidate[], accounts: AuditorAccounts, proxies: AuditorAccounts, currency_supply: number): AuditorTallies {
+export function generateAuditorTallies(block_num: number, candidates: AuditorCandidate[], accounts: AuditorAccounts, proxies: AuditorAccounts): AuditorTallies {
     const tallies: AuditorTallies = {};
 
     for (const candidate of candidates) {
-        tallies[candidate.candidate_name] = generateAuditorTally(block_num, candidate, accounts, proxies, currency_supply);
+        tallies[candidate.candidate_name] = generateAuditorTally(block_num, candidate, accounts, proxies);
     }
     return tallies;
 }
 
-export function generateAuditorTally(block_num: number, candidate: AuditorCandidate, accounts: AuditorAccounts, proxies: AuditorAccounts, currency_supply: number): AuditorTally {
+export function generateAuditorTally(block_num: number, candidate: AuditorCandidate, accounts: AuditorAccounts, proxies: AuditorAccounts): AuditorTally {
     const { candidate_name } = candidate;
-    const stats = defaultStats(block_num, currency_supply);
+    const stats = defaultStats(block_num);
 
     // Calculate account's staked
     for (const owner of Object.keys(accounts)) {

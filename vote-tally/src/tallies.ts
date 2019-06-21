@@ -12,7 +12,7 @@ export function defaultAccount() {
     };
 }
 
-export function defaultStats(block_num: number, currency_supply: number): TallyStats {
+export function defaultStats(block_num: number): TallyStats {
     return {
         votes: {
             total: 0,
@@ -35,7 +35,6 @@ export function defaultStats(block_num: number, currency_supply: number): TallyS
             total: 0,
         },
         block_num,
-        currency_supply,
     };
 }
 

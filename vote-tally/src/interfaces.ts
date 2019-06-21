@@ -54,6 +54,10 @@ export interface EosioStats {
      * Total amount of proxied staked BOS used to vote for Block Producers (vote weight to proxies)
      */
     bp_proxy_votes: number;
+    /**
+     * Currency Supply of `eosio.token`
+     */
+    currency_supply: number;
 }
 
 export interface TallyStats {
@@ -61,10 +65,6 @@ export interface TallyStats {
      * Block Number used for Tally calculations
      */
     block_num: number;
-    /**
-     * Currency Supply used for Tally calculations
-     */
-    currency_supply: number;
     /**
      * Total number of votes per account & proxies
      */

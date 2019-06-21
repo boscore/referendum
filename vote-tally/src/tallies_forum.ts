@@ -86,7 +86,7 @@ export function generateForumTallies(block_num: number, proposals: ForumProposal
 
 export function generateForumTally(block_num: number, proposal: ForumProposal, accounts: ForumAccounts, proxies: ForumAccounts, currency_supply: number): ForumTally {
     const { proposal_name } = proposal;
-    const stats = defaultStats(block_num, currency_supply);
+    const stats = defaultStats(block_num);
 
     // Calculate account's staked
     for (const owner of Object.keys(accounts)) {
