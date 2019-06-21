@@ -55,23 +55,35 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 ### `referendum` (tally)
 
-`referendum::tallies` (tallies for `eosio.forum` voters)
+`referendum::forum.tallies` (tallies for `eosio.forum` voters)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json
+- https://s3.amazonaws.com/bos.referendum/referendum/forum.tallies/latest.json
 
-`referendum::accounts` (account details for `eosio.forum` voters)
+`referendum::forum.accounts` (account details for `eosio.forum` voters)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/accounts/latest.json
+- https://s3.amazonaws.com/bos.referendum/referendum/forum.accounts/latest.json
 
-`referendum::proxies` (proxies details for `eosio.forum` voters)
+`referendum::forum.proxies` (proxies details for `eosio.forum` voters)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/proxies/latest.json
+- https://s3.amazonaws.com/bos.referendum/referendum/forum.proxies/latest.json
 
-`referendum::delband` (self delegated bandwidth amount for all `eosio.forum` voters)
+`referendum::auditor.tallies` (tallies for `auditor.bos` voters)
+
+- https://s3.amazonaws.com/bos.referendum/referendum/auditor.tallies/latest.json
+
+`referendum::auditor.accounts` (account details for `auditor.bos` voters)
+
+- https://s3.amazonaws.com/bos.referendum/referendum/auditor.accounts/latest.json
+
+`referendum::auditor.proxies` (proxies details for `auditor.bos` voters)
+
+- https://s3.amazonaws.com/bos.referendum/referendum/auditor.proxies/latest.json
+
+`referendum::delband` (self delegated bandwidth amount for all `eosio.forum` & `auditor.bos` voters)
 
 - https://s3.amazonaws.com/bos.referendum/referendum/delband/latest.json
 
-`referendum::voters` (voters table for all `eosio.forum` voters)
+`referendum::voters` (voters table for all `eosio.forum` & `auditor.bos` voters)
 
 - https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json
 

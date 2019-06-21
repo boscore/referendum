@@ -4,29 +4,35 @@ import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { uploadS3 } from "./src/aws";
-import { ForumVote, Proposal, Voters, Delband, AuditorVotes } from "./src/interfaces";
+import { ForumVote, ForumProposal, EosioVoter, EosioDelband, AuditorVote, AuditorCandidate } from "./src/interfaces";
 import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL, CONTRACT_AUDITOR } from "./src/config";
-import { filterVotersByVotes, generateAccounts, generateProxies, generateTallies } from "./src/tallies";
-import { get_table_voters, get_forum_vote, get_table_proposal, get_table_delband, get_auditor_votes } from "./src/get_tables";
+import { generateForumAccounts, generateForumProxies, generateForumTallies } from "./src/tallies_forum";
+import { filterVotersByVotes } from "./src/tallies";
+import { get_table_voters, get_forum_vote, get_table_forum_proposal, get_table_delband, get_auditor_votes, get_table_auditor_candidates } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
 import { generateEosioStats } from "./src/stats";
+import { generateAuditorAccounts, generateAuditorTallies, generateAuditorProxies } from "./src/tallies_auditor";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
 const voters_latest = path.join(basepath, "eosio", "voters", "latest.json");
-const delband_latest = path.join(basepath, "eosio", "delband", "latest.json");
 
-// Global containers
-let forum_votes: ForumVote[] = [];
-let auditor_votes: AuditorVotes[] = [];
-let voters: Voters[] = [];
-
-// `eosioVoters` cannot be stored globaly since it will cause memory leaks
-let proposals: Proposal[] = [];
-let votes_owner: Set<string> = new Set();
-let voters_owner: Set<string> = new Set();
-let delband: Delband[] = [];
+// Global Eosio
 let currency_supply: any = null;
+
+// Global Referendum
+let voters: EosioVoter[] = [];
+let delband: EosioDelband[] = [];
+let voters_owner: Set<string> = new Set();
+let votes_owner: Set<string> = new Set();
+
+// Global Forum
+let forum_votes: ForumVote[] = [];
+let forum_proposals: ForumProposal[] = [];
+
+// Global Auditor
+let auditor_votes: AuditorVote[] = [];
+let auditor_candidates: AuditorCandidate[] = [];
 
 /**
  * Sync `eosio` tables
@@ -35,11 +41,11 @@ async function syncEosio(head_block_num: number) {
     console.log(`syncEosio [head_block_num=${head_block_num}]`)
 
     // fetch `eosio` voters
-    let eosioVoters: Voters[] = [];
+    let eosioVoters: EosioVoter[] = [];
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
     else eosioVoters = await get_table_voters();
 
-    voters = filterVotersByVotes(eosioVoters, forum_votes);
+    voters = filterVotersByVotes(eosioVoters, forum_votes, auditor_votes);
     voters_owner = new Set(voters.map((row) => row.owner));
 
     // Retrieve `staked` from accounts that have not yet voted for BPs
@@ -70,14 +76,18 @@ async function syncForum(head_block_num: number) {
 
     // fetch `eosio.forum` votes
     forum_votes = await get_forum_vote();
-    votes_owner = new Set(forum_votes.map((row) => row.voter));
+
+    // Add unique voters to global tracking
+    for (const {voter} of forum_votes) {
+        votes_owner.add(voter);
+    }
 
     // fetch `eosio.forum` proposal
-    proposals = await get_table_proposal();
+    forum_proposals = await get_table_forum_proposal();
 
     // Save JSON
     save(CONTRACT_FORUM, "vote", head_block_num, forum_votes);
-    save(CONTRACT_FORUM, "proposal", head_block_num, proposals);
+    save(CONTRACT_FORUM, "proposal", head_block_num, forum_proposals);
 }
 
 /**
@@ -88,10 +98,18 @@ async function syncAuditor(head_block_num: number) {
 
     // fetch `auditor.bos` votes
     auditor_votes = await get_auditor_votes();
-    votes_owner = new Set(auditor_votes.map((row) => row.voter));
+
+    // Add unique voters to global tracking
+    for (const {voter} of auditor_votes) {
+        votes_owner.add(voter);
+    }
+
+    // fetch `eosio.forum` proposal
+    auditor_candidates = await get_table_auditor_candidates();
 
     // Save JSON
     save(CONTRACT_AUDITOR, "votes", head_block_num, auditor_votes);
+    save(CONTRACT_AUDITOR, "candidates", head_block_num, auditor_candidates);
 }
 
 /**
@@ -108,19 +126,38 @@ async function syncToken(head_block_num: number) {
 }
 
 /**
- * Calculate Tallies
+ * Calculate Forum Tallies
  */
-async function calculateTallies(head_block_num: number) {
-    console.log(`calculateTallies [head_block_num=${head_block_num}]`);
+async function calculateForumTallies(head_block_num: number) {
+    console.log(`calculateForumTallies [head_block_num=${head_block_num}]`);
 
-    const accounts = generateAccounts(forum_votes, delband, voters);
-    const proxies = generateProxies(forum_votes, delband, voters);
-    const tallies = generateTallies(head_block_num, proposals, accounts, proxies, currency_supply);
+    const forum_accounts = generateForumAccounts(forum_votes, delband, voters);
+    const forum_proxies = generateForumProxies(forum_votes, delband, voters);
+    const forum_tallies = generateForumTallies(head_block_num, forum_proposals, forum_accounts, forum_proxies, currency_supply);
 
     // Save JSON
-    save("referendum", "accounts", head_block_num, accounts);
-    save("referendum", "proxies", head_block_num, proxies);
-    save("referendum", "tallies", head_block_num, tallies);
+    save("referendum", "accounts", head_block_num, forum_accounts);
+    save("referendum", "proxies", head_block_num, forum_proxies);
+    save("referendum", "tallies", head_block_num, forum_tallies);
+    save("referendum", "forum.accounts", head_block_num, forum_accounts);
+    save("referendum", "forum.proxies", head_block_num, forum_proxies);
+    save("referendum", "forum.tallies", head_block_num, forum_tallies);
+}
+
+/**
+ * Calculate Auditor Tallies
+ */
+async function calculateAuditorTallies(head_block_num: number) {
+    console.log(`calculateAuditorTallies [head_block_num=${head_block_num}]`);
+
+    const auditor_accounts = generateAuditorAccounts(auditor_votes, delband, voters);
+    const auditor_proxies = generateAuditorProxies(auditor_votes, delband, voters);
+    const auditor_tallies = generateAuditorTallies(head_block_num, auditor_candidates, auditor_accounts, auditor_proxies, currency_supply);
+
+    // Save JSON
+    save("referendum", "auditor.accounts", head_block_num, auditor_accounts);
+    save("referendum", "auditor.proxies", head_block_num, auditor_proxies);
+    save("referendum", "auditor.tallies", head_block_num, auditor_tallies);
 }
 
 /**
@@ -150,14 +187,18 @@ async function save(account: string, table: string, block_num: number, json: any
 
 // Save to AWS S3 bucket
 async function saveS3(account: string, table: string, block_num: number, json: any) {
-    await uploadS3(`${account}/${table}/${block_num}.json`, json);
-    await uploadS3(`${account}/${table}/latest.json`, json);
+    if (!DEBUG) {
+        await uploadS3(`${account}/${table}/${block_num}.json`, json);
+        await uploadS3(`${account}/${table}/latest.json`, json);
+    }
 }
 
 async function quickTasks() {
     const {head_block_num} = await rpc.get_info()
     await syncForum(head_block_num);
-    await calculateTallies(head_block_num);
+    await syncAuditor(head_block_num);
+    await calculateForumTallies(head_block_num);
+    await calculateAuditorTallies(head_block_num);
 }
 
 async function allTasks() {
@@ -166,7 +207,8 @@ async function allTasks() {
     await syncToken(head_block_num);
     await syncForum(head_block_num);
     await syncEosio(head_block_num);
-    await calculateTallies(head_block_num);
+    await calculateForumTallies(head_block_num);
+    await calculateAuditorTallies(head_block_num);
 }
 
 /**

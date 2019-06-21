@@ -1,4 +1,7 @@
-export interface Voters {
+export * from "./interfaces_forum";
+export * from "./interfaces_auditor";
+
+export interface EosioVoter {
     owner: string;
     proxy: string;
     producers: any[];
@@ -11,59 +14,49 @@ export interface Voters {
     reserved3: string;
 }
 
-export interface ForumVote {
-    id: number;
-    proposal_name: string;
-    voter: string;
-    vote: number;
-    vote_json: string;
-    updated_at: string;
-}
-
-export interface AuditorVotes {
-    voter: string;
-    proxy: number;
-    weight: number;
-    candidates: string[];
-}
-
-export interface Proposal {
-    proposal_name: string;
-    proposer: string;
-    title: string;
-    proposal_json: string;
-    created_at: string;
-    expires_at: string;
-}
-
-export interface Delband {
+export interface EosioDelband {
     from: string;
     to: string;
     net_weight: string;
     cpu_weight: string;
 }
 
-export interface Userres {
+export interface EosioUserres {
     ram_bytes: number;
     cpu_weight: string;
     net_weight: string;
     owner: string;
 }
 
-export interface Tallies {
+export interface EosioTokenCurrencyStats {
+    [symbol: string]: {
+        supply:     string;
+        max_supply: string;
+        issuer:     string;
+    }
+}
+
+export interface EosioStats {
     /**
-     * proposal_name
+     * Block Number used for Summaries calculations
      */
-    [proposal_name: string]: Tally,
+    block_num: number;
+    /**
+     * Total amount of staked BOS used to vote for Block Producers
+     */
+    bp_votes: number;
+    /**
+     * Total amount of staked BOS used to vote for Block Producers by voters (vote weights by individual voters)
+     * > If Proxy has staked BOS, that staked amount will be counted towards `bp_producers_votes `
+     */
+    bp_producers_votes: number;
+    /**
+     * Total amount of proxied staked BOS used to vote for Block Producers (vote weight to proxies)
+     */
+    bp_proxy_votes: number;
 }
 
-export interface Tally {
-    id: string;
-    stats: Stats;
-    proposal: Proposal;
-}
-
-export interface Stats {
+export interface TallyStats {
     /**
      * Block Number used for Tally calculations
      */
@@ -106,64 +99,4 @@ export interface Stats {
         [vote: number]: number
         total: number,
     };
-}
-
-export interface ProxiesVote extends ForumVote {
-    staked_proxy: number;
-}
-
-export interface Proxies {
-    /**
-     * Account Information
-     */
-    [account_name: string]: {
-        votes: {
-            [proposal_name: string]: ProxiesVote;
-        }
-        staked: number;
-        is_proxy: boolean;
-        proxy: string;
-    }
-}
-
-export interface Accounts {
-    /**
-     * Account Information
-     */
-    [account_name: string]: {
-        votes: {
-            [proposal_name: string]: ForumVote;
-        }
-        staked: number;
-        is_proxy: boolean;
-        proxy: string;
-    }
-}
-
-export interface CurrencyStats {
-    [symbol: string]: {
-        supply:     string;
-        max_supply: string;
-        issuer:     string;
-    }
-}
-
-export interface EosioStats {
-    /**
-     * Block Number used for Summaries calculations
-     */
-    block_num: number;
-    /**
-     * Total amount of staked BOS used to vote for Block Producers
-     */
-    bp_votes: number;
-    /**
-     * Total amount of staked BOS used to vote for Block Producers by voters (vote weights by individual voters)
-     * > If Proxy has staked BOS, that staked amount will be counted towards `bp_producers_votes `
-     */
-    bp_producers_votes: number;
-    /**
-     * Total amount of proxied staked BOS used to vote for Block Producers (vote weight to proxies)
-     */
-    bp_proxy_votes: number;
 }

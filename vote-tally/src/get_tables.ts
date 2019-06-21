@@ -1,22 +1,23 @@
 import { delay, parseTokenString } from "./utils";
 import { rpc, DELAY_MS, CONTRACT_FORUM, CONTRACT_AUDITOR } from "./config";
-import { Voters, ForumVote, AuditorVotes, Proposal, Delband } from "./interfaces";
+import { EosioVoter, ForumVote, AuditorVote, ForumProposal, EosioDelband } from "./interfaces";
+import { AuditorCandidate } from "./interfaces_auditor";
 
 /**
  * Get Table `eosio::voters`
  */
 export async function get_table_voters() {
-    return (await rpc.get_all_table_rows<Voters>("eosio", "eosio", "voters", "owner")).rows;
+    return (await rpc.get_all_table_rows<EosioVoter>("eosio", "eosio", "voters", "owner")).rows;
 }
 
 /**
  * Get Table `eosio::delband`
  */
 export async function get_table_delband(scopes: Set<string>) {
-    const delband: Delband[] = [];
+    const delband: EosioDelband[] = [];
     for (const scope of Array.from(scopes)) {
         console.log(`get_table_rows [eosio::${scope}:userres]`);
-        const response = await rpc.get_table_rows<Delband>("eosio", scope, "delband", {json: true });
+        const response = await rpc.get_table_rows<EosioDelband>("eosio", scope, "delband", {json: true });
 
         for (const row of response.rows) {
             // Only include `delband` that is self delegated
@@ -37,12 +38,33 @@ export async function get_forum_vote() {
  * Get Table `auditor.bos::votes`
  */
 export async function get_auditor_votes() {
-    return (await rpc.get_all_table_rows<AuditorVotes>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "votes", "voter")).rows;
+    const result = await rpc.get_all_table_rows<AuditorVote>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "votes", "voter");
+    return result.rows.map(row => {
+        return {
+            voter: row.voter,
+            candidates: row.candidates
+        }
+    })
 }
 
 /**
  * Get Table `eosio.forum::proposal`
  */
-export async function get_table_proposal() {
-    return (await rpc.get_all_table_rows<Proposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name")).rows;
+export async function get_table_forum_proposal() {
+    return (await rpc.get_all_table_rows<ForumProposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name")).rows;
+}
+
+/**
+ * Get Table `auditor.bos::candidates`
+ */
+export async function get_table_auditor_candidates() {
+    const result = await rpc.get_all_table_rows<AuditorCandidate>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "candidates", "candidate_name");
+    return result.rows.map(row => {
+        return {
+            candidate_name: row.candidate_name,
+            locked_tokens: row.locked_tokens,
+            is_active: row.is_active,
+            auditor_end_time_stamp: row.auditor_end_time_stamp,
+        }
+    })
 }

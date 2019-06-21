@@ -1,6 +1,6 @@
-import { Voters, EosioStats } from "./interfaces";
+import { EosioVoter, EosioStats } from "./interfaces";
 
-export function generateEosioStats(head_block_num: number, voters: Voters[]): EosioStats {
+export function generateEosioStats(head_block_num: number, voters: EosioVoter[]): EosioStats {
     let bp_votes = 0;
     let bp_producers_votes = 0;
     let bp_proxy_votes = 0;
