@@ -7,7 +7,8 @@ import { AuditorCandidate } from "./interfaces_auditor";
  * Get Table `eosio::voters`
  */
 export async function get_table_voters() {
-    return (await rpc.get_all_table_rows<EosioVoter>("eosio", "eosio", "voters", "owner")).rows;
+    const result = await rpc.get_all_table_rows<EosioVoter>("eosio", "eosio", "voters", "owner");
+    return result.rows;
 }
 
 /**
@@ -31,7 +32,8 @@ export async function get_table_delband(scopes: Set<string>) {
  * Get Table `eosio.forum::vote`
  */
 export async function get_forum_vote() {
-    return (await rpc.get_all_table_rows<ForumVote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id")).rows;
+    const result = await rpc.get_all_table_rows<ForumVote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id")
+    return result.rows;
 }
 
 /**
@@ -51,7 +53,8 @@ export async function get_auditor_votes() {
  * Get Table `eosio.forum::proposal`
  */
 export async function get_table_forum_proposal() {
-    return (await rpc.get_all_table_rows<ForumProposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name")).rows;
+    const result = await rpc.get_all_table_rows<ForumProposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name");
+    return result.rows;
 }
 
 /**
