@@ -42,9 +42,8 @@ async function syncEosio(head_block_num: number) {
 
     // fetch `eosio` voters
     let eosioVoters: EosioVoter[] = [];
-    // if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
-    // else
-    eosioVoters = await get_table_voters();
+    if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
+    else eosioVoters = await get_table_voters();
 
     voters = filterVotersByVotes(eosioVoters, forum_votes, auditor_votes);
     voters_owner = new Set(voters.map((row) => row.owner));
