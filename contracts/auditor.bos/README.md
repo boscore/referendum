@@ -46,7 +46,7 @@ $ bosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
 > `auditor.bos@auditors` permission will `updateauth` with candidates with the highest votes
 
 ```bash
-$ bosc tx create auditor.bos newtenure '{"message":"newtenure for auditor.bos"}' -p auditor.bos@active
+$ bosc tx create auditor.bos newtenure '{"candidates": ["<CANDIDATE 1>", "<CANDIDATE 2>"], "message":"newtenure for auditor.bos"}' -p auditor.bos@active
 ```
 
 ### Fire Auditor

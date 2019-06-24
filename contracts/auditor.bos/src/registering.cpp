@@ -90,9 +90,6 @@ void auditorbos::removeAuditor(name auditor) {
     // Remove the candidate from being eligible for the next election period.
     removeCandidate(auditor, true);
 
-    // Allocate the next set of candidates to only fill the gap for the missing slot.
-    allocateAuditors(true);
-
     // Update the auths to give control to the new set of auditors.
     setAuditorAuths();
 }

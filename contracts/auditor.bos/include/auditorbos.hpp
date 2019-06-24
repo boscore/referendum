@@ -408,9 +408,10 @@ public:
      *
      * ##### Parameters:
      *
+     * candidates - auditor candidates to be nominated as auditors
      * message - a string that is used to log a message in the chain history logs. It serves no function in the contract logic.
      */
-    ACTION newtenure(std::string message);
+    ACTION newtenure(vector<name> candidates, std::string message);
 
     /**
      * This action is used to unstake a candidates tokens and have them transferred to their account.
@@ -433,15 +434,13 @@ private: // Private helper methods used by other actions.
 
     contr_config configs();
 
-    void assertPeriodTime();
-
     void setAuditorAuths();
 
     void removeAuditor(name auditor);
 
     void removeCandidate(name auditor, bool lockupStake);
 
-    void allocateAuditors(bool early_election);
+    void allocateAuditors(vector<name> candidates);
 
     // Do not use directly, use the VALIDATE_JSON macro instead!
     void validate_json(

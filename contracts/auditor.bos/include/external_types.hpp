@@ -4,6 +4,16 @@
 using namespace eosio;
 using namespace std;
 
+struct currency_stats {
+    eosio::asset supply;
+    eosio::asset max_supply;
+    name issuer;
+
+    uint64_t primary_key() const { return supply.symbol.code().raw(); }
+};
+
+typedef eosio::multi_index<"stat"_n, currency_stats> stats;
+
 //Authority Structs
 namespace eosiosystem {
 
