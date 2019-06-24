@@ -390,7 +390,7 @@ public:
      * @param newvotes - A vector of account ids for the candidate that the voter is voting for.
      *
      * ### Post Condition:
-     * An active vote record for the voter will have been created or modified to reflect the newvotes. Each of the candidates will have their total_votes amount updated to reflect the delta in voter's token balance. Eg. If a voter has 1000 tokens and votes for 5 candidates, each of those candidates will have their total_votes value increased by 1000. Then if they change their votes to now vote 2 different candidates while keeping the other 3 the same there would be a change of -1000 for 2 old candidates +1000 for 2 new candidates and the other 3 will remain unchanged.
+     * An active vote record for the voter will have been created or modified to reflect the newvotes.
      */
     ACTION voteauditor(name voter, std::vector<name> newvotes);
 
@@ -432,12 +432,6 @@ public:
 private: // Private helper methods used by other actions.
 
     contr_config configs();
-
-    void updateVoteWeight(name auditor, int64_t weight);
-
-    void updateVoteWeights(const vector<name> &votes, int64_t vote_weight);
-
-    void modifyVoteWeights(name voter, vector<name> newVotes);
 
     void assertPeriodTime();
 

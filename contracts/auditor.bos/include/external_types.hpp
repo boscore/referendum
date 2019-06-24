@@ -4,38 +4,6 @@
 using namespace eosio;
 using namespace std;
 
-struct account {
-    asset balance;
-
-    uint64_t primary_key() const { return balance.symbol.code().raw(); }
-};
-
-typedef eosio::multi_index<"accounts"_n, account> accounts;
-
-struct currency_stats {
-    eosio::asset supply;
-    eosio::asset max_supply;
-    name issuer;
-
-    uint64_t primary_key() const { return supply.symbol.code().raw(); }
-};
-
-typedef eosio::multi_index<"stat"_n, currency_stats> stats;
-
-/**
- * Every user 'from' has a scope/table that uses every receipient 'to' as the primary key.
- */
-struct delegated_bandwidth {
-    name          from;
-    name          to;
-    asset         net_weight;
-    asset         cpu_weight;
-
-    uint64_t  primary_key()const { return to.value; }
-};
-
-typedef eosio::multi_index< "delband"_n, delegated_bandwidth > del_bandwidth_table;
-
 //Authority Structs
 namespace eosiosystem {
 

@@ -13,6 +13,4 @@ void auditorbos::voteauditor(name voter, vector<name> newvotes) {
         auto candidate = registered_candidates.get(vote.value, "ERR::VOTEAUDITOR_CANDIDATE_NOT_FOUND::Candidate could not be found.");
         check(candidate.is_active, "ERR::VOTEAUDITOR_VOTING_FOR_INACTIVE_CAND::Attempting to vote for an inactive candidate.");
     }
-
-    modifyVoteWeights(voter, newvotes);
 }
