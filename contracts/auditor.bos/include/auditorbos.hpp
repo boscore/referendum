@@ -395,13 +395,6 @@ public:
     ACTION voteauditor(name voter, std::vector<name> newvotes);
 
     /**
-     * Refresh vote since `eosio` does not notify this contract
-     *
-     * @param voter - The account id for the voter account.
-     */
-    ACTION refreshvote(name voter);
-
-    /**
      * ### newtenure
      *
      * This action is to be run to end and begin each period in BOS life cycle. It performs multiple tasks for BOS including:
@@ -456,4 +449,11 @@ private: // Private helper methods used by other actions.
 
     void allocateAuditors(bool early_election);
 
+    // Do not use directly, use the VALIDATE_JSON macro instead!
+    void validate_json(
+        const string& payload,
+        size_t max_size,
+        const char* not_object_message,
+        const char* over_size_message
+    );
 };

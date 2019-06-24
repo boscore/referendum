@@ -43,7 +43,7 @@ EOSIO_ABI_EX(auditorbos,
              (updateconfig)
              (nominatecand)(withdrawcand)(firecand)(resign)(fireauditor)(unstake)
              (updatebio)
-             (voteauditor)(refreshvote)
+             (voteauditor)
              (newtenure)
              (transfer)
 #ifdef MIGRATE

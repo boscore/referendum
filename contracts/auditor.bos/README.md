@@ -183,8 +183,3 @@ To signal the end of one election period and commence the next. It performs seve
 
 The intent of {{ claimpay }} is to allow an account to claim pending payment amounts due to the account. The pay claim they are claiming needs to be visible in the `pendingpay` table. Transfers to the claimer via an inline transfer on the `eosio.token` contract and then removes the pending payment record from the `pending_pay` table. The active auth of this claimer is required to complete this action.
 
-<h1 class="contract">refreshvote</h1>
-
-## Description
-
-To update the auditor's vote weight.
