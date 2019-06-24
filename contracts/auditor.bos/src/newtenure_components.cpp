@@ -1,4 +1,7 @@
 void auditorbos::allocateAuditors(vector<name> candidates) {
+    contr_config conf = configs();
+    check(candidates.size() == conf.numelected, "ERR::NEWTENURE_CANDIDATES_NUM_ELECTED::Number of candidates does not match the threshold defined in `numelected` configs");
+
     auditors_table auditors(_self, _self.value);
 
     // Empty the auditors table to get a full set of new auditors.
@@ -14,7 +17,7 @@ void auditorbos::allocateAuditors(vector<name> candidates) {
 
     // Add appointed candidates as auditors
     auto cand_itr = candidates.begin();
-    for (const name candidate_name : candidates){
+    for (const name candidate_name : candidates) {
         // Candidate name to auditor table
         auditors.emplace(_self, [&](auditor & row) {
             row.auditor_name = candidate_name;
@@ -61,7 +64,6 @@ void auditorbos::setAuditorAuths() {
 }
 
 void auditorbos::newtenure(vector<name> candidates, string message) {
-
     // Set auditors for the next period.
     allocateAuditors(candidates);
 
