@@ -77,7 +77,6 @@ $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR 
 ### auditors
 
 - `auditor_name` (name) - Account name of the auditor (INDEX)
-- `total_votes` - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
 
 ### votes
 

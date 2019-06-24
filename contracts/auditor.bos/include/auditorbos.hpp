@@ -121,14 +121,9 @@ typedef multi_index<"candidates"_n, candidate,
  */
 struct [[eosio::table("auditors"), eosio::contract("auditorbos")]] auditor {
     name auditor_name;
-    uint64_t total_votes;
 
     uint64_t primary_key() const { return auditor_name.value; }
-
-    uint64_t by_votes_rank() const { return static_cast<uint64_t>(UINT64_MAX - total_votes); }
-
-    EOSLIB_SERIALIZE(auditor,
-                     (auditor_name)(total_votes))
+    EOSLIB_SERIALIZE(auditor, (auditor_name))
 };
 
 
@@ -142,10 +137,7 @@ struct [[eosio::table("bios"), eosio::contract("auditorbos")]] bios {
 
 typedef multi_index<"bios"_n, bios > bios_table;
 
-
-typedef multi_index<"auditors"_n, auditor,
-        indexed_by<"byvotesrank"_n, const_mem_fun<auditor, uint64_t, &auditor::by_votes_rank> >
-> auditors_table;
+typedef multi_index<"auditors"_n, auditor> auditors_table;
 
 /**
  * - voter (account_name) - The account name of the voter (INDEX)
