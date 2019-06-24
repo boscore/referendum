@@ -29,10 +29,7 @@ using namespace std;
  * - lockupasset (asset) -  The amount of assets that are locked up by each candidate applying for election.
  * - maxvotes (int default=5) - The maximum number of votes that each member can make for a candidate.
  * - numelected (int) -  Number of auditors to be elected for each election count.
- * - auditor_tenure (uint32 =  90 * 24 * 60 * 60) - Length of a period in seconds. Used for pay calculations if an early election is called and to trigger deferred `newtenure` calls.
  * - authaccount ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
- * - initial_vote_quorum_percent (uint32) - Amount of token value in votes required to trigger the initial set of auditors
- * - vote_quorum_percent (uint32) - Amount of token value in votes required to trigger the allow a new set of auditors to be set after the initial threshold has been achieved.
  * - auth_threshold_auditors (uint8) - Number of auditors required to approve the lowest level actions.
  * - lockup_release_time_delay (date) - The time before locked up stake can be released back to the candidate using the unstake action
  */
@@ -46,18 +43,8 @@ struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
     // Number of auditors to be elected for each election count.
     uint8_t numelected = 5;
 
-    // Length of a period in seconds.
-    // - used for pay calculations if an eary election is called and to trigger deferred `newtenure` calls.
-    uint32_t auditor_tenure = 90 * 24 * 60 * 60;
-
     // account to have active auth set with all all auditors on the newtenure.
     name authaccount = name{0};
-
-    // Amount of token value in votes required to trigger the initial set of auditors
-    uint32_t initial_vote_quorum_percent;
-
-    // Amount of token value in votes required to trigger the allow a new set of auditors to be set after the initial threshold has been achieved.
-    uint32_t vote_quorum_percent;
 
     // required number of auditors required to approve different levels of authenticated actions.
     uint8_t auth_threshold_auditors;
@@ -69,10 +56,7 @@ struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
                     (lockupasset)
                     (maxvotes)
                     (numelected)
-                    (auditor_tenure)
                     (authaccount)
-                    (initial_vote_quorum_percent)
-                    (vote_quorum_percent)
                     (auth_threshold_auditors)
                     (lockup_release_time_delay)
     )
@@ -243,10 +227,7 @@ public:
      * - lockupasset(uint8_t) : defines the asset and amount required for a user to register as a candidate. This is the amount that will be locked up until the user calls `withdrawcand` in order to get the asset returned to them. If there are currently already registered candidates in the contract this cannot be changed to a different asset type because of introduced complexity of handling the staked amounts.
      * - maxvotes(asset) : Defines the maximum number of candidates a user can vote for at any given time.
      * - numelected(uint16_t) : The number of candidates to elect for auditors. This is used for the payment amount to auditors for median amount.
-     * - auditor_tenure(uint32_t) : The length of a period in seconds. This is used for the scheduling of the deferred `newtenure` actions at the end of processing the current one. Also is used as part of the partial payment to auditors in the case of an elected auditor resigning which would also trigger a `newtenure` action.
      * - authaccount(name) : The managing account that controls the BOS auditor permission.
-     * - initial_vote_quorum_percent (uint32) : The percent of voters required to activate BOS for the first election period.
-     * - vote_quorum_percent (uint32) : The percent of voters required to continue BOS for the following election periods after the first one has activated BOS.
      * - auth_threshold_auditors (uint8) : The number of auditors required to approve an action in the low permission category ( ordinary action such as a worker proposal).
      */
     ACTION updateconfig(contr_config newconfig);

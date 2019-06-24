@@ -1,11 +1,8 @@
 {
     "auth_threshold_auditors": 1,
     "authaccount": "auditor.bos",
-    "initial_vote_quorum_percent": 1,
     "lockup_release_time_delay": 3600,
     "lockupasset": "100.0000 BOS",
     "maxvotes": 3,
-    "numelected": 5,
-    "auditor_tenure": 7776000,
-    "vote_quorum_percent": 1
+    "numelected": 5
 }

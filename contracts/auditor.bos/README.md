@@ -89,10 +89,7 @@ $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR 
 - `lockupasset` (asset) -  The amount of assets that are locked up by each candidate applying for election.
 - `maxvotes` (int default=3) - The maximum number of votes that each member can make for a candidate.
 - `numelected` (int default=5) -  Number of auditors to be elected for each election count.
-- `auditor_tenure` (uint32 =  90 * 24 * 60 * 60) - Length of a period in seconds. Used for pay calculations if an early election is called and to trigger deferred `newtenure` calls.
 - `authaccount` ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
-- `initial_vote_quorum_percent` (uint32) - Amount of token value in votes required to trigger the initial set of auditors
-- `vote_quorum_percent` (uint32) - Amount of token value in votes required to trigger the allow a new set of auditors to be set after the initial threshold has been achieved.
 - `auth_threshold_auditors` (uint8) - Number of auditors required to approve the lowest level actions.
 - `lockup_release_time_delay` (date) - The time before locked up stake can be released back to the candidate using the unstake action
 
