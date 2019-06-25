@@ -1,5 +1,3 @@
-
-
 void auditorbos::nominatecand(name cand) {
     require_auth(cand);
 
@@ -11,25 +9,25 @@ void auditorbos::nominatecand(name cand) {
     auto reg_candidate = registered_candidates.find(cand.value);
     if (reg_candidate != registered_candidates.end()) {
         check(!reg_candidate->is_active, "ERR::NOMINATECAND_ALREADY_REGISTERED::Candidate is already registered and active.");
-        registered_candidates.modify(reg_candidate, cand, [&](candidate &c) {
-            c.is_active = 1;
+        registered_candidates.modify(reg_candidate, cand, [&](candidate & row) {
+            row.is_active = 1;
 
             if (pending != pendingstake.end()) {
-                c.locked_tokens += pending->quantity;
+                row.locked_tokens += pending->quantity;
                 pendingstake.erase(pending);
             }
-            check(c.locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
+            check(row.locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
         });
     } else {
         check(pending != pendingstake.end() &&
                      pending->quantity >= configs().lockupasset,
                      "ERR::NOMINATECAND_STAKING_FUNDS_INCOMPLETE::A registering candidate must transfer sufficient tokens to the contract for staking.");
 
-        registered_candidates.emplace(cand, [&](candidate &c) {
-            c.candidate_name = cand;
-            c.locked_tokens = pending->quantity;
-            c.total_votes = 0;
-            c.is_active = 1;
+        registered_candidates.emplace(cand, [&](candidate & row) {
+            row.candidate_name = cand;
+            row.locked_tokens = pending->quantity;
+            row.total_votes = 0;
+            row.is_active = 1;
         });
         pendingstake.erase(pending);
     }
@@ -49,9 +47,9 @@ void auditorbos::unstake(name cand) {
     const auto &reg_candidate = registered_candidates.get(cand.value, "ERR::UNSTAKE_CAND_NOT_REGISTERED::Candidate is not already registered.");
     check(!reg_candidate.is_active, "ERR::UNSTAKE_CANNOT_UNSTAKE_FROM_ACTIVE_CAND::Cannot unstake tokens for an active candidate. Call withdrawcand first.");
 
-    check(reg_candidate.auditor_end_time_stamp < time_point_sec(now()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay.");
+    check(reg_candidate.auditor_end_time_stamp < time_point_sec(), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay.");
 
-    registered_candidates.modify(reg_candidate, cand, [&](candidate &c) {
+    registered_candidates.modify(reg_candidate, cand, [&](candidate & row) {
         // Ensure the candidate's tokens are not locked up for a time delay period.
         // Send back the locked up tokens
         // inline transfer unstaking
@@ -59,10 +57,10 @@ void auditorbos::unstake(name cand) {
                 eosio::permission_level{_self , "active"_n },
                 name( TOKEN_CONTRACT ),
                 "transfer"_n,
-                make_tuple( _self, cand, c.locked_tokens, string("Returning locked up stake. Thank you."))
+                make_tuple( _self, cand, row.locked_tokens, string("Returning locked up stake. Thank you."))
         ).send();
 
-        c.locked_tokens = asset(0, configs().lockupasset.symbol);
+        row.locked_tokens = asset(0, configs().lockupasset.symbol);
     });
 }
 
@@ -101,11 +99,11 @@ void auditorbos::removeCandidate(name cand, bool lockupStake) {
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
     // Set the is_active flag to false instead of deleting in order to retain votes if they return as BOS auditors.
-    registered_candidates.modify(reg_candidate, cand, [&](candidate &c) {
-        c.is_active = 0;
+    registered_candidates.modify(reg_candidate, cand, [&](candidate & row) {
+        row.is_active = 0;
         if (lockupStake) {
             eosio::print("Lockup stake for release delay.");
-            c.auditor_end_time_stamp = time_point_sec(now() + configs().lockup_release_time_delay);
+            row.auditor_end_time_stamp = current_time_point() + time_point_sec(configs().lockup_release_time_delay);
         }
     });
 }

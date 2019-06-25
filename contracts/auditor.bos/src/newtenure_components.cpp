@@ -10,7 +10,7 @@ void auditorbos::allocateAuditors(vector<name> candidates) {
         const auto &reg_candidate = registered_candidates.get(auditor_itr->auditor_name.value, "ERR::NEWTENURE_EXPECTED_CAND_NOT_FOUND::Corrupt data: Trying to set a lockup delay on candidate leaving office.");
         registered_candidates.modify(reg_candidate, auditor_itr->auditor_name, [&](candidate & row) {
             eosio::print("Lockup stake for release delay.");
-            row.auditor_end_time_stamp = time_point_sec(now() + configs().lockup_release_time_delay);
+            row.auditor_end_time_stamp = current_time_point() + time_point_sec(conf.lockup_release_time_delay);
         });
         auditor_itr = auditors.erase(auditor_itr);
     }
@@ -34,7 +34,7 @@ void auditorbos::allocateAuditors(vector<name> candidates) {
 
         // Lockup stake for release delay.
         registered_candidates.modify(reg_candidate, candidate_name, [&](candidate & row) {
-            row.auditor_end_time_stamp = time_point_sec(now() + configs().lockup_release_time_delay);
+            row.auditor_end_time_stamp = current_time_point() + time_point_sec(conf.lockup_release_time_delay);
         });
     }
 }
@@ -78,5 +78,5 @@ void auditorbos::newtenure(vector<name> candidates, string message) {
     // Set the auths on the BOS auditor authority account
     setAuditorAuths();
 
-    _currentState.lastperiodtime = now();
+    _currentState.lastperiodtime = current_time_point();
 }

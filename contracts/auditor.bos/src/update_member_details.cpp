@@ -10,13 +10,13 @@ void auditorbos::updatebio(name cand, string bio) {
 
     if(bio.size() > 0) {
         if (cand_bio != candidate_bios.end()) {
-            candidate_bios.modify(cand_bio, cand, [&](auto &b) {
-                b.bio = bio;
+            candidate_bios.modify(cand_bio, cand, [&](auto & row) {
+                row.bio = bio;
             });
         } else {
-            candidate_bios.emplace(cand, [&](auto &b) {
-                b.candidate_name = cand;
-                b.bio = bio;
+            candidate_bios.emplace(cand, [&](auto & row) {
+                row.candidate_name = cand;
+                row.bio = bio;
             });
         }
     } else {

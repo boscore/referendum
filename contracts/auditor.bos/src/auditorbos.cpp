@@ -1,10 +1,10 @@
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/singleton.hpp>
-#include <eosiolib/asset.hpp>
-#include <eosiolib/transaction.hpp>
+#include <eosio/eosio.hpp>
+#include <eosio/singleton.hpp>
+#include <eosio/asset.hpp>
+#include <eosio/transaction.hpp>
 
-#include <eosiolib/multi_index.hpp>
-#include <eosiolib/public_key.hpp>
+#include <eosio/multi_index.hpp>
+#include <eosio/crypto.hpp>
 #include <string>
 #include "auditorbos.hpp"
 
