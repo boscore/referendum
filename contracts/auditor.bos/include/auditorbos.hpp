@@ -63,7 +63,7 @@ struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidate {
     asset locked_tokens;
     uint64_t total_votes;
     uint8_t is_active;
-    time_point_sec auditor_end_time_stamp;
+    time_point_sec unstaking_end_time_stamp;
 
     uint64_t primary_key() const { return candidate_name.value; }
 
@@ -116,17 +116,6 @@ struct [[eosio::table("votes"), eosio::contract("auditorbos")]] vote {
 typedef eosio::multi_index<"votes"_n, vote,
         indexed_by<"byproxy"_n, const_mem_fun<vote, uint64_t, &vote::by_proxy> >
 > votes_table;
-
-struct [[eosio::table("pendingstake"), eosio::contract("auditorbos")]] tempstake {
-    name sender;
-    asset quantity;
-    string memo;
-
-    uint64_t primary_key() const { return sender.value; }
-};
-
-typedef multi_index<"pendingstake"_n, tempstake> pendingstake_table_t;
-
 
 class auditorbos : public contract {
 
@@ -190,7 +179,10 @@ public:
      * This action is intended only to observe transfers that are run by the associated token contract for the purpose of tracking the moving weights of votes if either the `from` or `to` in the transfer have active votes. It is not included in the ABI to prevent it from being called from outside the chain.
      */
     [[eosio::on_notify("eosio.token::transfer")]]
-    void transfer(name from, name to, asset quantity, string memo);
+    void stake( name from,
+                name to,
+                asset quantity,
+                const std::string& memo );
 
     /**
      * This action is used to nominate a candidate for auditor elections.
