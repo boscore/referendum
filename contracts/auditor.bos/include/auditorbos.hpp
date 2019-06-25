@@ -42,16 +42,6 @@ struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
 
 typedef singleton<"config"_n, contr_config> configscontainer;
 
-struct [[eosio::table("state"), eosio::contract("auditorbos")]] contr_state {
-    time_point_sec lastperiodtime = current_time_point();
-    int64_t total_weight_of_votes = 0;
-    int64_t total_votes_on_candidates = 0;
-    uint32_t number_active_candidates = 0;
-    bool met_initial_votes_threshold = false;
-};
-
-typedef singleton<"state"_n, contr_state> statecontainer;
-
 /**
  * - candidate_name (name) - Account name of the candidate (INDEX)
  * - is_active (int8) - Boolean indicating if the candidate is currently available for election. (INDEX)
@@ -121,11 +111,10 @@ class auditorbos : public contract {
 
 private: // Variables used throughout the other actions.
     configscontainer config_singleton;
-    statecontainer contract_state;
     candidates_table registered_candidates;
     votes_table votes_cast_by_members;
     bios_table candidate_bios;
-    contr_state _currentState;
+    name sending_code;
 
 public:
 
@@ -134,14 +123,9 @@ public:
             registered_candidates(_self, _self.value),
             votes_cast_by_members(_self, _self.value),
             candidate_bios(_self, _self.value),
-            config_singleton(_self, _self.value),
-            contract_state(_self, _self.value) {
+            config_singleton(_self, _self.value) {
 
-        _currentState = contract_state.get_or_default(contr_state());
-    }
-
-    ~auditorbos() {
-        contract_state.set(_currentState, _self); // This should not run during a contract_state migration since it will prevent changing the schema with data saved between runs.
+        sending_code = name{code};
     }
 
     /**

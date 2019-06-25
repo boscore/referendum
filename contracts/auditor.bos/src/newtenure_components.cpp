@@ -77,6 +77,4 @@ void auditorbos::newtenure(vector<name> candidates, string message) {
 
     // Set the auths on the BOS auditor authority account
     setAuditorAuths();
-
-    _currentState.lastperiodtime = current_time_point();
 }

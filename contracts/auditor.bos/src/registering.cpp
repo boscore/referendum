@@ -1,8 +1,6 @@
 void auditorbos::nominatecand(name cand) {
     require_auth(cand);
 
-    _currentState.number_active_candidates++;
-
     auto reg_candidate = registered_candidates.find(cand.value);
 
     check(reg_candidate == registered_candidates.end(), "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
@@ -75,8 +73,6 @@ void auditorbos::removeAuditor(name auditor) {
 }
 
 void auditorbos::removeCandidate(name cand, bool lockupStake) {
-    _currentState.number_active_candidates--;
-
     const auto &reg_candidate = registered_candidates.get(cand.value, "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
