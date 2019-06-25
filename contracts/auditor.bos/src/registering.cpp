@@ -7,7 +7,7 @@ void auditorbos::nominatecand(name cand) {
 
     // Set candidate as Active
     check(!reg_candidate->is_active, "ERR::NOMINATECAND_ALREADY_REGISTERED::Candidate is already registered and active.");
-    registered_candidates.modify(reg_candidate, cand, [&](candidate & row) {
+    registered_candidates.modify(reg_candidate, cand, [&](auto & row) {
         row.is_active = 1;
         check(row.locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
     });
@@ -29,7 +29,7 @@ void auditorbos::unstake(name cand) {
 
     check(reg_candidate.unstaking_end_time_stamp < time_point_sec(current_time_point()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay.");
 
-    registered_candidates.modify(reg_candidate, cand, [&](candidate & row) {
+    registered_candidates.modify(reg_candidate, cand, [&](auto & row) {
         // Ensure the candidate's tokens are not locked up for a time delay period.
         // Send back the locked up tokens
         // inline transfer unstaking
@@ -77,7 +77,7 @@ void auditorbos::removeCandidate(name cand, bool lockupStake) {
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
     // Set the is_active flag to false instead of deleting in order to retain votes if they return as BOS auditors.
-    registered_candidates.modify(reg_candidate, cand, [&](candidate & row) {
+    registered_candidates.modify(reg_candidate, cand, [&](auto & row) {
         row.is_active = 0;
         if (lockupStake) {
             eosio::print("Lockup stake for release delay.");

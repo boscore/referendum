@@ -9,13 +9,13 @@ void auditorbos::stake( name from,
 
         // Modify existing registered candidate with additional locked_tokens
         if (reg_candidate != registered_candidates.end()) {
-            registered_candidates.modify(reg_candidate, eosio::same_payer, [&](candidate & row) {
+            registered_candidates.modify(reg_candidate, eosio::same_payer, [&](auto & row) {
                 row.locked_tokens += quantity;
                 row.unstaking_end_time_stamp = unstaking_period;
             });
         // New candidate, register them and add locked_tokens
         } else {
-            registered_candidates.emplace(_self, [&](candidate & row) {
+            registered_candidates.emplace(_self, [&](auto & row) {
                 row.candidate_name = from;
                 row.locked_tokens = quantity;
                 row.total_votes = 0;
