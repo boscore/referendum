@@ -6,3 +6,9 @@ void auditorbos::updateconfig(contr_config new_config) {
 
     config_singleton.set(new_config, _self);
 }
+
+contr_config auditorbos::configs() {
+    contr_config conf = config_singleton.get_or_default(contr_config());
+    config_singleton.set(conf, _self);
+    return conf;
+}

@@ -6,21 +6,7 @@
 
 #include "external_types.hpp"
 
-#define _STRINGIZE(x) #x
-#define STRINGIZE(x) _STRINGIZE(x)
-
-#ifdef TOKENCONTRACT
-#define TOKEN_CONTRACT STRINGIZE(TOKENCONTRACT)
-#endif
-
-#ifndef TOKEN_CONTRACT
-#define TOKEN_CONTRACT "eosio.token"
-#endif
-
-#ifndef TRANSFER_DELAY
-#define TRANSFER_DELAY 60*60
-#endif
-
+const name TOKEN_CONTRACT = "eosio.token"_n;
 const name AUDITORS_PERMISSION = "auditors"_n;
 
 using namespace eosio;

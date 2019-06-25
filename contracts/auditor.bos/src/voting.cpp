@@ -1,9 +1,4 @@
-
 void auditorbos::voteauditor(name voter, vector<name> newvotes) {
-#ifdef VOTING_DISABLED
-    check(false,"ERR::VOTEAUDITOR_VOTING_IS_DISABLED::Voting is currently disabled.");
-#endif
-
     require_auth(voter);
 
     check(newvotes.size() <= configs().maxvotes, "ERR::VOTEAUDITOR_MAX_VOTES_EXCEEDED::Max number of allowed votes was exceeded.");

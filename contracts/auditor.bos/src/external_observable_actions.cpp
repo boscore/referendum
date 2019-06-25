@@ -1,4 +1,3 @@
-
 void auditorbos::transfer(name from,
                           name to,
                           asset quantity,
