@@ -21,7 +21,7 @@ $ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDAT
 ### Vote for Auditor Candidate
 
 ```
-$ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
+$ bosc tx create auditor.bos vote '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
 ```
 
 ### Withdraw Candidate & Unstake
@@ -63,6 +63,14 @@ $ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p audi
 
 ```bash
 $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
+```
+
+### Unvote
+
+> Removes existing vote from `voter`.
+
+```bash
+$ bosc tx create auditor.bos unvote '{"voter": "<VOTER NAME>"}' -p <VOTER NAME>@active
 ```
 
 ## Tables
@@ -154,7 +162,7 @@ The intent of {{ nominatecand }} is to nominates a candidate to auditor election
 
 To withdraw a candidate for becoming an elected auditor. The action ensures the {{ cand }} account is currently nominated. On success the amount of tokens that was locked up via the {{ nominatecand }} action will be added to a list of pending transactions to transfer back to the {{ cand }} account. The actual transfer would be performed by a separate action due to the auth requirement for sending funds from the contract's account.
 
-<h1 class="contract">voteauditor</h1>
+<h1 class="contract">vote</h1>
 
 ## Description
 
@@ -179,3 +187,8 @@ To signal the end of one election period and commence the next. It performs seve
 
 The intent of {{ claimpay }} is to allow an account to claim pending payment amounts due to the account. The pay claim they are claiming needs to be visible in the `pendingpay` table. Transfers to the claimer via an inline transfer on the `eosio.token` contract and then removes the pending payment record from the `pending_pay` table. The active auth of this claimer is required to complete this action.
 
+<h1 class="contract">unvote</h1>
+
+## Description
+
+Removes existing vote from {{ voter }}.
