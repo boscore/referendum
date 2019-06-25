@@ -56,17 +56,9 @@ struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidate {
     time_point_sec unstaking_end_time_stamp;
 
     uint64_t primary_key() const { return candidate_name.value; }
-
-    uint64_t by_number_votes() const { return static_cast<uint64_t>(total_votes); }
-
-    uint64_t by_votes_rank() const { return static_cast<uint64_t>(UINT64_MAX - total_votes); }
 };
 
-typedef multi_index<"candidates"_n, candidate,
-        indexed_by<"bycandidate"_n, const_mem_fun<candidate, uint64_t, &candidate::primary_key> >,
-        indexed_by<"byvotes"_n, const_mem_fun<candidate, uint64_t, &candidate::by_number_votes> >,
-        indexed_by<"byvotesrank"_n, const_mem_fun<candidate, uint64_t, &candidate::by_votes_rank> >
-> candidates_table;
+typedef multi_index<"candidates"_n, candidate> candidates_table;
 
 /**
  * - auditor_name (name) - Account name of the auditor (INDEX)
@@ -100,12 +92,9 @@ struct [[eosio::table("votes"), eosio::contract("auditorbos")]] vote {
     std::vector<name> candidates;
 
     uint64_t primary_key() const { return voter.value; }
-    uint64_t by_proxy() const { return proxy.value; }
 };
 
-typedef eosio::multi_index<"votes"_n, vote,
-        indexed_by<"byproxy"_n, const_mem_fun<vote, uint64_t, &vote::by_proxy> >
-> votes_table;
+typedef eosio::multi_index<"votes"_n, vote> votes_table;
 
 class auditorbos : public contract {
 
