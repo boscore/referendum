@@ -31,6 +31,6 @@ void auditorbos::unvote(name voter) {
     require_auth( voter );
 
     const auto & vote_itr = votes_cast_by_members.find(voter.value);
-    check(vote_itr == votes_cast_by_members.end(), "ERR::UNVOTE_NOT_FOUND::Cannot find an existing vote with this voter.");
+    check(vote_itr != votes_cast_by_members.end(), "ERR::UNVOTE_NOT_FOUND::Cannot find an existing vote with this voter.");
     votes_cast_by_members.erase(vote_itr);
 }
