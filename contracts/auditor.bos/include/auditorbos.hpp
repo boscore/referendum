@@ -38,15 +38,6 @@ struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
 
     // The time before locked up stake can be released back to the candidate using the unstake action
     uint32_t lockup_release_time_delay;
-
-    EOSLIB_SERIALIZE(contr_config,
-                    (lockupasset)
-                    (maxvotes)
-                    (numelected)
-                    (authaccount)
-                    (auth_threshold_auditors)
-                    (lockup_release_time_delay)
-    )
 };
 
 typedef singleton<"config"_n, contr_config> configscontainer;
@@ -57,21 +48,9 @@ struct [[eosio::table("state"), eosio::contract("auditorbos")]] contr_state {
     int64_t total_votes_on_candidates = 0;
     uint32_t number_active_candidates = 0;
     bool met_initial_votes_threshold = false;
-
-    EOSLIB_SERIALIZE(contr_state, (lastperiodtime)
-            (total_weight_of_votes)
-            (total_votes_on_candidates)
-            (number_active_candidates)
-            (met_initial_votes_threshold)
-    )
 };
 
 typedef singleton<"state"_n, contr_state> statecontainer;
-
-// Utility to combine ids to help with indexing.
-uint128_t combine_ids(const uint8_t &boolvalue, const uint64_t &longValue) {
-    return (uint128_t{boolvalue} << 8) | longValue;
-}
 
 /**
  * - candidate_name (name) - Account name of the candidate (INDEX)
@@ -91,9 +70,6 @@ struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidate {
     uint64_t by_number_votes() const { return static_cast<uint64_t>(total_votes); }
 
     uint64_t by_votes_rank() const { return static_cast<uint64_t>(UINT64_MAX - total_votes); }
-
-    EOSLIB_SERIALIZE(candidate,
-                     (candidate_name)(locked_tokens)(total_votes)(is_active)(auditor_end_time_stamp))
 };
 
 typedef multi_index<"candidates"_n, candidate,
@@ -110,21 +86,18 @@ struct [[eosio::table("auditors"), eosio::contract("auditorbos")]] auditor {
     name auditor_name;
 
     uint64_t primary_key() const { return auditor_name.value; }
-    EOSLIB_SERIALIZE(auditor, (auditor_name))
 };
 
+typedef multi_index<"auditors"_n, auditor> auditors_table;
 
 struct [[eosio::table("bios"), eosio::contract("auditorbos")]] bios {
     name candidate_name;
     string bio;
 
     uint64_t primary_key() const { return candidate_name.value; }
-    EOSLIB_SERIALIZE(bios, (candidate_name)(bio))
 };
 
 typedef multi_index<"bios"_n, bios > bios_table;
-
-typedef multi_index<"auditors"_n, auditor> auditors_table;
 
 /**
  * - voter (account_name) - The account name of the voter (INDEX)
@@ -138,9 +111,6 @@ struct [[eosio::table("votes"), eosio::contract("auditorbos")]] vote {
 
     uint64_t primary_key() const { return voter.value; }
     uint64_t by_proxy() const { return proxy.value; }
-
-
-    EOSLIB_SERIALIZE(vote, (voter)(proxy)(weight)(candidates))
 };
 
 typedef eosio::multi_index<"votes"_n, vote,
@@ -153,8 +123,6 @@ struct [[eosio::table("pendingstake"), eosio::contract("auditorbos")]] tempstake
     string memo;
 
     uint64_t primary_key() const { return sender.value; }
-
-    EOSLIB_SERIALIZE(tempstake, (sender)(quantity)(memo))
 };
 
 typedef multi_index<"pendingstake"_n, tempstake> pendingstake_table_t;
@@ -209,7 +177,8 @@ public:
      * - authaccount(name) : The managing account that controls the BOS auditor permission.
      * - auth_threshold_auditors (uint8) : The number of auditors required to approve an action in the low permission category ( ordinary action such as a worker proposal).
      */
-    ACTION updateconfig(contr_config newconfig);
+    [[eosio::action]]
+    void updateconfig(contr_config newconfig);
 
     /**
      * Action to listen to from the associated token contract to ensure registering should be allowed.
@@ -220,11 +189,8 @@ public:
      * @param memo A string to attach to a transaction. For staking this string should match the name of the running contract eg "auditor.bos". Otherwise it will be regarded only as a generic transfer to the account.
      * This action is intended only to observe transfers that are run by the associated token contract for the purpose of tracking the moving weights of votes if either the `from` or `to` in the transfer have active votes. It is not included in the ABI to prevent it from being called from outside the chain.
      */
-    void transfer(name from,
-                  name to,
-                  asset quantity,
-                  string memo);
-
+    [[eosio::on_notify("eosio.token::transfer")]]
+    void transfer(name from, name to, asset quantity, string memo);
 
     /**
      * This action is used to nominate a candidate for auditor elections.
@@ -246,7 +212,8 @@ public:
      * ### Post Condition:
      * The candidate should be present in the candidates table and be set to active. If they are a returning candidate they should be set to active again. The `locked_tokens` value should reflect the total of the tokens they have transferred to the contract for staking. The number of active candidates in the contract will incremented.
      */
-    ACTION nominatecand(name cand);
+    [[eosio::action]]
+    void nominatecand(name cand);
 
     /**
      * This action is used to withdraw a candidate from being active for auditor elections.
@@ -261,7 +228,8 @@ public:
      * ### Post Condition:
      * The candidate should still be present in the candidates table and be set to inactive. If the were recently an elected auditor there may be a time delay on when they can unstake their tokens from the contract. If not they will be able to unstake their tokens immediately using the unstake action.
      */
-    ACTION withdrawcand(name cand);
+    [[eosio::action]]
+    void withdrawcand(name cand);
 
     /**
      * This action is used to remove a candidate from being a candidate for auditor elections.
@@ -277,7 +245,8 @@ public:
      * ### Post Condition:
      * The candidate should still be present in the candidates table and be set to inactive. If the `lockupstake` parameter is true the stake will be locked until the time delay has passed. If not the candidate will be able to unstake their tokens immediately using the unstake action to have them returned.
      */
-    ACTION firecand(name cand, bool lockupStake);
+    [[eosio::action]]
+    void firecand(name cand, bool lockupStake);
 
     /**
      * This action is used to resign as a auditor.
@@ -297,7 +266,8 @@ public:
      * A replacement auditor will selected from the candidates to fill the missing place (based on vote ranking)
      * then the auths for the controlling BOS auth account will be set for the auditor board.
      */
-    ACTION resign(name auditor);
+    [[eosio::action]]
+    void resign(name auditor);
 
     /**
      * This action is used to remove a auditor.
@@ -315,7 +285,8 @@ public:
      * that time has passed. A replacement auditor will selected from the candidates to fill the missing place (based on vote ranking)
      * then the auths for the controlling BOS auth account will be set for the auditor board.
      */
-    ACTION fireauditor(name auditor);
+    [[eosio::action]]
+    void fireauditor(name auditor);
 
     /**
      * This action is used to update the bio for a candidate.
@@ -331,7 +302,8 @@ public:
      * ### Post Condition:
      * Nothing from this action is stored on the blockchain. It is only intended to ensure authentication of changing the bio which will be stored off chain.
      */
-    ACTION updatebio(name cand, std::string bio);
+    [[eosio::action]]
+    void updatebio(name cand, std::string bio);
 
     /**
      * This action is to facilitate voting for candidates to become auditors of BOS.
@@ -352,7 +324,8 @@ public:
      * ### Post Condition:
      * An active vote record for the voter will have been created or modified to reflect the newvotes.
      */
-    ACTION voteauditor(name voter, std::vector<name> newvotes);
+    [[eosio::action]]
+    void voteauditor(name voter, std::vector<name> newvotes);
 
     /**
      * ### newtenure
@@ -371,7 +344,8 @@ public:
      * candidates - auditor candidates to be nominated as auditors
      * message - a string that is used to log a message in the chain history logs. It serves no function in the contract logic.
      */
-    ACTION newtenure(vector<name> candidates, std::string message);
+    [[eosio::action]]
+    void newtenure(vector<name> candidates, std::string message);
 
     /**
      * This action is used to unstake a candidates tokens and have them transferred to their account.
@@ -387,7 +361,8 @@ public:
      * ### Post Condition:
      * The candidate should still be present in the candidates table and should be still set to inactive. The candidates tokens will be transferred back to their account and their `locked_tokens` value will be reduced to 0.
      */
-    ACTION unstake(name cand);
+    [[eosio::action]]
+    void unstake(name cand);
 
 
 private: // Private helper methods used by other actions.
