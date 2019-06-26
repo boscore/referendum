@@ -40,7 +40,7 @@ struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
     uint32_t lockup_release_time_delay;
 };
 
-typedef singleton<"config"_n, contr_config> configscontainer;
+typedef singleton<"config"_n, contr_config> config_table;
 
 /**
  * - candidate_name (name) - Account name of the candidate (INDEX)
@@ -48,7 +48,7 @@ typedef singleton<"config"_n, contr_config> configscontainer;
  * - locked_tokens (asset) - An asset object representing the number of tokens locked when registering
  * - total_votes (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
  */
-struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidate_row {
+struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidates_row {
     name candidate_name;
     asset locked_tokens;
     uint64_t total_votes;
@@ -58,19 +58,19 @@ struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidate_r
     uint64_t primary_key() const { return candidate_name.value; }
 };
 
-typedef multi_index<"candidates"_n, candidate_row> candidates_table;
+typedef multi_index<"candidates"_n, candidates_row> candidates_table;
 
 /**
  * - auditor_name (name) - Account name of the auditor (INDEX)
  * - total_votes - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
  */
-struct [[eosio::table("auditors"), eosio::contract("auditorbos")]] auditor_row {
+struct [[eosio::table("auditors"), eosio::contract("auditorbos")]] auditors_row {
     name auditor_name;
 
     uint64_t primary_key() const { return auditor_name.value; }
 };
 
-typedef multi_index<"auditors"_n, auditor_row> auditors_table;
+typedef multi_index<"auditors"_n, auditors_row> auditors_table;
 
 struct [[eosio::table("bios"), eosio::contract("auditorbos")]] bios_row {
     name candidate_name;
@@ -85,7 +85,7 @@ typedef multi_index<"bios"_n, bios_row > bios_table;
  * - voter (account_name) - The account name of the voter (INDEX)
  * - candidates (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
  */
-struct [[eosio::table("votes"), eosio::contract("auditorbos")]] vote_row {
+struct [[eosio::table("votes"), eosio::contract("auditorbos")]] votes_row {
     name voter;
     name proxy;
     uint64_t weight;
@@ -94,25 +94,25 @@ struct [[eosio::table("votes"), eosio::contract("auditorbos")]] vote_row {
     uint64_t primary_key() const { return voter.value; }
 };
 
-typedef eosio::multi_index<"votes"_n, vote_row> votes_table;
+typedef eosio::multi_index<"votes"_n, votes_row> votes_table;
 
 class auditorbos : public contract {
 
 private: // Variables used throughout the other actions.
-    configscontainer config_singleton;
-    candidates_table registered_candidates;
-    votes_table votes_cast_by_members;
-    bios_table candidate_bios;
+    config_table _config;
+    candidates_table _candidates;
+    votes_table _votes;
+    bios_table _bios;
     name sending_code;
 
 public:
 
     auditorbos( name s, name code, datastream<const char*> ds )
         :contract(s,code,ds),
-            registered_candidates(_self, _self.value),
-            votes_cast_by_members(_self, _self.value),
-            candidate_bios(_self, _self.value),
-            config_singleton(_self, _self.value) {
+            _candidates(_self, _self.value),
+            _votes(_self, _self.value),
+            _bios(_self, _self.value),
+            _config(_self, _self.value) {
 
         sending_code = name{code};
     }
@@ -152,10 +152,10 @@ public:
      * This action is intended only to observe transfers that are run by the associated token contract for the purpose of tracking the moving weights of votes if either the `from` or `to` in the transfer have active votes. It is not included in the ABI to prevent it from being called from outside the chain.
      */
     [[eosio::on_notify("eosio.token::transfer")]]
-    void stake( name from,
-                name to,
-                asset quantity,
-                const std::string& memo );
+    void transfer( name from,
+                   name to,
+                   asset quantity,
+                   const std::string& memo );
 
     /**
      * This action is used to nominate a candidate for auditor elections.

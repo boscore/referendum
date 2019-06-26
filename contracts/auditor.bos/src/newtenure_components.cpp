@@ -7,8 +7,8 @@ void auditorbos::allocateAuditors(vector<name> candidates) {
     // Empty the auditors table to get a full set of new auditors.
     auto auditor_itr = auditors.begin();
     while (auditor_itr != auditors.end()) {
-        const auto &reg_candidate = registered_candidates.get(auditor_itr->auditor_name.value, "ERR::NEWTENURE_EXPECTED_CAND_NOT_FOUND::Corrupt data: Trying to set a lockup delay on candidate leaving office.");
-        registered_candidates.modify(reg_candidate, auditor_itr->auditor_name, [&](auto & row) {
+        const auto &reg_candidate = _candidates.get(auditor_itr->auditor_name.value, "ERR::NEWTENURE_EXPECTED_CAND_NOT_FOUND::Corrupt data: Trying to set a lockup delay on candidate leaving office.");
+        _candidates.modify(reg_candidate, auditor_itr->auditor_name, [&](auto & row) {
             eosio::print("Lockup stake for release delay.");
             row.unstaking_end_time_stamp = current_time_point() + time_point_sec(conf.lockup_release_time_delay);
         });
@@ -19,7 +19,7 @@ void auditorbos::allocateAuditors(vector<name> candidates) {
     auto cand_itr = candidates.begin();
     for (const name candidate_name : candidates) {
         // update auditor's locked token time period
-        const auto & reg_candidate = registered_candidates.get(candidate_name.value, "ERR::NEWTENURE_EXPECTED_CAND_NOT_FOUND::Corrupt data: Trying to set a lockup delay on candidate leaving office.");
+        const auto & reg_candidate = _candidates.get(candidate_name.value, "ERR::NEWTENURE_EXPECTED_CAND_NOT_FOUND::Corrupt data: Trying to set a lockup delay on candidate leaving office.");
 
         // Check if candidate has the proper locked assets
         const asset locked_tokens = reg_candidate.locked_tokens;
@@ -33,7 +33,7 @@ void auditorbos::allocateAuditors(vector<name> candidates) {
         });
 
         // Lockup stake for release delay.
-        registered_candidates.modify(reg_candidate, candidate_name, [&](auto & row) {
+        _candidates.modify(reg_candidate, candidate_name, [&](auto & row) {
             row.unstaking_end_time_stamp = current_time_point() + time_point_sec(conf.lockup_release_time_delay);
         });
     }
