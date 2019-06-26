@@ -8,11 +8,11 @@
 #include <string>
 #include "auditorbos.hpp"
 
-#include "update_member_details.cpp"
+#include "update_bio.cpp"
 #include "registering.cpp"
 #include "voting.cpp"
-#include "newtenure_components.cpp"
-#include "external_observable_actions.cpp"
+#include "newtenure.cpp"
+#include "on_transfer.cpp"
 #include "config.cpp"
 
 using namespace eosio;
