@@ -1,35 +1,36 @@
-void auditorbos::nominatecand(name cand) {
-    require_auth(cand);
+void auditorbos::nominatecand( name cand ) {
+    require_auth( cand );
 
-    auto reg_candidate = registered_candidates.find(cand.value);
+    const auto candidate = _candidates.get(cand.value, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
 
-    check(reg_candidate == registered_candidates.end(), "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
+    check(!candidate.is_active, "ERR::NOMINATECAND_ALREADY_REGISTERED::Candidate is already registered and active.");
+    check(candidate.locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
 
     // Set candidate as Active
-    check(!reg_candidate->is_active, "ERR::NOMINATECAND_ALREADY_REGISTERED::Candidate is already registered and active.");
-    registered_candidates.modify(reg_candidate, cand, [&](auto & row) {
+    _candidates.modify(candidate, cand, [&](auto & row) {
         row.is_active = 1;
-        check(row.locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
     });
 }
 
-void auditorbos::withdrawcand(name cand) {
-    require_auth(cand);
-    removeCandidate(cand, false);
+void auditorbos::withdrawcand( name cand ) {
+    require_auth( cand );
+    removeCandidate( cand, false );
 }
 
-void auditorbos::firecand(name cand, bool lockupStake) {
-    require_auth(configs().authaccount);
-    removeCandidate(cand, lockupStake);
+void auditorbos::firecand( name cand ) {
+    require_auth( configs().authaccount );
+    removeCandidate( cand, false );
 }
 
-void auditorbos::unstake(name cand) {
-    const auto &reg_candidate = registered_candidates.get(cand.value, "ERR::UNSTAKE_CAND_NOT_REGISTERED::Candidate is not already registered.");
-    check(!reg_candidate.is_active, "ERR::UNSTAKE_CANNOT_UNSTAKE_FROM_ACTIVE_CAND::Cannot unstake tokens for an active candidate. Call withdrawcand first.");
+void auditorbos::unstake( name cand ) {
+    require_auth( cand );
 
-    check(reg_candidate.unstaking_end_time_stamp < time_point_sec(current_time_point()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay.");
+    const auto candidate = _candidates.get(cand.value, "ERR::UNSTAKE_CAND_NOT_REGISTERED::Candidate is not already registered.");
 
-    registered_candidates.modify(reg_candidate, cand, [&](auto & row) {
+    check(!candidate.is_active, "ERR::UNSTAKE_CANNOT_UNSTAKE_FROM_ACTIVE_CAND::Cannot unstake tokens for an active candidate. Call withdrawcand first.");
+    check(candidate.unstaking_end_time_stamp < time_point_sec(current_time_point()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay.");
+
+    _candidates.modify(candidate, cand, [&](auto & row) {
         // Ensure the candidate's tokens are not locked up for a time delay period.
         // Send back the locked up tokens
         // inline transfer unstaking
@@ -44,26 +45,24 @@ void auditorbos::unstake(name cand) {
     });
 }
 
-void auditorbos::resign(name auditor) {
-    require_auth(auditor);
-    removeAuditor(auditor);
+void auditorbos::resign( name auditor ) {
+    require_auth( auditor );
+    removeAuditor( auditor );
 }
 
-void auditorbos::fireauditor(name auditor) {
-    require_auth(configs().authaccount);
-    removeAuditor(auditor);
+void auditorbos::fireauditor( name auditor ) {
+    require_auth( configs().authaccount );
+    removeAuditor( auditor );
 }
 
 // private methods for the above actions
 
-void auditorbos::removeAuditor(name auditor) {
+void auditorbos::removeAuditor( name auditor ) {
+    const auto auditor_itr = _auditors.find(auditor.value);
+    check(auditor_itr != auditors.end(), "ERR::REMOVEAUDITOR_NOT_CURRENT_AUDITOR::The entered account name is not for a current auditor.");
 
-    auditors_table auditors(_self, _self.value);
-    auto elected = auditors.find(auditor.value);
-    check(elected != auditors.end(), "ERR::REMOVEAUDITOR_NOT_CURRENT_AUDITOR::The entered account name is not for a current auditor.");
-
-    eosio::print("Remove auditor from the auditors table.");
-    auditors.erase(elected);
+    // Remove auditor from the auditors table.
+    auditors.erase(auditor_itr);
 
     // Remove the candidate from being eligible for the next election period.
     removeCandidate(auditor, true);
@@ -72,12 +71,13 @@ void auditorbos::removeAuditor(name auditor) {
     setAuditorAuths();
 }
 
-void auditorbos::removeCandidate(name cand, bool lockupStake) {
-    const auto &reg_candidate = registered_candidates.get(cand.value, "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
+void auditorbos::removeCandidate( name cand, bool lockupStake ) {
+    const auto reg_candidate = _candidates.get(cand.value, "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
+
     // Set the is_active flag to false instead of deleting in order to retain votes if they return as BOS auditors.
-    registered_candidates.modify(reg_candidate, cand, [&](auto & row) {
+    _candidates.modify(reg_candidate, cand, [&](auto & row) {
         row.is_active = 0;
         if (lockupStake) {
             eosio::print("Lockup stake for release delay.");
