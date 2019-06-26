@@ -59,10 +59,10 @@ void auditorbos::fireauditor( name auditor ) {
 
 void auditorbos::removeAuditor( name auditor ) {
     const auto auditor_itr = _auditors.find(auditor.value);
-    check(auditor_itr != auditors.end(), "ERR::REMOVEAUDITOR_NOT_CURRENT_AUDITOR::The entered account name is not for a current auditor.");
+    check(auditor_itr != _auditors.end(), "ERR::REMOVEAUDITOR_NOT_CURRENT_AUDITOR::The entered account name is not for a current auditor.");
 
     // Remove auditor from the auditors table.
-    auditors.erase(auditor_itr);
+    _auditors.erase(auditor_itr);
 
     // Remove the candidate from being eligible for the next election period.
     removeCandidate(auditor, true);

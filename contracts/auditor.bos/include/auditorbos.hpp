@@ -103,6 +103,7 @@ private: // Variables used throughout the other actions.
     candidates_table _candidates;
     votes_table _votes;
     bios_table _bios;
+    auditors_table _auditors;
     name sending_code;
 
 public:
@@ -112,6 +113,7 @@ public:
             _candidates(_self, _self.value),
             _votes(_self, _self.value),
             _bios(_self, _self.value),
+            _auditors(_self, _self.value),
             _config(_self, _self.value) {
 
         sending_code = name{code};
@@ -204,14 +206,12 @@ public:
      * - The candidate is already a nominated candidate.
      *
      * @param cand - The account id for the candidate nominating.
-     * @param lockupStake - if true the stake will be locked up for a time period as set by the contract config - `lockup_release_time_delay`
-     *
      *
      * ### Post Condition:
      * The candidate should still be present in the candidates table and be set to inactive. If the `lockupstake` parameter is true the stake will be locked until the time delay has passed. If not the candidate will be able to unstake their tokens immediately using the unstake action to have them returned.
      */
     [[eosio::action]]
-    void firecand(name cand, bool lockupStake);
+    void firecand( name cand );
 
     /**
      * This action is used to resign as a auditor.
