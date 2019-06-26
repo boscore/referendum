@@ -75,12 +75,13 @@ void auditorbos::removeAuditor( name auditor ) {
 }
 
 void auditorbos::removeCandidate( name cand, bool lockupStake ) {
-    const auto reg_candidate = _candidates.get(cand.value, "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
+    const auto candidate_itr = _candidates.find(cand.value);
+    check(candidate_itr != _candidates.end(), "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
 
     // Set the is_active flag to false instead of deleting in order to retain votes if they return as BOS auditors.
-    _candidates.modify(reg_candidate, cand, [&](auto & row) {
+    _candidates.modify(candidate_itr, cand, [&](auto & row) {
         row.is_active = 0;
         if (lockupStake) {
             eosio::print("Lockup stake for release delay.");
