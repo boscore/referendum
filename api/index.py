@@ -320,6 +320,53 @@ def auditorsinfo():
 	return resp
 
 
+@app.route('/getAllProposals')
+def proposals():
+	logger = reactive_log('getAllProposals')
+	try:
+		rawtext = urlopen(TALLY_API, timeout=15).read()
+		proposals = json.loads(rawtext.decode('utf8'))
+	except Exception as err:
+		logger.error(err)
+	for proposal in proposals:
+		try:
+			propos = Proposal.select().where(Proposal.name == proposal).count()
+			logger.info("result"+str(propos))
+			# the proposal exists
+			if propos > 0:
+				propos = Proposal.get(Proposal.name == proposal)
+				proposals[proposal]['meet_conditions_days'] = propos.meet_conditions_days
+				proposals[proposal]['approved_by_vote'] = propos.approved_by_vote
+				proposals[proposal]['approved_by_vote_date'] = str(
+					propos.approved_by_vote_date)
+				proposals[proposal]['approved_by_BET'] = propos.approved_by_BET
+				proposals[proposal]['reviewed_by_BET_date'] = str(
+					propos.reviewed_by_BET_date)
+				proposals[proposal]['approved_by_BPs'] = propos.approved_by_BPs
+				proposals[proposal]['approved_by_BPs_date'] = str(
+					propos.approved_by_BPs_date)
+				proposals[proposal]['review'] = propos.review
+				proposals[proposal]['review_date'] = str(propos.review_date)
+				proposals[proposal]['finish'] = propos.finish
+				proposals[proposal]['finish_date'] = str(propos.finish_date)
+			else:
+				proposals[proposal]['meet_conditions_days'] = 0
+				proposals[proposal]['approved_by_vote'] = 0
+				proposals[proposal]['approved_by_vote_date'] = ""
+				proposals[proposal]['approved_by_BET'] = 0
+				proposals[proposal]['reviewed_by_BET_date'] = ""
+				proposals[proposal]['approved_by_BPs'] = 0
+				proposals[proposal]['approved_by_BPs_date'] = ""
+				proposals[proposal]['review'] = 0
+				proposals[proposal]['review_date'] = ""
+				proposals[proposal]['finish'] = ""
+				proposals[proposal]['finish_date'] = 0
+		except Exception as err:
+				logger.error(err)
+	resp = flask.Response(json.dumps(proposals), mimetype='application/json')
+	resp.headers['Access-Control-Allow-Origin'] = '*'
+	return resp
+
 @app.route('/getProposal/<proposal_name>')
 def proposal(proposal_name):
 	logger = reactive_log('getProposal')
