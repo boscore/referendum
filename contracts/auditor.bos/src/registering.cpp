@@ -1,4 +1,4 @@
-void auditorbos::nominatecand( name cand ) {
+void auditorbos::nominatecand( const name cand ) {
     require_auth( cand );
 
     const auto candidate_itr = _candidates.find(cand.value);
@@ -13,17 +13,17 @@ void auditorbos::nominatecand( name cand ) {
     });
 }
 
-void auditorbos::withdrawcand( name cand ) {
+void auditorbos::withdrawcand( const name cand ) {
     require_auth( cand );
     removeCandidate( cand, false );
 }
 
-void auditorbos::firecand( name cand ) {
+void auditorbos::firecand( const name cand ) {
     require_auth( configs().authaccount );
     removeCandidate( cand, false );
 }
 
-void auditorbos::unstake( name cand ) {
+void auditorbos::unstake( const name cand ) {
     require_auth( cand );
 
     const auto candidate_itr = _candidates.find(cand.value);
@@ -48,19 +48,19 @@ void auditorbos::unstake( name cand ) {
     });
 }
 
-void auditorbos::resign( name auditor ) {
+void auditorbos::resign( const name auditor ) {
     require_auth( auditor );
     removeAuditor( auditor );
 }
 
-void auditorbos::fireauditor( name auditor ) {
+void auditorbos::fireauditor( const name auditor ) {
     require_auth( configs().authaccount );
     removeAuditor( auditor );
 }
 
 // private methods for the above actions
 
-void auditorbos::removeAuditor( name auditor ) {
+void auditorbos::removeAuditor( const name auditor ) {
     const auto auditor_itr = _auditors.find(auditor.value);
     check(auditor_itr != _auditors.end(), "ERR::REMOVEAUDITOR_NOT_CURRENT_AUDITOR::The entered account name is not for a current auditor.");
 
@@ -74,7 +74,7 @@ void auditorbos::removeAuditor( name auditor ) {
     setAuditorAuths();
 }
 
-void auditorbos::removeCandidate( name cand, bool lockupStake ) {
+void auditorbos::removeCandidate( const name cand, const bool lockupStake ) {
     const auto candidate_itr = _candidates.find(cand.value);
     check(candidate_itr != _candidates.end(), "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
 

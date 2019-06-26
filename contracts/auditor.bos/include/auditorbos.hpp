@@ -142,7 +142,7 @@ public:
      * - auth_threshold_auditors (uint8) : The number of auditors required to approve an action in the low permission category ( ordinary action such as a worker proposal).
      */
     [[eosio::action]]
-    void updateconfig(contr_config newconfig);
+    void updateconfig( const contr_config newconfig );
 
     /**
      * Action to listen to from the associated token contract to ensure registering should be allowed.
@@ -180,7 +180,7 @@ public:
      * The candidate should be present in the candidates table and be set to active. If they are a returning candidate they should be set to active again. The `locked_tokens` value should reflect the total of the tokens they have transferred to the contract for staking. The number of active candidates in the contract will incremented.
      */
     [[eosio::action]]
-    void nominatecand(name cand);
+    void nominatecand( const name cand);
 
     /**
      * This action is used to withdraw a candidate from being active for auditor elections.
@@ -196,7 +196,7 @@ public:
      * The candidate should still be present in the candidates table and be set to inactive. If the were recently an elected auditor there may be a time delay on when they can unstake their tokens from the contract. If not they will be able to unstake their tokens immediately using the unstake action.
      */
     [[eosio::action]]
-    void withdrawcand(name cand);
+    void withdrawcand( const name cand);
 
     /**
      * This action is used to remove a candidate from being a candidate for auditor elections.
@@ -211,7 +211,7 @@ public:
      * The candidate should still be present in the candidates table and be set to inactive. If the `lockupstake` parameter is true the stake will be locked until the time delay has passed. If not the candidate will be able to unstake their tokens immediately using the unstake action to have them returned.
      */
     [[eosio::action]]
-    void firecand( name cand );
+    void firecand( const name cand );
 
     /**
      * This action is used to resign as a auditor.
@@ -232,7 +232,7 @@ public:
      * then the auths for the controlling BOS auth account will be set for the auditor board.
      */
     [[eosio::action]]
-    void resign(name auditor);
+    void resign( const name auditor );
 
     /**
      * This action is used to remove a auditor.
@@ -251,7 +251,7 @@ public:
      * then the auths for the controlling BOS auth account will be set for the auditor board.
      */
     [[eosio::action]]
-    void fireauditor(name auditor);
+    void fireauditor( const name auditor );
 
     /**
      * This action is used to update the bio for a candidate.
@@ -268,7 +268,7 @@ public:
      * Nothing from this action is stored on the blockchain. It is only intended to ensure authentication of changing the bio which will be stored off chain.
      */
     [[eosio::action]]
-    void updatebio(name cand, std::string bio);
+    void updatebio( const name cand, const string bio );
 
     /**
      * This action is to facilitate voting for candidates to become auditors of BOS.
@@ -284,19 +284,21 @@ public:
      * - Ensure all the candidates in the vector are registered and active candidates.
      *
      * @param voter - The account id for the voter account.
-     * @param newvotes - A vector of account ids for the candidate that the voter is voting for.
+     * @param candidates - A vector of account ids for the candidate that the voter is voting for.
      *
      * ### Post Condition:
-     * An active vote record for the voter will have been created or modified to reflect the newvotes.
+     * An active vote record for the voter will have been created or modified to reflect the candidates.
      */
     [[eosio::action]]
-    void vote(name voter, std::vector<name> newvotes);
+    void vote( const name voter,
+               const vector<name> candidates,
+               const string& vote_json );
 
     /**
      * Removes existing vote from {{ voter }}.
      */
     [[eosio::action]]
-    void unvote(name voter);
+    void unvote( const name voter );
 
     /**
      * ### newtenure
@@ -316,7 +318,7 @@ public:
      * message - a string that is used to log a message in the chain history logs. It serves no function in the contract logic.
      */
     [[eosio::action]]
-    void newtenure(vector<name> candidates, std::string message);
+    void newtenure( const vector<name> candidates, const string message);
 
     /**
      * This action is used to unstake a candidates tokens and have them transferred to their account.
@@ -333,7 +335,7 @@ public:
      * The candidate should still be present in the candidates table and should be still set to inactive. The candidates tokens will be transferred back to their account and their `locked_tokens` value will be reduced to 0.
      */
     [[eosio::action]]
-    void unstake(name cand);
+    void unstake( const name cand );
 
 
 private: // Private helper methods used by other actions.

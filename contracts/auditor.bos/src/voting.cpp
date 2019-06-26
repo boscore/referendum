@@ -1,4 +1,4 @@
-void auditorbos::vote(name voter, vector<name> candidates) {
+void auditorbos::vote( const name voter, const vector<name> candidates, const string& vote_json ) {
     require_auth( voter );
 
     check(candidates.size() <= configs().maxvotes, "ERR::VOTE_MAX_VOTES_EXCEEDED::Max number of allowed votes was exceeded.");
@@ -34,7 +34,7 @@ void auditorbos::vote(name voter, vector<name> candidates) {
     }
 }
 
-void auditorbos::unvote(name voter) {
+void auditorbos::unvote( const name voter ) {
     require_auth( voter );
 
     const auto & vote_itr = _votes.find(voter.value);

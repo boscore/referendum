@@ -1,8 +1,8 @@
 #include "validate_json.cpp"
 
-void auditorbos::updatebio(name cand, string bio) {
-    require_auth(cand);
-    VALIDATE_JSON(bio, 32768);
+void auditorbos::updatebio( const name cand, const string bio ) {
+    require_auth( cand );
+    VALIDATE_JSON( bio, 32768 );
 
     const auto &reg_candidate = _candidates.get(cand.value, "ERR::UPDATEBIO_NOT_CURRENT_REG_CANDIDATE::Candidate is not already registered.");
 
