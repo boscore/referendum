@@ -1,13 +1,14 @@
 void auditorbos::nominatecand( name cand ) {
     require_auth( cand );
 
-    const auto candidate = _candidates.get(cand.value, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
+    const auto candidate_itr = _candidates.find(cand.value);
 
-    check(!candidate.is_active, "ERR::NOMINATECAND_ALREADY_REGISTERED::Candidate is already registered and active.");
-    check(candidate.locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked.");
+    check( candidate_itr != _candidates.end(), "ERR::NOMINATECAND_NOT_FOUND::Cannot find candidate to nominate, candidate must first transfer BOS tokens to `auditor.bos` account." );
+    check( !candidate_itr->is_active, "ERR::NOMINATECAND_ALREADY_REGISTERED::Candidate is already registered and active." );
+    check( candidate_itr->locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked." );
 
-    // Set candidate as Active
-    _candidates.modify(candidate, cand, [&](auto & row) {
+    // Set candidate as active
+    _candidates.modify( candidate_itr, _self, [&](auto & row) {
         row.is_active = 1;
     });
 }
@@ -25,12 +26,14 @@ void auditorbos::firecand( name cand ) {
 void auditorbos::unstake( name cand ) {
     require_auth( cand );
 
-    const auto candidate = _candidates.get(cand.value, "ERR::UNSTAKE_CAND_NOT_REGISTERED::Candidate is not already registered.");
+    const auto candidate_itr = _candidates.find(cand.value);
 
-    check(!candidate.is_active, "ERR::UNSTAKE_CANNOT_UNSTAKE_FROM_ACTIVE_CAND::Cannot unstake tokens for an active candidate. Call withdrawcand first.");
-    check(candidate.unstaking_end_time_stamp < time_point_sec(current_time_point()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay.");
+    check( candidate_itr != _candidates.end(), "ERR::UNSTAKE_CAND_NOT_REGISTERED::Candidate is not already registered." );
+    check( !candidate_itr->is_active, "ERR::UNSTAKE_CANNOT_UNSTAKE_FROM_ACTIVE_CAND::Cannot unstake tokens for an active candidate. Call withdrawcand first." );
+    check( candidate_itr->unstaking_end_time_stamp < time_point_sec(current_time_point()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay." );
+    check( candidate_itr->locked_tokens.amount > 0, "ERR::UNSTAKE_ZERO_LOCKED_TOKENS::Cannot unstake tokens of zero balance." );
 
-    _candidates.modify(candidate, cand, [&](auto & row) {
+    _candidates.modify(candidate_itr, _self, [&](auto & row) {
         // Ensure the candidate's tokens are not locked up for a time delay period.
         // Send back the locked up tokens
         // inline transfer unstaking
