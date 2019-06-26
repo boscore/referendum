@@ -1,10 +1,14 @@
 from flask import Flask
 import flask
 from eospy.cleos import Cleos
+from init_db import *
 from utils import *
 import json
-from init_db import *
 from urllib.request import urlopen
+
+
+# init global config
+cfg = Config.select().limit(1).get()
 
 # constants
 BOS_URLS = [
@@ -13,10 +17,12 @@ BOS_URLS = [
 		,'https://api-bos.eospacex.com'
 		]
 
-TALLY_API = "https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json"
-VOTE_TOTAL_API = "https://s3.amazonaws.com/bos.referendum/referendum/summaries/latest.json"
-
-BP_TOTAL_VOTES = 311193750652
+TALLY_API = cfg.TALLY_API
+VOTE_TOTAL_API = cfg.VOTE_TOTAL_API
+AUDITOR_TOTAL_API = cfg.AUDITOR_TOTAL_API
+BP_TOTAL_VOTES = cfg.BP_TOTAL_VOTES
+PROPOSAL_MEET_DAYS = cfg.PROPOSAL_MEET_DAYS
+AUDITOR_MEET_DAYS = cfg.PROPOSAL_MEET_DAYS
 
 # util func
 def test_net_is_working(urls):
@@ -52,19 +58,14 @@ def bpinfos():
 	resp = flask.Response(result)
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
-
+# caculate propsal condition meet
 @app.route('/getJson')
 def jsoninfo():
 	logger = reactive_log('json')
 	url_index = test_net_is_working(BOS_URLS)
 	logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
 	ce = Cleos(url=BOS_URLS[url_index])
-
-	
-	# BP_TOTAL_VOTES = float(int(ce.get_table('eosio','eosio','global')['rows'][0]['total_activated_stake'])/10000)
-	# csv_file = csv.reader(open('sum.csv','r'))
-	# for s in csv_file:
-	# 	BP_TOTAL_VOTES  
+	BP_TOTAL_VOTES = cfg.BP_TOTAL_VOTES
 	try:
 		rawtext = urlopen(VOTE_TOTAL_API, timeout=15).read()
 		NEW_BP_TOTAL_VOTES = json.loads(rawtext.decode('utf8'))['bp_votes']
@@ -113,7 +114,7 @@ def jsoninfo():
 					meet = propos.meet_conditions_days
 					# abv = propos.approved_by_vote 
 					abvd = propos.approved_by_vote_date
-					_approved_by_vote = 1 if int(meet) >= 20 else 0
+					_approved_by_vote = 1 if int(meet) >= PROPOSAL_MEET_DAYS else 0
 					_approved_by_vote_date = datetime.now() if abvd == None else abvd
 					# if meet >= 0 and abv != False and abvd != None:
 					nrow = (Proposal.update(
@@ -123,9 +124,7 @@ def jsoninfo():
 						, vote_bp_total = BP_TOTAL_VOTES
 						, vote_yes = vote_yes
 						, vote_no = vote_no
-						, meet_conditions_days = int(meet) + 1
-						, approved_by_vote = _approved_by_vote
-						, approved_by_vote_date = _approved_by_vote_date
+						, meet_conditions_days = int(meet) + 1 if int(meet) < PROPOSAL_MEET_DAYS + 1 else int(meet)						, approved_by_vote = _approved_by_vote						, approved_by_vote_date = _approved_by_vote_date
 						).where(Proposal.name == proposal).execute())
 				else:
 					nrow = (Proposal.update(
@@ -186,50 +185,137 @@ def jsoninfo():
 	# except Exception as err:
 	# 		return err
 
-
-
-@app.route('/getAllProposals')
-def proposals():
-	logger = reactive_log('getAllProposals')
+# caculate auditor condition meet
+@app.route('/getAuditorJson')
+def aujsoninfo():
+	logger = reactive_log('auditorjson')
+	url_index = test_net_is_working(BOS_URLS)
+	logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
+	ce = Cleos(url=BOS_URLS[url_index])
+	BP_TOTAL_VOTES = cfg.BP_TOTAL_VOTES
 	try:
-		rawtext=urlopen(TALLY_API,timeout=15).read()
-		proposals = json.loads(rawtext.decode('utf8'))
+		rawtext = urlopen(VOTE_TOTAL_API, timeout=15).read()
+		NEW_BP_TOTAL_VOTES = json.loads(rawtext.decode('utf8'))['bp_votes']
+		BP_TOTAL_VOTES = int(NEW_BP_TOTAL_VOTES) if int(NEW_BP_TOTAL_VOTES) > 0 else BP_TOTAL_VOTES
 	except Exception as err:
 		logger.error(err)
-	for proposal in proposals:
-		# print("@@@@"+str(proposals[proposal]))
+	print(BP_TOTAL_VOTES)
+	# try:
+		# get tally json file
+	auditors = {}
+	try:
+		rawtext = urlopen(AUDITOR_TOTAL_API, timeout=15).read()
+		auditors = json.loads(rawtext.decode('utf8'))
+	except Exception as err:
+		logger.error(err)
+	# get Voted Total
+	#iterater the current auditors
+	for auditor in auditors:
+		auditor_item = auditors[auditor]
+		vote_key = auditor_item['stats']['votes']
+		stake_key = auditor_item['stats']['staked']
+		staked_total = float(int(auditor_item['stats']['staked']['total'])) if 'total' in stake_key else 0
+		vote_total = auditor_item['stats']['votes']['total'] if  'total' in vote_key else 0
+		vote_yes = auditor_item['stats']['votes']['1'] if  '1' in vote_key else 0
+		vote_no = auditor_item['stats']['votes']['0'] if '0' in vote_key else 0
+		_meet_conditions_days =  0
+		_approved_by_vote =  0
+		_approved_by_vote_date =  None
+		
+		# check if the auditor exists
 		try:
-			propos = Proposal.select().where(Proposal.name == proposal).count()
-			logger.info("result"+str(propos))
-			# the proposal exists
-			if propos > 0:
-				propos = Proposal.get(Proposal.name == proposal)
-				proposals[proposal]['meet_conditions_days'] = propos.meet_conditions_days
-				proposals[proposal]['approved_by_vote'] = propos.approved_by_vote
-				proposals[proposal]['approved_by_vote_date'] = str(propos.approved_by_vote_date)
-				proposals[proposal]['approved_by_BET'] = propos.approved_by_BET
-				proposals[proposal]['reviewed_by_BET_date'] = str(propos.reviewed_by_BET_date)
-				proposals[proposal]['approved_by_BPs'] = propos.approved_by_BPs
-				proposals[proposal]['approved_by_BPs_date'] = str(propos.approved_by_BPs_date)
-				proposals[proposal]['review'] = propos.review
-				proposals[proposal]['review_date'] = str(propos.review_date)
-				proposals[proposal]['finish'] = propos.finish
-				proposals[proposal]['finish_date'] = str(propos.finish_date)
+			audits = AuditorTally.select().where(AuditorTally.name == auditor).count()
+			logger.info("result"+str(audits))				
+			# the auditor exists
+			if audits > 0:
+				# check if the auditor is passed
+				if auditor_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
+					audits = AuditorTally.get(AuditorTally.name == auditor)
+					meet = audits.meet_conditions_days
+					# abv = audits.approved_by_vote 
+					abvd = audits.approved_by_vote_date
+					_approved_by_vote = 1 if int(meet) >= AUDITOR_MEET_DAYS else 0
+					_approved_by_vote_date = datetime.now() if abvd == None else abvd
+					# if meet >= 0 and abv != False and abvd != None:
+					nrow = (AuditorTally.update(
+						json_info = auditor_item
+						, vote_total = vote_total
+						, staked_total = staked_total
+						, vote_bp_total = BP_TOTAL_VOTES
+						, vote_yes = vote_yes
+						, vote_no = vote_no
+						, meet_conditions_days = int(meet) + 1 if int(meet) < AUDITOR_MEET_DAYS + 1 else int(meet)						, approved_by_vote = _approved_by_vote						, approved_by_vote_date = _approved_by_vote_date
+						).where(AuditorTally.name == auditor).execute())
+				else:
+					nrow = (AuditorTally.update(
+						json_info = auditor_item
+						, vote_total = vote_total
+						, staked_total = staked_total
+						, vote_bp_total = BP_TOTAL_VOTES
+						, vote_yes = vote_yes
+						, vote_no = vote_no
+						, meet_conditions_days = 0
+						, approved_by_vote = 0
+						, approved_by_vote_date = None
+						).where(AuditorTally.name == auditor).execute())
 			else:
-				proposals[proposal]['meet_conditions_days'] = 0
-				proposals[proposal]['approved_by_vote'] = 0
-				proposals[proposal]['approved_by_vote_date'] = ""
-				proposals[proposal]['approved_by_BET'] = 0
-				proposals[proposal]['reviewed_by_BET_date'] = ""
-				proposals[proposal]['approved_by_BPs'] = 0
-				proposals[proposal]['approved_by_BPs_date'] = ""
-				proposals[proposal]['review'] = 0
-				proposals[proposal]['review_date'] = ""
-				proposals[proposal]['finish'] = ""
-				proposals[proposal]['finish_date'] = 0
+				if auditor_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
+					_approved_by_vote = 1
+					_approved_by_vote_date = datetime.now()
+				else:
+					pass
+				new_auditor = AuditorTally(
+				  name = auditor
+                , json_info = auditor_item
+				, vote_total = vote_total
+				, staked_total = staked_total
+				, vote_bp_total = BP_TOTAL_VOTES
+				, vote_yes = vote_yes
+				, vote_no = vote_no
+				, meet_conditions_days = _meet_conditions_days
+				, approved_by_vote = _approved_by_vote
+				, approved_by_vote_date = _approved_by_vote_date
+				)
+				new_auditor.save()  
+		except Exception as err:
+			logger.error(err)
+		logger.info("auditor name: " + auditor)
+		logger.info("vote total: " + str(vote_total))
+		logger.info("staked total: " + str(staked_total))
+		logger.info("vote yes: " + str(vote_yes))
+		logger.info("vote no: " + str(vote_no))
+		logger.info("___________________")
+	resp = flask.Response(auditors)
+	resp.headers['Access-Control-Allow-Origin'] = '*'
+	return resp
+	# except Exception as err:
+	# 		return err
+
+@app.route('/getAllAuditors')
+def auditorsinfo():
+	logger = reactive_log('getAllAuditors')
+	try:
+		rawtext = urlopen(AUDITOR_TOTAL_API, timeout=15).read()
+		auditors = json.loads(rawtext.decode('utf8'))
+	except Exception as err:
+		logger.error(err)
+	for auditor in auditors:
+		try:
+			propos = AuditorTally.select().where(AuditorTally.name == auditor).count()
+			logger.info("result"+str(propos))
+			# the auditor exists
+			if propos > 0:
+				propos = AuditorTally.get(AuditorTally.name == auditor)
+				auditors[auditor]['meet_conditions_days'] = propos.meet_conditions_days
+				auditors[auditor]['approved_by_vote'] = propos.approved_by_vote
+				auditors[auditor]['approved_by_vote_date'] = str(propos.approved_by_vote_date)
+			else:
+				auditors[auditor]['meet_conditions_days'] = 0
+				auditors[auditor]['approved_by_vote'] = 0
+				auditors[auditor]['approved_by_vote_date'] = ""
 		except Exception as err:
 				logger.error(err)
-	resp = flask.Response(json.dumps(proposals), mimetype='application/json')
+	resp = flask.Response(json.dumps(auditors), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
 
