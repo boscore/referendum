@@ -44,7 +44,7 @@ typedef singleton<"config"_n, contr_config> config_table;
 
 /**
  * - candidate_name (name) - Account name of the candidate (INDEX)
- * - is_active (int8) - Boolean indicating if the candidate is currently available for election. (INDEX)
+ * - is_active (bool) - Boolean indicating if the candidate is currently available for election. (INDEX)
  * - locked_tokens (asset) - An asset object representing the number of tokens locked when registering
  * - total_votes (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
  */
@@ -52,7 +52,7 @@ struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidates_
     name candidate_name;
     asset locked_tokens;
     uint64_t total_votes;
-    uint8_t is_active;
+    bool is_active;
     time_point_sec unstaking_end_time_stamp;
 
     uint64_t primary_key() const { return candidate_name.value; }
