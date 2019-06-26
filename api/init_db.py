@@ -5,8 +5,8 @@ import os
 DATABASE = "tally.db"
 
 # os.environ.get('DB_PWD')
-db = SqliteDatabase(DATABASE)
-# db = PostgresqlDatabase('d3cjkjmhbkt11i', user='dtzkpiirdsycdh', password=os.environ.get('DB_PWD'), host='ec2-54-247-178-166.eu-west-1.compute.amazonaws.com', port=5432)
+# db = SqliteDatabase(DATABASE)
+db = PostgresqlDatabase('d3cjkjmhbkt11i', user='dtzkpiirdsycdh', password=os.environ.get('DB_PWD'), host='ec2-54-247-178-166.eu-west-1.compute.amazonaws.com', port=5432)
 
 class BaseModel(Model):
     class Meta:
