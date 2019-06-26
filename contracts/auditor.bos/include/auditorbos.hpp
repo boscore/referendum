@@ -13,12 +13,12 @@ using namespace eosio;
 using namespace std;
 
 /**
- * - lockupasset (asset) -  The amount of assets that are locked up by each candidate applying for election.
- * - maxvotes (int default=5) - The maximum number of votes that each member can make for a candidate.
- * - numelected (int) -  Number of auditors to be elected for each election count.
- * - authaccount ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
- * - auth_threshold_auditors (uint8) - Number of auditors required to approve the lowest level actions.
- * - lockup_release_time_delay (date) - The time before locked up stake can be released back to the candidate using the unstake action
+ * - `lockupasset` (asset) -  The amount of assets that are locked up by each candidate applying for election.
+ * - `maxvotes` (int default=3) - The maximum number of votes that each member can make for a candidate.
+ * - `numelected` (int default=5) -  Number of auditors to be elected for each election count.
+ * - `authaccount` ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
+ * - `auth_threshold_auditors` (uint8) - Number of auditors required to approve the lowest level actions.
+ * - `lockup_release_time_delay` (date) - The time before locked up stake can be released back to the candidate using the unstake action
  */
 struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
     // The amount of assets that are locked up by each candidate applying for election.
@@ -43,10 +43,11 @@ struct [[eosio::table("config"), eosio::contract("auditorbos")]] contr_config {
 typedef singleton<"config"_n, contr_config> config_table;
 
 /**
- * - candidate_name (name) - Account name of the candidate (INDEX)
- * - is_active (bool) - Boolean indicating if the candidate is currently available for election. (INDEX)
- * - locked_tokens (asset) - An asset object representing the number of tokens locked when registering
- * - total_votes (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+ * - `candidate_name` (name) - Account name of the candidate
+ * - `locked_tokens` (asset) - An asset object representing the number of tokens locked when registering
+ * - `total_votes` (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+ * - `is_active` (bool) - Boolean indicating if the candidate is currently available for election.
+ * - `unstaking_end_time_stamp` (time_point_sec) - timestamp that user is allowed to unstake tokens.
  */
 struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidates_row {
     name candidate_name;
@@ -61,8 +62,8 @@ struct [[eosio::table("candidates"), eosio::contract("auditorbos")]] candidates_
 typedef multi_index<"candidates"_n, candidates_row> candidates_table;
 
 /**
- * - auditor_name (name) - Account name of the auditor (INDEX)
- * - total_votes - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
+ * - `auditor_name` (name) - Account name of the auditor
+ * - `total_votes` - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
  */
 struct [[eosio::table("auditors"), eosio::contract("auditorbos")]] auditors_row {
     name auditor_name;
@@ -72,6 +73,10 @@ struct [[eosio::table("auditors"), eosio::contract("auditorbos")]] auditors_row 
 
 typedef multi_index<"auditors"_n, auditors_row> auditors_table;
 
+/**
+ * - `candidate_name` (name) - Account name of candidate
+ * - `bio` (string JSON) - Bio of candidate
+ */
 struct [[eosio::table("bios"), eosio::contract("auditorbos")]] bios_row {
     name candidate_name;
     string bio;
@@ -82,26 +87,28 @@ struct [[eosio::table("bios"), eosio::contract("auditorbos")]] bios_row {
 typedef multi_index<"bios"_n, bios_row > bios_table;
 
 /**
- * - voter (account_name) - The account name of the voter (INDEX)
- * - candidates (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+ * - `voter` (account_name) - The account name of the voter
+ * - `candidates` (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+ * - `vote_json` (string JSON)- JSON metadata for voting (ex: {"comment": "great work"})
+ * - `updated_at` (time_point_sec) last updated timestamp
  */
-struct [[eosio::table("votes"), eosio::contract("auditorbos")]] votes_row {
+struct [[eosio::table("vote"), eosio::contract("auditorbos")]] vote_row {
     name voter;
-    name proxy;
-    uint64_t weight;
-    std::vector<name> candidates;
+    vector<name> candidates;
+    string vote_json;
+    time_point_sec updated_at;
 
     uint64_t primary_key() const { return voter.value; }
 };
 
-typedef eosio::multi_index<"votes"_n, votes_row> votes_table;
+typedef eosio::multi_index<"vote"_n, vote_row> vote_table;
 
 class auditorbos : public contract {
 
 private: // Variables used throughout the other actions.
     config_table _config;
     candidates_table _candidates;
-    votes_table _votes;
+    vote_table _vote;
     bios_table _bios;
     auditors_table _auditors;
     name sending_code;
@@ -111,7 +118,7 @@ public:
     auditorbos( name s, name code, datastream<const char*> ds )
         :contract(s,code,ds),
             _candidates(_self, _self.value),
-            _votes(_self, _self.value),
+            _vote(_self, _self.value),
             _bios(_self, _self.value),
             _auditors(_self, _self.value),
             _config(_self, _self.value) {

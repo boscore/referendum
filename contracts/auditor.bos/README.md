@@ -10,18 +10,25 @@ If an elected auditor resigns via the `withdrawcand` during a period a new candi
 
 ### Nominate Candidante
 
-> Must `eosio::transfer` BOS tokens at a minimum of `lockupasset` before submitting `nominatecand` action
-> Once candidate is nominated, BOS users can now vote for that candidate to become a BOS auditor.
+> Must `eosio::transfer` BOS tokens at a minimum of `lockupasset` (100.0000 BOS).
+> Once candidate has meet the minimum locked tokens threshold, they will be automatically set as an active candidate able to receive votes from BOS users.
 
 ```
 $ bosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
-$ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>@active
 ```
 
 ### Vote for Auditor Candidate
 
 ```
-$ bosc tx create auditor.bos vote '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
+$ bosc tx create auditor.bos vote '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"], "vote_json":""}' -p deniscarrier
+```
+
+### Unvote
+
+> Removes existing vote from `voter`.
+
+```bash
+$ bosc tx create auditor.bos unvote '{"voter": "<VOTER NAME>"}' -p <VOTER NAME>@active
 ```
 
 ### Withdraw Candidate & Unstake
@@ -65,31 +72,31 @@ $ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p audi
 $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
 ```
 
-### Unvote
-
-> Removes existing vote from `voter`.
-
-```bash
-$ bosc tx create auditor.bos unvote '{"voter": "<VOTER NAME>"}' -p <VOTER NAME>@active
-```
-
 ## Tables
 
 ### candidates
 
-- `candidate_name` (name)   - Account name of the candidate (INDEX)
-- `is_active` (int8) - Boolean indicating if the candidate is currently available for election. (INDEX)
-- `locked_tokens` (asset) - An asset object representing the number of tokens locked when registering
-- `total_votes` (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+ - `candidate_name` (name) - Account name of the candidate
+ - `locked_tokens` (asset) - An asset object representing the number of tokens locked when registering
+ - `total_votes` (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+ - `is_active` (bool) - Boolean indicating if the candidate is currently available for election.
+ - `unstaking_end_time_stamp` (time_point_sec) - timestamp that user is allowed to unstake tokens.
 
 ### auditors
 
-- `auditor_name` (name) - Account name of the auditor (INDEX)
+- `auditor_name` (name) - Account name of the auditor
 
-### votes
+### vote
 
-- `voter` (account_name) - The account name of the voter (INDEX)
+- `voter` (account_name) - The account name of the voter
 - `candidates` (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+- `vote_json` (string JSON)- JSON metadata for voting (ex: {"comment": "great work"})
+- `updated_at` (time_point_sec) last updated timestamp
+
+## bios
+
+ - `candidate_name` (name) - Account name of candidate
+ - `bio` (string JSON) - Bio of candidate
 
 ### config
 
