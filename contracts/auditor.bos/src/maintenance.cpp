@@ -1,3 +1,13 @@
+/**
+ * ### ACTION `refreshcand`
+ *
+ * > Used to refresh `candidate`
+ *
+ * > Authorized by `require_auth( _self )`
+ *
+ * - set `total_votes` to 0
+ * - set `is_active` if locked_tockens met minimum threshold
+ */
 void auditorbos::refreshcand( const name cand ) {
     require_auth( _self );
 
@@ -14,6 +24,17 @@ void auditorbos::refreshcand( const name cand ) {
     });
 }
 
+/**
+ * ### ACTION `refreshvoter`
+ *
+ * > Used to refresh `voter`
+ *
+ * > Authorized by `require_auth( _self )`
+ *
+ * - If voter has not voted for any candidates, remove voter from `votes` & `votejson`
+ * - Update voter's staked & proxy data
+ * - Add `vote_json` if not present in `votejson` table
+ */
 void auditorbos::refreshvoter( const name voter ) {
     require_auth( _self );
 

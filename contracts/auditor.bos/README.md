@@ -8,22 +8,30 @@ If an elected auditor resigns via the `withdrawcand` during a period a new candi
 
 ## Quickstart
 
-### Nominate Candidante
+### ACTION `eosio.token::transfer` & `nominatecand`
+
+> Nominate Candidate
 
 > Must `eosio::transfer` BOS tokens at a minimum of `lockupasset` (100.0000 BOS).
 > Once candidate has meet the minimum locked tokens threshold, they will be automatically set as an active candidate able to receive votes from BOS users.
 
-```
+```bash
 $ bosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
 ```
+OR
+```bash
+$ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE NAME>"}' -p <CANDIDATE NAME>@active
+```
 
-### Vote for Auditor Candidate
+### ACTION `vote`
+
+> Vote for Auditor Candidate
 
 ```
 $ bosc tx create auditor.bos vote '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"], "vote_json":""}' -p deniscarrier
 ```
 
-### Unvote
+### ACTION `unvote`
 
 > Removes existing vote from `voter`.
 
@@ -40,7 +48,9 @@ $ bosc tx create auditor.bos withdrawcand '{"cand":"<CANDIDATE>"}' -p <CANDIDATE
 $ bosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
 ```
 
-### Resign as Auditor
+### ACTION `resign`
+
+> Resign as Auditor
 
 > Removes elected auditor from `auditor.bos@auditors`
 
@@ -48,7 +58,9 @@ $ bosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
 $ bosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
 ```
 
-### Start Auditor Tenure (Election)
+### ACTION `newtenure`
+
+> Start Auditor Tenure (Election)
 
 > `auditor.bos@auditors` permission will `updateauth` with candidates with the highest votes
 
@@ -56,7 +68,7 @@ $ bosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
 $ bosc tx create auditor.bos newtenure '{"candidates": ["<CANDIDATE 1>", "<CANDIDATE 2>"], "message":"newtenure for auditor.bos"}' -p auditor.bos@active
 ```
 
-### Fire Auditor
+### ACTION `fireauditor`
 
 > Removes Auditor from `auditor.bos@auditors` authority
 
@@ -64,12 +76,35 @@ $ bosc tx create auditor.bos newtenure '{"candidates": ["<CANDIDATE 1>", "<CANDI
 $ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p auditor.bos@active
 ```
 
-### Resign as Auditor
+### ACTION `resign`
 
 > Removes Auditor from `auditor.bos@auditors` authority
 
 ```bash
 $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
+```
+
+### ACTION `refreshcand`
+
+> Used to refresh `candidate`
+> Authorized by `require_auth( _self )`
+- set `total_votes` to 0
+- set `is_active` if locked_tockens met minimum threshold
+
+```bash
+$ bosc tx create auditor.bos refreshcand '{"cand": "<CANDIDATE NAME>"}' -p auditor.bos@active
+```
+
+### ACTION `refreshvoter`
+
+> Used to refresh `voter`
+> Authorized by `require_auth( _self )`
+- If voter has not voted for any candidates, remove voter from `votes` & `votejson`
+- Update voter's staked & proxy data
+- Add `vote_json` if not present in `votejson` table
+
+```bash
+$ bosc tx create auditor.bos refreshvoter '{"voter": "<VOTER NAME>"}' -p auditor.bos@active
 ```
 
 ## Tables
