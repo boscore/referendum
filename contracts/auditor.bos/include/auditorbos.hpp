@@ -87,28 +87,28 @@ struct [[eosio::table("bios"), eosio::contract("auditorbos")]] bios_row {
 typedef multi_index<"bios"_n, bios_row > bios_table;
 
 /**
- * - `voter` (account_name) - The account name of the voter
- * - `candidates` (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
- * - `vote_json` (string JSON)- JSON metadata for voting (ex: {"comment": "great work"})
- * - `updated_at` (time_point_sec) last updated timestamp
+ * - `voter` (name) - The account name of the voter
+ * - `proxy` (name) - DEPRECATED: not currently being used
+ * - `weight` (uint64) - DEPRECATED: not currently being used
+ * - `candidates` (name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
  */
-struct [[eosio::table("vote"), eosio::contract("auditorbos")]] vote_row {
+struct [[eosio::table("votes"), eosio::contract("auditorbos")]] votes_row {
     name voter;
+    name proxy;
+    uint64_t weight;
     vector<name> candidates;
-    string vote_json;
-    time_point_sec updated_at;
 
     uint64_t primary_key() const { return voter.value; }
 };
 
-typedef eosio::multi_index<"vote"_n, vote_row> vote_table;
+typedef eosio::multi_index<"votes"_n, votes_row> votes_table;
 
 class auditorbos : public contract {
 
 private: // Variables used throughout the other actions.
     config_table _config;
     candidates_table _candidates;
-    vote_table _vote;
+    votes_table _votes;
     bios_table _bios;
     auditors_table _auditors;
     name sending_code;
@@ -118,7 +118,7 @@ public:
     auditorbos( name s, name code, datastream<const char*> ds )
         :contract(s,code,ds),
             _candidates(_self, _self.value),
-            _vote(_self, _self.value),
+            _votes(_self, _self.value),
             _bios(_self, _self.value),
             _auditors(_self, _self.value),
             _config(_self, _self.value) {
@@ -298,8 +298,7 @@ public:
      */
     [[eosio::action]]
     void vote( const name voter,
-               const vector<name> candidates,
-               const string& vote_json );
+               const vector<name> candidates );
 
     /**
      * Removes existing vote from {{ voter }}.
