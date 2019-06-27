@@ -14,6 +14,7 @@
 #include "newtenure.cpp"
 #include "on_transfer.cpp"
 #include "config.cpp"
+#include "maintenance.cpp"
 
 using namespace eosio;
 using namespace std;

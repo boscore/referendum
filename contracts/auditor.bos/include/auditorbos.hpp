@@ -361,18 +361,32 @@ public:
     [[eosio::action]]
     void unstake( const name cand );
 
+    /**
+     * MAINTENANCE action used to refresh {{ cand }}
+     */
+    [[eosio::action]]
+    void refreshcand( const name cand );
+
+    /**
+     * MAINTENANCE action used to refresh {{ voter }}
+     */
+    [[eosio::action]]
+    void refreshvoter( const name voter );
+
 
 private: // Private helper methods used by other actions.
 
     contr_config configs();
 
-    void setAuditorAuths();
+    void set_auditor_auths();
 
-    void removeAuditor(name auditor);
+    void remove_auditor( const name auditor );
 
-    void removeCandidate(name auditor, bool lockupStake);
+    void remove_candidate( const name auditor, const bool lockupStake );
 
-    void allocateAuditors(vector<name> candidates);
+    void allocate_auditors( const vector<name> candidates );
+
+    void remove_voter( const name voter );
 
     // Do not use directly, use the VALIDATE_JSON macro instead!
     void validate_json(

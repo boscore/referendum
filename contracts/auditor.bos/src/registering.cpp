@@ -15,12 +15,12 @@ void auditorbos::nominatecand( const name cand ) {
 
 void auditorbos::withdrawcand( const name cand ) {
     require_auth( cand );
-    removeCandidate( cand, false );
+    remove_candidate( cand, false );
 }
 
 void auditorbos::firecand( const name cand ) {
     require_auth( configs().authaccount );
-    removeCandidate( cand, false );
+    remove_candidate( cand, false );
 }
 
 void auditorbos::unstake( const name cand ) {
@@ -50,17 +50,17 @@ void auditorbos::unstake( const name cand ) {
 
 void auditorbos::resign( const name auditor ) {
     require_auth( auditor );
-    removeAuditor( auditor );
+    remove_auditor( auditor );
 }
 
 void auditorbos::fireauditor( const name auditor ) {
     require_auth( configs().authaccount );
-    removeAuditor( auditor );
+    remove_auditor( auditor );
 }
 
 // private methods for the above actions
 
-void auditorbos::removeAuditor( const name auditor ) {
+void auditorbos::remove_auditor( const name auditor ) {
     const auto auditor_itr = _auditors.find(auditor.value);
     check(auditor_itr != _auditors.end(), "ERR::REMOVEAUDITOR_NOT_CURRENT_AUDITOR::The entered account name is not for a current auditor.");
 
@@ -68,15 +68,15 @@ void auditorbos::removeAuditor( const name auditor ) {
     _auditors.erase(auditor_itr);
 
     // Remove the candidate from being eligible for the next election period.
-    removeCandidate(auditor, true);
+    remove_candidate(auditor, true);
 
     // Update the auths to give control to the new set of auditors.
-    setAuditorAuths();
+    set_auditor_auths();
 }
 
-void auditorbos::removeCandidate( const name cand, const bool lockupStake ) {
+void auditorbos::remove_candidate( const name cand, const bool lockupStake ) {
     const auto candidate_itr = _candidates.find(cand.value);
-    check(candidate_itr != _candidates.end(), "ERR::REMOVECANDIDATE_NOT_CURRENT_CANDIDATE::Candidate is not already registered.");
+    check(candidate_itr != _candidates.end(), "ERR::REMOVECANDIDATE_NOT_CURRENT__cANDIDATE::Candidate is not already registered.");
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
 

@@ -14,11 +14,6 @@ void auditorbos::vote( const name voter, const vector<name> candidates, const st
         auto candidate_itr = _candidates.find(candidate_name.value);
         check(candidate_itr != _candidates.end(), "ERR::VOTE_CANDIDATE_NOT_FOUND::Candidate could not be found.");
         check(candidate_itr->is_active, "ERR::VOTE_VOTING_FOR_INACTIVE_CAND::Attempting to vote for an inactive candidate.");
-
-        // Zero existing votes (vote counting is done offchain via BOS Referendum Tally)
-        _candidates.modify(candidate_itr, eosio::same_payer, [&]( auto& row) {
-            row.total_votes = 0;
-        });
     }
 
     // Get voter's voting information (staked & proxy)
@@ -69,7 +64,10 @@ void auditorbos::vote( const name voter, const vector<name> candidates, const st
 
 void auditorbos::unvote( const name voter ) {
     require_auth( voter );
+    remove_voter( voter );
+}
 
+void auditorbos::remove_voter( const name voter ) {
     // Delete `votes` row from voter
     const auto & votes_itr = _votes.find(voter.value);
     check(votes_itr != _votes.end(), "ERR::UNVOTE_NOT_FOUND::Cannot find an existing vote with this voter.");

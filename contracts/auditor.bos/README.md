@@ -205,3 +205,13 @@ The intent of {{ claimpay }} is to allow an account to claim pending payment amo
 ## Description
 
 Removes existing vote from {{ voter }}.
+
+## Description
+
+MAINTENANCE action used to refresh {{ cand }}
+
+<h1 class="contract">refreshvoter</h1>
+
+## Description
+
+MAINTENANCE action used to refresh {{ voter }}
