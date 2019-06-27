@@ -5,6 +5,7 @@
 #include <eosio/time.hpp>
 
 #include "external_types.hpp"
+#include "voter_info.hpp"
 
 const name TOKEN_CONTRACT = "eosio.token"_n;
 const name AUDITORS_PERMISSION = "auditors"_n;
@@ -88,14 +89,14 @@ typedef multi_index<"bios"_n, bios_row > bios_table;
 
 /**
  * - `voter` (name) - The account name of the voter
- * - `proxy` (name) - DEPRECATED: not currently being used
- * - `weight` (uint64) - DEPRECATED: not currently being used
+ * - `proxy` (name) - DEPRECATED: the proxy set by the voter, if any (not being used to count final vote tally)
+ * - `staked` (uint64) - DEPRECATED: total staked amount of voter (not being used to count final vote tally)
  * - `candidates` (name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
  */
 struct [[eosio::table("votes"), eosio::contract("auditorbos")]] votes_row {
     name voter;
     name proxy;
-    uint64_t weight;
+    uint64_t staked;
     vector<name> candidates;
 
     uint64_t primary_key() const { return voter.value; }
@@ -103,15 +104,31 @@ struct [[eosio::table("votes"), eosio::contract("auditorbos")]] votes_row {
 
 typedef eosio::multi_index<"votes"_n, votes_row> votes_table;
 
+/**
+ * - `voter` (name) - The account name of the voter
+ * - `vote_json` (string JSON)- JSON metadata for voting (ex: {"comment": "great work"})
+ * - `updated_at` (time_point_sec) last updated timestamp
+ */
+struct [[eosio::table("votejson"), eosio::contract("auditorbos")]] votejson_row {
+    name voter;
+    string vote_json;
+    time_point_sec updated_at;
+
+    uint64_t primary_key() const { return voter.value; }
+};
+
+typedef eosio::multi_index<"votejson"_n, votejson_row> votejson_table;
+
 class auditorbos : public contract {
 
 private: // Variables used throughout the other actions.
-    config_table _config;
-    candidates_table _candidates;
-    votes_table _votes;
-    bios_table _bios;
-    auditors_table _auditors;
-    name sending_code;
+    config_table        _config;
+    candidates_table    _candidates;
+    votes_table         _votes;
+    votejson_table      _votejson;
+    bios_table          _bios;
+    auditors_table      _auditors;
+    voter_table         _voters;
 
 public:
 
@@ -121,10 +138,10 @@ public:
             _votes(_self, _self.value),
             _bios(_self, _self.value),
             _auditors(_self, _self.value),
-            _config(_self, _self.value) {
-
-        sending_code = name{code};
-    }
+            _config(_self, _self.value),
+            _votejson(_self, _self.value),
+            _voters( "eosio"_n, "eosio"_n.value )
+    {}
 
     /**
      * ### updateconfig
@@ -298,7 +315,8 @@ public:
      */
     [[eosio::action]]
     void vote( const name voter,
-               const vector<name> candidates );
+               const vector<name> candidates,
+               const string& vote_json );
 
     /**
      * Removes existing vote from {{ voter }}.

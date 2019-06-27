@@ -88,10 +88,16 @@ $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR 
 
 ### votes
 
-- `voter` (name) - The account name of the voter
-- `proxy` (name) - DEPRECATED: not currently being used
-- `weight` (uint64) - DEPRECATED: not currently being used
-- `candidates` (name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+ - `voter` (name) - The account name of the voter
+ - `proxy` (name) - DEPRECATED: the proxy set by the voter, if any (not being used to count final vote tally)
+ - `staked` (uint64) - DEPRECATED: total staked amount of voter (not being used to count final vote tally)
+ - `candidates` (name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+
+### votejson
+
+ - `voter` (name) - The account name of the voter
+ - `vote_json` (string JSON)- JSON metadata for voting (ex: {"comment": "great work"})
+ - `updated_at` (time_point_sec) last updated timestamp
 
 ## bios
 
