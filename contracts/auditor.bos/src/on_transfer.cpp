@@ -24,7 +24,7 @@ void auditorbos::transfer( name from,
         // New candidate, register them and add locked_tokens
         } else {
             // Auto nominate candidate if locked_tockens is above minimum threshold
-            if (candidate_itr->locked_tokens >= configs().lockupasset) is_active = true;
+            if (quantity >= configs().lockupasset) is_active = true;
 
             // Add candidate to table
             _candidates.emplace(_self, [&](auto & row) {
