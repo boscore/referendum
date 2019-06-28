@@ -1,14 +1,14 @@
 /**
- * ### ACTION `refreshcand`
+ * ### ACTION `cleancand`
  *
- * > Used to refresh `candidate`
+ * > Used to refresh `candidate` data entry
  *
  * > Authorized by `require_auth( _self )`
  *
  * - set `total_votes` to 0
  * - set `is_active` if locked_tockens met minimum threshold
  */
-void auditorbos::refreshcand( const name cand ) {
+void auditorbos::cleancand( const name cand ) {
     require_auth( _self );
 
     const auto & candidates_itr = _candidates.find(cand.value);
@@ -25,9 +25,9 @@ void auditorbos::refreshcand( const name cand ) {
 }
 
 /**
- * ### ACTION `refreshvoter`
+ * ### ACTION `cleanvoter`
  *
- * > Used to refresh `voter`
+ * > Used to refresh `voter` data entry
  *
  * > Authorized by `require_auth( _self )`
  *
@@ -35,7 +35,7 @@ void auditorbos::refreshcand( const name cand ) {
  * - Update voter's staked & proxy data
  * - Add `vote_json` if not present in `votejson` table
  */
-void auditorbos::refreshvoter( const name voter ) {
+void auditorbos::cleanvoter( const name voter ) {
     require_auth( _self );
 
     const auto & votes_itr = _votes.find(voter.value);

@@ -362,16 +362,31 @@ public:
     void unstake( const name cand );
 
     /**
-     * MAINTENANCE action used to refresh {{ cand }}
+     * ### ACTION `cleancand`
+     *
+     * > Used to refresh `candidate` data entry
+     *
+     * > Authorized by `require_auth( _self )`
+     *
+     * - set `total_votes` to 0
+     * - set `is_active` if locked_tockens met minimum threshold
      */
     [[eosio::action]]
-    void refreshcand( const name cand );
+    void cleancand( const name cand );
 
     /**
-     * MAINTENANCE action used to refresh {{ voter }}
+     * ### ACTION `cleanvoter`
+     *
+     * > Used to refresh `voter` data entry
+     *
+     * > Authorized by `require_auth( _self )`
+     *
+     * - If voter has not voted for any candidates, remove voter from `votes` & `votejson`
+     * - Update voter's staked & proxy data
+     * - Add `vote_json` if not present in `votejson` table
      */
     [[eosio::action]]
-    void refreshvoter( const name voter );
+    void cleanvoter( const name voter );
 
 
 private: // Private helper methods used by other actions.

@@ -84,27 +84,27 @@ $ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p audi
 $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
 ```
 
-### ACTION `refreshcand`
+### ACTION `cleancand`
 
-> Used to refresh `candidate`
+> Used to clean `candidate` data entry
 > Authorized by `require_auth( _self )`
 - set `total_votes` to 0
 - set `is_active` if locked_tockens met minimum threshold
 
 ```bash
-$ bosc tx create auditor.bos refreshcand '{"cand": "<CANDIDATE NAME>"}' -p auditor.bos@active
+$ bosc tx create auditor.bos cleancand '{"cand": "<CANDIDATE NAME>"}' -p auditor.bos@active
 ```
 
-### ACTION `refreshvoter`
+### ACTION `cleanvoter`
 
-> Used to refresh `voter`
+> Used to clean `voter` data entry
 > Authorized by `require_auth( _self )`
 - If voter has not voted for any candidates, remove voter from `votes` & `votejson`
 - Update voter's staked & proxy data
 - Add `vote_json` if not present in `votejson` table
 
 ```bash
-$ bosc tx create auditor.bos refreshvoter '{"voter": "<VOTER NAME>"}' -p auditor.bos@active
+$ bosc tx create auditor.bos cleanvoter '{"voter": "<VOTER NAME>"}' -p auditor.bos@active
 ```
 
 ## Tables
