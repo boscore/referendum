@@ -89,14 +89,23 @@ The intent of {{ claimpay }} is to allow an account to claim pending payment amo
 
 Removes existing vote from {{ voter }}.
 
-<h1 class="contract">refreshcand</h1>
+<h1 class="contract">cleancand</h1>
 
 ## Description
 
-MAINTENANCE action used to refresh {{ cand }}
+> Used to refresh `candidate` data entry
+> Authorized by `require_auth( _self )`
 
-<h1 class="contract">refreshvoter</h1>
+- set `total_votes` to 0
+- set `is_active` if locked_tockens met minimum threshold
+
+<h1 class="contract">cleanvoter</h1>
 
 ## Description
 
-MAINTENANCE action used to refresh {{ voter }}
+> Used to refresh `voter` data entry
+> Authorized by `require_auth( _self )`
+
+- If voter has not voted for any candidates, remove voter from `votes` & `votejson`
+- Update voter's staked & proxy data
+- Add `vote_json` if not present in `votejson` table
