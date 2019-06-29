@@ -3,7 +3,7 @@ void auditorbos::transfer( name from,
                            asset quantity,
                            const std::string& memo ) {
 
-    if (to == _self) {
+    if (to == get_self()) {
         const auto & candidate_itr = _candidates.find(from.value);
         const time_point_sec unstaking_period = current_time_point() + time_point_sec(configs().lockup_release_time_delay);
 
@@ -27,7 +27,7 @@ void auditorbos::transfer( name from,
             if (quantity >= configs().lockupasset) is_active = true;
 
             // Add candidate to table
-            _candidates.emplace(_self, [&](auto & row) {
+            _candidates.emplace( get_self(), [&](auto & row) {
                 row.candidate_name = from;
                 row.locked_tokens = quantity;
                 row.total_votes = 0;

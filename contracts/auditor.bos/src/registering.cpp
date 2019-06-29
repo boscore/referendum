@@ -8,7 +8,7 @@ void auditorbos::nominatecand( const name cand ) {
     check( candidate_itr->locked_tokens >= configs().lockupasset, "ERR::NOMINATECAND_INSUFFICIENT_FUNDS_TO_STAKE::Insufficient funds have been staked." );
 
     // Set candidate as active
-    _candidates.modify( candidate_itr, _self, [&](auto & row) {
+    _candidates.modify( candidate_itr, get_self(), [&](auto & row) {
         row.is_active = 1;
     });
 }
@@ -33,15 +33,15 @@ void auditorbos::unstake( const name cand ) {
     check( candidate_itr->unstaking_end_time_stamp < time_point_sec(current_time_point()), "ERR::UNSTAKE_CANNOT_UNSTAKE_UNDER_TIME_LOCK::Cannot unstake tokens before they are unlocked from the time delay." );
     check( candidate_itr->locked_tokens.amount > 0, "ERR::UNSTAKE_ZERO_LOCKED_TOKENS::Cannot unstake tokens of zero balance." );
 
-    _candidates.modify(candidate_itr, _self, [&](auto & row) {
+    _candidates.modify(candidate_itr, get_self(), [&](auto & row) {
         // Ensure the candidate's tokens are not locked up for a time delay period.
         // Send back the locked up tokens
         // inline transfer unstaking
         eosio::action(
-                eosio::permission_level{_self , "active"_n },
+                eosio::permission_level{get_self() , "active"_n },
                 name( TOKEN_CONTRACT ),
                 "transfer"_n,
-                make_tuple( _self, cand, row.locked_tokens, string("Returning locked up stake. Thank you."))
+                make_tuple( get_self(), cand, row.locked_tokens, string("Returning locked up stake. Thank you."))
         ).send();
 
         row.locked_tokens = asset(0, configs().lockupasset.symbol);

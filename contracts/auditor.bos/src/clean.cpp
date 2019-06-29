@@ -9,7 +9,7 @@
  * - set `is_active` if locked_tockens met minimum threshold
  */
 void auditorbos::cleancand( const name cand ) {
-    require_auth( _self );
+    require_auth( get_self() );
 
     const auto & candidates_itr = _candidates.find(cand.value);
     check(candidates_itr != _candidates.end(), "ERR::REFRESH_CAND_NOT_FOUND::Cannot find an existing candidate.");
@@ -36,7 +36,7 @@ void auditorbos::cleancand( const name cand ) {
  * - Add `vote_json` if not present in `votejson` table
  */
 void auditorbos::cleanvoter( const name voter ) {
-    require_auth( _self );
+    require_auth( get_self() );
 
     const auto & votes_itr = _votes.find(voter.value);
     check(votes_itr != _votes.end(), "ERR::REFRESH_VOTER_NOT_FOUND::Cannot find an existing voter.");
@@ -62,7 +62,7 @@ void auditorbos::cleanvoter( const name voter ) {
     // Add `votejson` row if not present
     const auto & votejson_itr = _votejson.find(voter.value);
     if (votejson_itr == _votejson.end()) {
-        _votejson.emplace(_self, [&](auto& row) {
+        _votejson.emplace( get_self(), [&](auto& row) {
             row.voter = voter;
             row.vote_json = "";
             row.updated_at = current_time_point();

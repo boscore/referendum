@@ -35,7 +35,7 @@ void auditorbos::vote( const name voter, const vector<name> candidates, const st
         });
     // New candidate, register them and add locked_tokens
     } else {
-        _votes.emplace(_self, [&](auto& row) {
+        _votes.emplace( get_self(), [&](auto& row) {
             row.voter = voter;
             row.candidates = candidates;
             row.staked = staked;
@@ -54,7 +54,7 @@ void auditorbos::vote( const name voter, const vector<name> candidates, const st
         });
     // Create new `vote_json row
     } else {
-        _votejson.emplace(_self, [&](auto& row) {
+        _votejson.emplace( get_self(), [&](auto& row) {
             row.voter = voter;
             row.vote_json = vote_json;
             row.updated_at = current_time_point();

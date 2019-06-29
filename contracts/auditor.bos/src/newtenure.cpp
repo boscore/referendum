@@ -28,7 +28,7 @@ void auditorbos::allocate_auditors( const vector<name> candidates ) {
         check(candidates_itr->is_active, "ERR::NEWTENURE_CANDIDATE_ACTIVE::Candidate must be active to be elected as an auditor.");
 
         // Add Candidate name to auditor table
-        _auditors.emplace(_self, [&](auto & row) {
+        _auditors.emplace( get_self(), [&](auto & row) {
             row.auditor_name = candidate_name;
         });
 
@@ -69,7 +69,7 @@ void auditorbos::set_auditor_auths() {
 }
 
 void auditorbos::newtenure( const vector<name> candidates, const string message) {
-    require_auth( _self );
+    require_auth( get_self() );
 
     // Set auditors for the next period.
     allocate_auditors(candidates);
