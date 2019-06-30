@@ -397,7 +397,7 @@ private: // Private helper methods used by other actions.
 
     void remove_auditor( const name auditor );
 
-    void remove_candidate( const name auditor, const bool lockupStake );
+    void invalid_candidate( const name cand, const bool lockupStake );
 
     void allocate_auditors( const vector<name> candidates );
 

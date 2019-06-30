@@ -15,12 +15,12 @@ void auditorbos::nominatecand( const name cand ) {
 
 void auditorbos::withdrawcand( const name cand ) {
     require_auth( cand );
-    remove_candidate( cand, false );
+    invalid_candidate( cand, false );
 }
 
 void auditorbos::firecand( const name cand ) {
     require_auth( configs().authaccount );
-    remove_candidate( cand, false );
+    invalid_candidate( cand, false );
 }
 
 void auditorbos::unstake( const name cand ) {
@@ -68,15 +68,15 @@ void auditorbos::remove_auditor( const name auditor ) {
     _auditors.erase(auditor_itr);
 
     // Remove the candidate from being eligible for the next election period.
-    remove_candidate(auditor, true);
+    invalid_candidate(auditor, true);
 
     // Update the auths to give control to the new set of auditors.
     set_auditor_auths();
 }
 
-void auditorbos::remove_candidate( const name cand, const bool lockupStake ) {
+void auditorbos::invalid_candidate( const name cand, const bool lockupStake ) {
     const auto candidate_itr = _candidates.find(cand.value);
-    check(candidate_itr != _candidates.end(), "ERR::REMOVECANDIDATE_NOT_CURRENT__cANDIDATE::Candidate is not already registered.");
+    check(candidate_itr != _candidates.end(), "ERR::INVALID_CANDIDATE_NOT_FOUND::Candidate to invalidate is not registered.");
 
     eosio::print("Remove from nominated candidate by setting them to inactive.");
 
