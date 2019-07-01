@@ -14,16 +14,21 @@ void auditorbos::vote( const name voter, const vector<name> candidates, const st
         auto candidate_itr = _candidates.find(candidate_name.value);
         check(candidate_itr != _candidates.end(), "ERR::VOTE_CANDIDATE_NOT_FOUND::Candidate could not be found.");
         check(candidate_itr->is_active, "ERR::VOTE_VOTING_FOR_INACTIVE_CAND::Attempting to vote for an inactive candidate.");
+
+        // Zero existing votes (vote counting is done offchain via BOS Referendum Tally)
+        _candidates.modify(candidate_itr, eosio::same_payer, [&](auto& row) {
+            row.total_votes = 0;
+        });
     }
 
     // Get voter's voting information (staked & proxy)
     const auto & voter_itr = _votes.find(voter.value);
     int64_t staked = 0;
     name proxy = ""_n;
-    auto candidate_itr = _voters.find(voter.value);
-    if (candidate_itr != _voters.end()) {
-        staked = candidate_itr->staked;
-        proxy = candidate_itr->proxy;
+    auto voters_itr = _voters.find(voter.value);
+    if (voters_itr != _voters.end()) {
+        staked = voters_itr->staked;
+        proxy = voters_itr->proxy;
     }
 
     // Modify existing registered candidate with additional locked_tokens

@@ -20,6 +20,7 @@ void auditorbos::transfer( name from,
                 row.locked_tokens += quantity;
                 row.unstaking_end_time_stamp = unstaking_period;
                 row.is_active = is_active;
+                row.total_votes = 0;
             });
         // New candidate, register them and add locked_tokens
         } else {
