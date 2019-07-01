@@ -1,14 +1,6 @@
-import { delay, parseTokenString } from "./utils";
-import { rpc, DELAY_MS, CONTRACT_FORUM, CONTRACT_AUDITOR } from "./config";
-import { EosioVoter, ForumVote, AuditorVote, ForumProposal, EosioDelband } from "./interfaces";
-import { AuditorCandidate } from "./interfaces_auditor";
-
-/**
- * Get Table `eosio::voters`
- */
-export async function get_table_voters() {
-    return get_tables<EosioVoter>("eosio", "eosio", "voters", "owner", ["flags1", "reserved2", "reserved3"]);
-}
+import { delay } from "./utils";
+import { rpc, DELAY_MS } from "./config";
+import { EosioDelband } from "./interfaces";
 
 /**
  * Get Table `eosio::delband`
@@ -25,35 +17,6 @@ export async function get_table_delband(scopes: Set<string>) {
         }
     }
     return delband;
-}
-
-/**
- * Get Table `eosio.forum::vote`
- */
-export function get_forum_vote() {
-    return get_tables<ForumVote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id");
-}
-
-/**
- * Get Table `auditor.bos::votes`
- */
-export function get_auditor_votes() {
-    return get_tables<AuditorVote>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "votes", "voter");
-
-}
-
-/**
- * Get Table `eosio.forum::proposal`
- */
-export function get_table_forum_proposal() {
-    return get_tables<ForumProposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name");
-}
-
-/**
- * Get Table `auditor.bos::candidates`
- */
-export function get_table_auditor_candidates() {
-    return get_tables<AuditorCandidate>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "candidates", "candidate_name", ["total_votes"]);
 }
 
 /**

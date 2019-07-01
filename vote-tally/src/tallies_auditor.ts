@@ -1,5 +1,5 @@
 import { EosioVoter, EosioDelband, AuditorAccounts, AuditorVote, AuditorProxies, AuditorTallies, AuditorTally, TallyStats } from "./interfaces";
-import { AuditorCandidate } from "./interfaces_auditor";
+import { AuditorCandidate, AuditorBios, AuditorVotesCombined, AuditorVoteJSON, AuditorAuditors } from "./interfaces_auditor";
 import { countStaked, defaultStats, defaultAccount } from "./tallies";
 
 export function generateAuditorProxies(votes: AuditorVote[], delband: EosioDelband[], voters: EosioVoter[]): AuditorProxies {
@@ -79,16 +79,39 @@ export function generateAuditorAccounts(votes: AuditorVote[], delband: EosioDelb
     return accounts;
 }
 
-export function generateAuditorTallies(block_num: number, candidates: AuditorCandidate[], accounts: AuditorAccounts, proxies: AuditorAccounts): AuditorTallies {
+export function generateAuditorTallies(block_num: number, candidates: AuditorCandidate[], accounts: AuditorAccounts, proxies: AuditorAccounts, auditor_bios: AuditorBios[], auditor_auditors: AuditorAuditors[]): AuditorTallies {
     const tallies: AuditorTallies = {};
 
     for (const candidate of candidates) {
-        tallies[candidate.candidate_name] = generateAuditorTally(block_num, candidate, accounts, proxies);
+        tallies[candidate.candidate_name] = generateAuditorTally(block_num, candidate, accounts, proxies, auditor_bios, auditor_auditors);
     }
     return tallies;
 }
 
-export function generateAuditorTally(block_num: number, candidate: AuditorCandidate, accounts: AuditorAccounts, proxies: AuditorAccounts): AuditorTally {
+export function combineAuditorVotes(auditor_votes: AuditorVote[], auditor_votejson: AuditorVoteJSON[]): AuditorVotesCombined[] {
+    const votes: {[voter: string]: AuditorVotesCombined} = {};
+
+    for (const vote of auditor_votes) {
+        votes[vote.voter] = vote;
+        votes[vote.voter].updated_at = "";
+        votes[vote.voter].vote_json = {};
+    }
+
+    for (const votejson of auditor_votejson) {
+        votes[votejson.voter].updated_at = votejson.updated_at;
+    
+        // Handle JSON.parse
+        try {
+            votes[votejson.voter].vote_json = JSON.parse(votejson.vote_json);
+        } catch {
+            // JSON.parse error
+        }
+    }
+
+    return Object.values(votes);
+}
+
+export function generateAuditorTally(block_num: number, candidate: AuditorCandidate, accounts: AuditorAccounts, proxies: AuditorAccounts, auditor_bios: AuditorBios[], auditor_auditors: AuditorAuditors[]): AuditorTally {
     const { candidate_name } = candidate;
     const stats = defaultStats(block_num);
 
@@ -181,9 +204,36 @@ export function generateAuditorTally(block_num: number, candidate: AuditorCandid
         stats.staked.total += staked;
     }
 
+    //  Add Candidate Bio string to Tally
+    let bio: any = {
+        avatar: "",
+        bio: "",
+        contact: "",
+    };
+    for (const auditor_bio of auditor_bios) {
+        if (candidate_name === auditor_bio.candidate_name) {
+            try {
+                bio = Object.assign(bio, JSON.parse(auditor_bio.bio));
+            } catch {
+                // JSON.parse caused an error
+            }
+        }
+    }
+
+    // Include total votes from stats
+    candidate.total_votes = stats.staked.total;
+
+    // Check if candidate is an active auditor
+    let is_auditor = false;
+    for (const {auditor_name} of auditor_auditors) {
+        if (auditor_name === candidate_name) is_auditor = true;
+    }
+
     return {
         id: candidate_name,
         candidate,
         stats,
+        bio,
+        is_auditor,
     };
 }
