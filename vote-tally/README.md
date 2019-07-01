@@ -67,19 +67,19 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 ## `auditor.bos`
 
-- [auditor.bos::votes`](https://s3.amazonaws.com/bos.referendum/auditor.bos/votes/latest.json)
-- [auditor.bos::votejson`](https://s3.amazonaws.com/bos.referendum/auditor.bos/votejson/latest.json)
-- [auditor.bos::candidates`](https://s3.amazonaws.com/bos.referendum/auditor.bos/candidates/latest.json)
-- [auditor.bos::auditors`](https://s3.amazonaws.com/bos.referendum/auditor.bos/auditors/latest.json)
-- [auditor.bos::config`](https://s3.amazonaws.com/bos.referendum/auditor.bos/config/latest.json)
-- [auditor.bos::bios`](https://s3.amazonaws.com/bos.referendum/auditor.bos/bios/latest.json)
+- [auditor.bos::votes](https://s3.amazonaws.com/bos.referendum/auditor.bos/votes/latest.json)
+- [auditor.bos::votejson](https://s3.amazonaws.com/bos.referendum/auditor.bos/votejson/latest.json)
+- [auditor.bos::candidates](https://s3.amazonaws.com/bos.referendum/auditor.bos/candidates/latest.json)
+- [auditor.bos::auditors](https://s3.amazonaws.com/bos.referendum/auditor.bos/auditors/latest.json)
+- [auditor.bos::config](https://s3.amazonaws.com/bos.referendum/auditor.bos/config/latest.json)
+- [auditor.bos::bios](https://s3.amazonaws.com/bos.referendum/auditor.bos/bios/latest.json)
 
 ## `eosio.forum`
 
-- [eosio.forum::vote`](https://s3.amazonaws.com/bos.referendum/eosio.forum/vote/latest.json)
-- [eosio.forum::proposal`](https://s3.amazonaws.com/bos.referendum/eosio.forum/proposal/latest.json)
+- [eosio.forum::vote](https://s3.amazonaws.com/bos.referendum/eosio.forum/vote/latest.json)
+- [eosio.forum::proposal](https://s3.amazonaws.com/bos.referendum/eosio.forum/proposal/latest.json)
 
 ### `eosio`
 
-- [eosio::voters`](https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json)
-- [eosio::stats`](https://s3.amazonaws.com/bos.referendum/eosio/stats/latest.json)
+- [eosio::voters](https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json)
+- [eosio::stats](https://s3.amazonaws.com/bos.referendum/eosio/stats/latest.json)
