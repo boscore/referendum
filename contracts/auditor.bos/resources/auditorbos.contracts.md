@@ -58,7 +58,7 @@ The intent of {{ nominatecand }} is to nominates a candidate to auditor election
 
 To withdraw a candidate for becoming an elected auditor. The action ensures the {{ cand }} account is currently nominated. On success the amount of tokens that was locked up via the {{ nominatecand }} action will be added to a list of pending transactions to transfer back to the {{ cand }} account. The actual transfer would be performed by a separate action due to the auth requirement for sending funds from the contract's account.
 
-<h1 class="contract">voteauditor</h1>
+<h1 class="contract">vote</h1>
 
 ## Description
 
@@ -83,8 +83,29 @@ To signal the end of one election period and commence the next. It performs seve
 
 The intent of {{ claimpay }} is to allow an account to claim pending payment amounts due to the account. The pay claim they are claiming needs to be visible in the `pendingpay` table. Transfers to the claimer via an inline transfer on the `eosio.token` contract and then removes the pending payment record from the `pending_pay` table. The active auth of this claimer is required to complete this action.
 
-<h1 class="contract">refreshvote</h1>
+<h1 class="contract">unvote</h1>
 
 ## Description
 
-To update the auditor's vote weight.
+Removes existing vote from {{ voter }}.
+
+<h1 class="contract">cleancand</h1>
+
+## Description
+
+> Used to refresh `candidate` data entry
+> Authorized by `require_auth( _self )`
+
+- set `total_votes` to 0
+- set `is_active` if locked_tockens met minimum threshold
+
+<h1 class="contract">cleanvoter</h1>
+
+## Description
+
+> Used to refresh `voter` data entry
+> Authorized by `require_auth( _self )`
+
+- If voter has not voted for any candidates, remove voter from `votes` & `votejson`
+- Update voter's staked & proxy data
+- Add `vote_json` if not present in `votejson` table

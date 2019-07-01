@@ -8,20 +8,35 @@ If an elected auditor resigns via the `withdrawcand` during a period a new candi
 
 ## Quickstart
 
-### Nominate Candidante
+### ACTION `eosio.token::transfer` & `nominatecand`
 
-> Must `eosio::transfer` BOS tokens at a minimum of `lockupasset` before submitting `nominatecand` action
-> Once candidate is nominated, BOS users can now vote for that candidate to become a BOS auditor.
+> Nominate Candidate
 
-```
+> Must `eosio::transfer` BOS tokens at a minimum of `lockupasset` (100.0000 BOS).
+> Once candidate has meet the minimum locked tokens threshold, they will be automatically set as an active candidate able to receive votes from BOS users.
+
+```bash
 $ bosc transfer <CANDIDATE> auditor.bos "100.0000 BOS" -m "stake for auditor.bos"
-$ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE>"}' -p <CANDIDATE>@active
+```
+OR
+```bash
+$ bosc tx create auditor.bos nominatecand '{"cand": "<CANDIDATE NAME>"}' -p <CANDIDATE NAME>@active
 ```
 
-### Vote for Auditor Candidate
+### ACTION `vote`
+
+> Vote for Auditor Candidate
 
 ```
-$ bosc tx create auditor.bos voteauditor '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"]}' -p deniscarrier
+$ bosc tx create auditor.bos vote '{"voter":"<VOTER>","newvotes":["<CANDIDATE_1>", "<CANDIDATE_2>","<CANDIDATE_3>"], "vote_json":""}' -p deniscarrier
+```
+
+### ACTION `unvote`
+
+> Removes existing vote from `voter`.
+
+```bash
+$ bosc tx create auditor.bos unvote '{"voter": "<VOTER NAME>"}' -p <VOTER NAME>@active
 ```
 
 ### Withdraw Candidate & Unstake
@@ -33,7 +48,9 @@ $ bosc tx create auditor.bos withdrawcand '{"cand":"<CANDIDATE>"}' -p <CANDIDATE
 $ bosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
 ```
 
-### Resign as Auditor
+### ACTION `resign`
+
+> Resign as Auditor
 
 > Removes elected auditor from `auditor.bos@auditors`
 
@@ -41,15 +58,17 @@ $ bosc tx create auditor.bos unstake '{"cand":"<CANDIDATE>"}' -p <CANDIDATE>
 $ bosc tx create auditor.bos resign '{"auditor":"<AUDITOR>"}' -p <AUDITOR>
 ```
 
-### Start Auditor Tenure (Election)
+### ACTION `newtenure`
+
+> Start Auditor Tenure (Election)
 
 > `auditor.bos@auditors` permission will `updateauth` with candidates with the highest votes
 
 ```bash
-$ bosc tx create auditor.bos newtenure '{"message":"newtenure for auditor.bos"}' -p auditor.bos@active
+$ bosc tx create auditor.bos newtenure '{"candidates": ["<CANDIDATE 1>", "<CANDIDATE 2>"], "message":"newtenure for auditor.bos"}' -p auditor.bos@active
 ```
 
-### Fire Auditor
+### ACTION `fireauditor`
 
 > Removes Auditor from `auditor.bos@auditors` authority
 
@@ -57,7 +76,7 @@ $ bosc tx create auditor.bos newtenure '{"message":"newtenure for auditor.bos"}'
 $ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p auditor.bos@active
 ```
 
-### Resign as Auditor
+### ACTION `resign`
 
 > Removes Auditor from `auditor.bos@auditors` authority
 
@@ -65,34 +84,67 @@ $ bosc tx create auditor.bos fireauditor '{"auditor": "<AUDITOR NAME>"}' -p audi
 $ bosc tx create auditor.bos resign '{"auditor": "<AUDITOR NAME>"}' -p <AUDITOR NAME>@active
 ```
 
+### ACTION `cleancand`
+
+> Used to clean `candidate` data entry
+> Authorized by `require_auth( _self )`
+- set `total_votes` to 0
+- set `is_active` if locked_tockens met minimum threshold
+
+```bash
+$ bosc tx create auditor.bos cleancand '{"cand": "<CANDIDATE NAME>"}' -p auditor.bos@active
+```
+
+### ACTION `cleanvoter`
+
+> Used to clean `voter` data entry
+> Authorized by `require_auth( _self )`
+- If voter has not voted for any candidates, remove voter from `votes` & `votejson`
+- Update voter's staked & proxy data
+- Add `vote_json` if not present in `votejson` table
+
+```bash
+$ bosc tx create auditor.bos cleanvoter '{"voter": "<VOTER NAME>"}' -p auditor.bos@active
+```
+
 ## Tables
 
 ### candidates
 
-- `candidate_name` (name)   - Account name of the candidate (INDEX)
-- `is_active` (int8) - Boolean indicating if the candidate is currently available for election. (INDEX)
-- `locked_tokens` (asset) - An asset object representing the number of tokens locked when registering
-- `total_votes` (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+ - `candidate_name` (name) - Account name of the candidate
+ - `locked_tokens` (asset) - An asset object representing the number of tokens locked when registering
+ - `total_votes` (uint64) - Updated tally of the number of votes cast to a candidate. This is updated and used as part of the `newtenure` calculations. It is updated every time there is a vote change or a change of token balance for a voter for this candidate to facilitate live voting stats.
+ - `is_active` (bool) - Boolean indicating if the candidate is currently available for election.
+ - `unstaking_end_time_stamp` (time_point_sec) - timestamp that user is allowed to unstake tokens.
 
 ### auditors
 
-- `auditor_name` (name) - Account name of the auditor (INDEX)
-- `total_votes` - Tally of the number of votes cast to a auditor when they were elected in. This is updated as part of the `newtenure` action.
+- `auditor_name` (name) - Account name of the auditor
 
 ### votes
 
-- `voter` (account_name) - The account name of the voter (INDEX)
-- `candidates` (account_name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+ - `voter` (name) - The account name of the voter
+ - `proxy` (name) - DEPRECATED: the proxy set by the voter, if any (not being used to count final vote tally)
+ - `staked` (uint64) - DEPRECATED: total staked amount of voter (not being used to count final vote tally)
+ - `candidates` (name[]) - The candidates voted for, can supply up to the maximum number of votes (currently 5) - Can be configured via `updateconfig`
+
+### votejson
+
+ - `voter` (name) - The account name of the voter
+ - `vote_json` (string JSON)- JSON metadata for voting (ex: {"comment": "great work"})
+ - `updated_at` (time_point_sec) last updated timestamp
+
+## bios
+
+ - `candidate_name` (name) - Account name of candidate
+ - `bio` (string JSON) - Bio of candidate
 
 ### config
 
 - `lockupasset` (asset) -  The amount of assets that are locked up by each candidate applying for election.
 - `maxvotes` (int default=3) - The maximum number of votes that each member can make for a candidate.
 - `numelected` (int default=5) -  Number of auditors to be elected for each election count.
-- `auditor_tenure` (uint32 =  90 * 24 * 60 * 60) - Length of a period in seconds. Used for pay calculations if an early election is called and to trigger deferred `newtenure` calls.
 - `authaccount` ( account= "auditor.bos") - account to have active auth set with all auditors on the newtenure.
-- `initial_vote_quorum_percent` (uint32) - Amount of token value in votes required to trigger the initial set of auditors
-- `vote_quorum_percent` (uint32) - Amount of token value in votes required to trigger the allow a new set of auditors to be set after the initial threshold has been achieved.
 - `auth_threshold_auditors` (uint8) - Number of auditors required to approve the lowest level actions.
 - `lockup_release_time_delay` (date) - The time before locked up stake can be released back to the candidate using the unstake action
 
@@ -158,7 +210,7 @@ The intent of {{ nominatecand }} is to nominates a candidate to auditor election
 
 To withdraw a candidate for becoming an elected auditor. The action ensures the {{ cand }} account is currently nominated. On success the amount of tokens that was locked up via the {{ nominatecand }} action will be added to a list of pending transactions to transfer back to the {{ cand }} account. The actual transfer would be performed by a separate action due to the auth requirement for sending funds from the contract's account.
 
-<h1 class="contract">voteauditor</h1>
+<h1 class="contract">vote</h1>
 
 ## Description
 
@@ -183,8 +235,18 @@ To signal the end of one election period and commence the next. It performs seve
 
 The intent of {{ claimpay }} is to allow an account to claim pending payment amounts due to the account. The pay claim they are claiming needs to be visible in the `pendingpay` table. Transfers to the claimer via an inline transfer on the `eosio.token` contract and then removes the pending payment record from the `pending_pay` table. The active auth of this claimer is required to complete this action.
 
-<h1 class="contract">refreshvote</h1>
+<h1 class="contract">unvote</h1>
 
 ## Description
 
-To update the auditor's vote weight.
+Removes existing vote from {{ voter }}.
+
+## Description
+
+MAINTENANCE action used to refresh {{ cand }}
+
+<h1 class="contract">refreshvoter</h1>
+
+## Description
+
+MAINTENANCE action used to refresh {{ voter }}
