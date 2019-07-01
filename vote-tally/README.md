@@ -53,19 +53,23 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 - [https://s3.amazonaws.com/bos.referendum/{scope}/{table}/{block_num}.json](https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json)
 
-### `referendum` (tally)
+### `referendum` (tally) Aggregated Data
 
+**eosio.forum**
 - [referendum::forum.tallies](https://s3.amazonaws.com/bos.referendum/referendum/forum.tallies/latest.json)
 - [referendum::forum.accounts](https://s3.amazonaws.com/bos.referendum/referendum/forum.accounts/latest.json)
 - [referendum::forum.proxies](https://s3.amazonaws.com/bos.referendum/referendum/forum.proxies/latest.json)
+
+**auditor.bos**
 - [referendum::auditor.tallies](https://s3.amazonaws.com/bos.referendum/referendum/auditor.tallies/latest.json)
 - [referendum::auditor.accounts](https://s3.amazonaws.com/bos.referendum/referendum/auditor.accounts/latest.json)
 - [referendum::auditor.proxies](https://s3.amazonaws.com/bos.referendum/referendum/auditor.proxies/latest.json)
-- [referendum::auditor.auditors](https://s3.amazonaws.com/bos.referendum/referendum/auditor.auditors/latest.json)
+
+**eosio**
 - [referendum::delband](https://s3.amazonaws.com/bos.referendum/referendum/delband/latest.json)
 - [referendum::voters](https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json)
 
-## `auditor.bos`
+## `auditor.bos` TABLES
 
 - [auditor.bos::votes](https://s3.amazonaws.com/bos.referendum/auditor.bos/votes/latest.json)
 - [auditor.bos::votejson](https://s3.amazonaws.com/bos.referendum/auditor.bos/votejson/latest.json)
@@ -74,12 +78,12 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 - [auditor.bos::config](https://s3.amazonaws.com/bos.referendum/auditor.bos/config/latest.json)
 - [auditor.bos::bios](https://s3.amazonaws.com/bos.referendum/auditor.bos/bios/latest.json)
 
-## `eosio.forum`
+## `eosio.forum` TABLES
 
 - [eosio.forum::vote](https://s3.amazonaws.com/bos.referendum/eosio.forum/vote/latest.json)
 - [eosio.forum::proposal](https://s3.amazonaws.com/bos.referendum/eosio.forum/proposal/latest.json)
 
-### `eosio`
+### `eosio` TABLES
 
 - [eosio::voters](https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json)
 - [eosio::stats](https://s3.amazonaws.com/bos.referendum/eosio/stats/latest.json)
