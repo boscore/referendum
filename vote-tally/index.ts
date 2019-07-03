@@ -4,14 +4,14 @@ import * as write from "write-json-file";
 import * as load from "load-json-file";
 import { CronJob } from "cron";
 import { uploadS3 } from "./src/aws";
-import { ForumVote, ForumProposal, EosioVoter, EosioDelband, AuditorVote, AuditorCandidate } from "./src/interfaces";
+import { ForumVote, ForumProposal, EosioVoter, EosioDelband, AuditorVote, AuditorCandidate, AuditorAuditors, AuditorVoteJSON, AuditorBios, AuditorConfig } from "./src/interfaces";
 import { rpc, CHAIN, CONTRACT_FORUM, DEBUG, CONTRACT_TOKEN, TOKEN_SYMBOL, CONTRACT_AUDITOR } from "./src/config";
 import { generateForumAccounts, generateForumProxies, generateForumTallies } from "./src/tallies_forum";
 import { filterVotersByVotes } from "./src/tallies";
-import { get_table_voters, get_forum_vote, get_table_forum_proposal, get_table_delband, get_auditor_votes, get_table_auditor_candidates } from "./src/get_tables";
+import { get_table_delband, get_tables } from "./src/get_tables";
 import { disjoint, parseTokenString, createHash } from "./src/utils";
 import { generateEosioStats } from "./src/stats";
-import { generateAuditorAccounts, generateAuditorTallies, generateAuditorProxies } from "./src/tallies_auditor";
+import { generateAuditorAccounts, generateAuditorTallies, generateAuditorProxies, combineAuditorVotes } from "./src/tallies_auditor";
 
 // Base filepaths
 const basepath = path.join(__dirname, "data", CHAIN);
@@ -33,6 +33,10 @@ let forum_proposals: ForumProposal[] = [];
 // Global Auditor
 let auditor_votes: AuditorVote[] = [];
 let auditor_candidates: AuditorCandidate[] = [];
+let auditor_auditors: AuditorAuditors[] = [];
+let auditor_votejson: AuditorVoteJSON[] = [];
+let auditor_bios: AuditorBios[] = [];
+let auditor_config: AuditorConfig;
 
 /**
  * Sync `eosio` tables
@@ -43,7 +47,7 @@ async function syncEosio(head_block_num: number) {
     // fetch `eosio` voters
     let eosioVoters: EosioVoter[] = [];
     if (DEBUG && fs.existsSync(voters_latest)) eosioVoters = load.sync(voters_latest) // Speed up download of eosio::voters table for debugging
-    else eosioVoters = await get_table_voters();
+    else eosioVoters = await get_tables<EosioVoter>("eosio", "eosio", "voters", "owner", ["flags1", "reserved2", "reserved3"]);
 
     voters = filterVotersByVotes(eosioVoters, forum_votes, auditor_votes);
     voters_owner = new Set(voters.map((row) => row.owner));
@@ -75,7 +79,7 @@ async function syncForum(head_block_num: number) {
     console.log(`syncForum [head_block_num=${head_block_num}]`);
 
     // fetch `eosio.forum` votes
-    forum_votes = await get_forum_vote();
+    forum_votes = await get_tables<ForumVote>(CONTRACT_FORUM, CONTRACT_FORUM, "vote", "id");
 
     // Add unique voters to global tracking
     for (const {voter} of forum_votes) {
@@ -83,7 +87,7 @@ async function syncForum(head_block_num: number) {
     }
 
     // fetch `eosio.forum` proposal
-    forum_proposals = await get_table_forum_proposal();
+    forum_proposals = await get_tables<ForumProposal>(CONTRACT_FORUM, CONTRACT_FORUM, "proposal", "proposal_name");
 
     // Save JSON
     save(CONTRACT_FORUM, "vote", head_block_num, forum_votes);
@@ -97,19 +101,25 @@ async function syncAuditor(head_block_num: number) {
     console.log(`syncAuditor [head_block_num=${head_block_num}]`);
 
     // fetch `auditor.bos` votes
-    auditor_votes = await get_auditor_votes();
+    auditor_votes = await get_tables<AuditorVote>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "votes", "voter");
+    auditor_votejson = await get_tables<AuditorVoteJSON>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "votejson", "voter");
+    auditor_candidates = await get_tables<AuditorCandidate>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "candidates", "candidate_name");
+    auditor_auditors = await get_tables<AuditorAuditors>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "auditors", "auditor_name");
+    auditor_bios = await get_tables<AuditorBios>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "bios", "candidate_name");
+    auditor_config = (await get_tables<AuditorConfig>(CONTRACT_AUDITOR, CONTRACT_AUDITOR, "config", "lockupasset"))[0];
 
     // Add unique voters to global tracking
     for (const {voter} of auditor_votes) {
         votes_owner.add(voter);
     }
 
-    // fetch `eosio.forum` proposal
-    auditor_candidates = await get_table_auditor_candidates();
-
     // Save JSON
     save(CONTRACT_AUDITOR, "votes", head_block_num, auditor_votes);
+    save(CONTRACT_AUDITOR, "votejson", head_block_num, auditor_votejson);
     save(CONTRACT_AUDITOR, "candidates", head_block_num, auditor_candidates);
+    save(CONTRACT_AUDITOR, "auditors", head_block_num, auditor_auditors);
+    save(CONTRACT_AUDITOR, "bios", head_block_num, auditor_bios);
+    save(CONTRACT_AUDITOR, "config", head_block_num, auditor_config);
 }
 
 /**
@@ -136,9 +146,6 @@ async function calculateForumTallies(head_block_num: number) {
     const forum_tallies = generateForumTallies(head_block_num, forum_proposals, forum_accounts, forum_proxies, currency_supply);
 
     // Save JSON
-    save("referendum", "accounts", head_block_num, forum_accounts);
-    save("referendum", "proxies", head_block_num, forum_proxies);
-    save("referendum", "tallies", head_block_num, forum_tallies);
     save("referendum", "forum.accounts", head_block_num, forum_accounts);
     save("referendum", "forum.proxies", head_block_num, forum_proxies);
     save("referendum", "forum.tallies", head_block_num, forum_tallies);
@@ -152,12 +159,14 @@ async function calculateAuditorTallies(head_block_num: number) {
 
     const auditor_accounts = generateAuditorAccounts(auditor_votes, delband, voters);
     const auditor_proxies = generateAuditorProxies(auditor_votes, delband, voters);
-    const auditor_tallies = generateAuditorTallies(head_block_num, auditor_candidates, auditor_accounts, auditor_proxies);
+    const auditor_tallies = generateAuditorTallies(head_block_num, auditor_candidates, auditor_accounts, auditor_proxies, auditor_bios, auditor_auditors);
+    const auditor_combined_votes = combineAuditorVotes(auditor_votes, auditor_votejson);
 
     // Save JSON
     save("referendum", "auditor.accounts", head_block_num, auditor_accounts);
     save("referendum", "auditor.proxies", head_block_num, auditor_proxies);
     save("referendum", "auditor.tallies", head_block_num, auditor_tallies);
+    save("referendum", "auditor.votes", head_block_num, auditor_combined_votes);
 }
 
 /**
