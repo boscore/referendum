@@ -15,8 +15,7 @@ outputs of the post and status actions.
 
 The `propose` action is first called providing the proposer's account, proposal's name (its
 id among all other proposals), proposal's title, a JSON string for extra metadata
-(specification not defined yet) that can be left empty, and an expiration date
-(must be no later than 6 months in the future).
+(specification not defined yet) that can be left empty.
 
 Once the proposal has been created, people can start to vote on it via the `vote` action.
 The vote action is called using the voter's account, proposal's name, vote's value (`0` for
