@@ -6,22 +6,8 @@
 #include <string>
 #include <optional>
 
-using eosio::const_mem_fun;
-using eosio::indexed_by;
-using eosio::multi_index;
-using eosio::extended_asset;
-using eosio::check;
-using eosio::datastream;
-using eosio::contract;
-using eosio::print;
-using eosio::name;
-using eosio::asset;
-using eosio::symbol;
-using eosio::time_point_sec;
-using eosio::current_time_point;
-using std::vector;
-using std::function;
-using std::string;
+using namespace eosio;
+using namespace std;
 
 class [[eosio::contract("escrow")]] escrow : public eosio::contract {
     public:
