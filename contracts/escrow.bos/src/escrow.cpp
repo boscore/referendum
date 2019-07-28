@@ -8,34 +8,35 @@ void escrow::transfer( const name     from,
                        const asset    quantity,
                        const string   memo )
 {
+    // Only monitor incoming transfers to `escrow.bos` account
+    if ( to != get_self() ) return;
 
-    if (to != _self) {
-        return;
-    }
-
+    // authenticate incoming `from` account
     require_auth( from );
 
-    auto by_sender = escrows.get_index<"bysender"_n>();
+    // memo is required
+    check( memo.length() > 0 , "[memo] must be provided and must match `escrow_name`");
 
-    uint8_t found = 0;
+    // transfer memo must match escrow_name
+    const name escrow_name = name{memo};
+    auto escrow_itr = escrows.find( escrow_name.value );
+    check( escrow_itr != escrows.end() , "[memo] could not find `escrow_name`");
 
-    for (auto esc_itr = by_sender.lower_bound(from.value), end_itr = by_sender.upper_bound(from.value); esc_itr != end_itr; ++esc_itr) {
-        if (esc_itr->ext_asset.quantity.amount == 0){
+    // `sender` must match incoming `from` account
+    const name sender = escrow_itr->sender;
+    check( sender == from, "[from] does not match `sender` using this `escrow_name`" );
 
-            by_sender.modify(esc_itr, from, [&](auto & row) {
-                row.ext_asset = extended_asset{quantity, sending_code};
-            });
+    // escrow must be empty
+    check( quantity.amount > 0, "[quantity] must be positive");
+    check( escrow_itr->ext_asset.quantity.amount != 0, "`escrow_name` has already been filled");
 
-            found = 1;
-
-            break;
-        }
-    }
-
-    check(found, "Could not find existing escrow to deposit to, transfer cancelled");
+    // fill escrow quantity with transfer deposit
+    escrows.modify(escrow_itr, get_self(), [&](auto & row) {
+        row.ext_asset = extended_asset{quantity, sending_code};
+    });
 }
 
-ACTION escrow::init( const name           sender,
+void escrow::init( const name           sender,
                      const name           receiver,
                      const name           approver,
                      const name           escrow_name,
@@ -67,14 +68,6 @@ ACTION escrow::init( const name           sender,
 
     // Set Escrow deposit as `eosio.token` BOS (Extended Asset)
     extended_asset zero_asset{{0, symbol{"BOS", 4}}, "eosio.token"_n};
-
-
-    // Sender can only have one un-filled escrow
-    // Sender must either transfer BOS to `escrow.bos` or `cancel` the existing escrow
-    auto by_sender = escrows.get_index<"bysender"_n>();
-    for (auto esc_itr = by_sender.lower_bound(sender.value), end_itr = by_sender.upper_bound(sender.value); esc_itr != end_itr; ++esc_itr) {
-        check(esc_itr->ext_asset.quantity.amount != 0, "You already have an empty escrow.  Either transfer BOS to escrow.bos or cancel the escrow");
-    }
 
     // Escrow name must be unique
     auto esc_itr = escrows.find(escrow_name.value);
