@@ -55,11 +55,6 @@ void escrow::init( const name           sender,
     time_point_sec max_expires_at = current_time_point() + time_point_sec(SIX_MONTHS_IN_SECONDS);
     check( expires_at <= max_expires_at, "[expires_at] must be within 6 months from now.");
 
-    // Enforce `sender` as BOS Executive & `approver` as EOSIO
-    // Asserts should be removed once escrow.bos is ready for public use
-    check( sender == name("bet.bos"), "[sender] must be bet.bos");
-    check( approver == name("eosio"), "[approver] must be eosio");
-
     // Notify the following accounts
     require_recipient( sender );
     require_recipient( receiver );
