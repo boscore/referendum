@@ -37,29 +37,29 @@ void escrow::transfer( const name     from,
 }
 
 void escrow::init( const name           sender,
-                     const name           receiver,
-                     const name           approver,
-                     const name           escrow_name,
-                     const time_point_sec expires_at,
-                     const string         memo)
+                   const name           receiver,
+                   const name           approver,
+                   const name           escrow_name,
+                   const time_point_sec expires_at,
+                   const string         memo)
 {
     // Validate user input
-    check( sender != receiver, "cannot escrow to self" );
-    check( receiver != approver, "receiver cannot be approver" );
+    check( sender != receiver, "cannot init escrow to self" );
+    check( receiver != approver, "[receiver] cannot be approver" );
     require_auth( sender );
-    check( is_account( receiver ), "receiver account does not exist");
-    check( is_account( approver ), "approver account does not exist");
-    check( escrow_name.length() > 2, "escrow name should be at least 3 characters long.");
+    check( is_account( receiver ), "[receiver] account does not exist");
+    check( is_account( approver ), "[approver] account does not exist");
+    check( escrow_name.length() > 2, "[escrow_name] should be at least 3 characters long.");
 
     // Validate expire time_point_sec
-    check(expires_at > current_time_point(), "expires_at must be a value in the future.");
+    check( expires_at > current_time_point(), "[expires_at] must be a value in the future.");
     time_point_sec max_expires_at = current_time_point() + time_point_sec(SIX_MONTHS_IN_SECONDS);
-    check(expires_at <= max_expires_at, "expires_at must be within 6 months from now.");
+    check( expires_at <= max_expires_at, "[expires_at] must be within 6 months from now.");
 
     // Enforce `sender` as BOS Executive & `approver` as EOSIO
     // Asserts should be removed once escrow.bos is ready for public use
-    check(sender == name("bet.bos"), "sender must be bet.bos");
-    check(approver == name("eosio"), "approver must be eosio");
+    check( sender == name("bet.bos"), "[sender] must be bet.bos");
+    check( approver == name("eosio"), "[approver] must be eosio");
 
     // Notify the following accounts
     require_recipient( sender );
@@ -70,8 +70,8 @@ void escrow::init( const name           sender,
     extended_asset zero_asset{{0, symbol{"BOS", 4}}, "eosio.token"_n};
 
     // Escrow name must be unique
-    auto esc_itr = escrows.find(escrow_name.value);
-    check(esc_itr == escrows.end(), "escrow with same name already exists.");
+    auto esc_itr = escrows.find( escrow_name.value );
+    check( esc_itr == escrows.end(), "[escrow_name] already exists");
 
     // Update `escrows` table
     escrows.emplace(sender, [&](auto & row) {
@@ -87,7 +87,7 @@ void escrow::init( const name           sender,
     });
 }
 
-ACTION escrow::approve( const name escrow_name, const name approver )
+void escrow::approve( const name escrow_name, const name approver )
 {
     require_auth( approver );
 
@@ -116,7 +116,7 @@ ACTION escrow::approve( const name escrow_name, const name approver )
     });
 }
 
-ACTION escrow::unapprove( const name escrow_name, const name disapprover )
+void escrow::unapprove( const name escrow_name, const name disapprover )
 {
     require_auth( disapprover );
 
@@ -132,7 +132,7 @@ ACTION escrow::unapprove( const name escrow_name, const name disapprover )
     });
 }
 
-ACTION escrow::claim( const name escrow_name )
+void escrow::claim( const name escrow_name )
 {
     // Check if `escrow_name` already exists
     auto esc_itr = escrows.find(escrow_name.value);
@@ -150,11 +150,11 @@ ACTION escrow::claim( const name escrow_name )
 
     // Transfer escrow funds from `escrow.bos` to `receiver`
     eosio::action(
-            eosio::permission_level{_self , "active"_n }, // escrow.bos@active
+            eosio::permission_level{ get_self() , "active"_n }, // escrow.bos@active
             esc_itr->ext_asset.contract, // eosio.token
             "transfer"_n,
             make_tuple(
-                _self, // from (escrow.bos)
+                get_self(), // from (escrow.bos)
                 esc_itr->receiver, // to (sender)
                 esc_itr->ext_asset.quantity, // quantity (BOS quanity from escrow)
                 esc_itr->memo // memo (escrow memo from `init`)
@@ -168,7 +168,7 @@ ACTION escrow::claim( const name escrow_name )
 /**
  * Empties an unfilled escrow request
  */
-ACTION escrow::cancel(const name escrow_name)
+void escrow::cancel(const name escrow_name)
 {
     // Check if `escrow_name` already exists
     auto esc_itr = escrows.find(escrow_name.value);
@@ -187,7 +187,7 @@ ACTION escrow::cancel(const name escrow_name)
 /**
  * Allows the sender to withdraw the funds if there are not enough approvals and the escrow has expired
  */
-ACTION escrow::refund(const name escrow_name)
+void escrow::refund(const name escrow_name)
 {
     // Check if `escrow_name` already exists
     auto esc_itr = escrows.find(escrow_name.value);
@@ -208,11 +208,11 @@ ACTION escrow::refund(const name escrow_name)
 
     // Transfer back escrow funds from `escrow.bos` to `sender`
     eosio::action(
-            eosio::permission_level{_self , "active"_n }, // escrow.bos@active
+            eosio::permission_level{ get_self() , "active"_n }, // escrow.bos@active
             esc_itr->ext_asset.contract, // eosio.token
             "transfer"_n,
             make_tuple(
-                _self, // from (escrow.bos)
+                get_self(), // from (escrow.bos)
                 esc_itr->sender, // to (sender)
                 esc_itr->ext_asset.quantity, // quantity (BOS quanity from escrow)
                 esc_itr->memo // memo (TO-DO add custom refund message)
@@ -226,7 +226,7 @@ ACTION escrow::refund(const name escrow_name)
 /**
  * Allows the sender to extend the expiry
  */
-ACTION escrow::extend(const name escrow_name, const time_point_sec expires_at)
+void escrow::extend(const name escrow_name, const time_point_sec expires_at)
 {
     // Check if `escrow_name` already exists
     auto esc_itr = escrows.find(escrow_name.value);
@@ -254,7 +254,7 @@ ACTION escrow::extend(const name escrow_name, const time_point_sec expires_at)
 /**
  * Allows the `approver` to close and refund an unexpired escrow
  */
-ACTION escrow::close(const name escrow_name)
+void escrow::close(const name escrow_name)
 {
     // Check if `escrow_name` already exists
     auto esc_itr = escrows.find(escrow_name.value);
@@ -268,11 +268,11 @@ ACTION escrow::close(const name escrow_name)
 
     // Transfer back escrow funds from `escrow.bos` to `sender`
     eosio::action(
-            eosio::permission_level{_self , "active"_n }, // escrow.bos@active
+            eosio::permission_level{ get_self() , "active"_n }, // escrow.bos@active
             esc_itr->ext_asset.contract, // eosio.token
             "transfer"_n,
             make_tuple(
-                _self, // from (escrow.bos)
+                get_self(), // from (escrow.bos)
                 esc_itr->sender, // to (sender)
                 esc_itr->ext_asset.quantity, // quantity (BOS quanity from escrow)
                 esc_itr->memo // memo (TO-DO add custom close message)
@@ -286,7 +286,7 @@ ACTION escrow::close(const name escrow_name)
 /**
  * Allows the `approver` to lock an escrow preventing any actions by `sender` or `receiver`.
  */
-ACTION escrow::lock(const name escrow_name, const bool locked)
+void escrow::lock(const name escrow_name, const bool locked)
 {
     // Check if `escrow_name` already exists
     auto esc_itr = escrows.find(escrow_name.value);
@@ -304,7 +304,7 @@ ACTION escrow::lock(const name escrow_name, const bool locked)
     });
 }
 
-ACTION escrow::review(const name escrow_name, const name user, const name reviewer, const string memo)
+void escrow::review(const name escrow_name, const name user, const name reviewer, const string memo)
 {
     // Validate user input
     require_auth( user );
@@ -325,10 +325,10 @@ ACTION escrow::review(const name escrow_name, const name user, const name review
     require_recipient( reviewer );
 }
 
-ACTION escrow::clean()
+void escrow::clean()
 {
     // Only `escrow.bos` can call `clean` action
-    require_auth(_self);
+    require_auth( get_self() );
 
     // Remove all rows from `escrows` table
     auto itr = escrows.begin();

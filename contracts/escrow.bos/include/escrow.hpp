@@ -28,7 +28,7 @@ class [[eosio::contract("escrow")]] escrow : public eosio::contract {
 
         escrow(name s, name code, datastream<const char *> ds)
                 : contract(s, code, ds),
-                  escrows(_self, _self.value) {
+                  escrows( get_self(), get_self().value) {
             sending_code = name{code};
         }
 
