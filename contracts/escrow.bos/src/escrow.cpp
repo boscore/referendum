@@ -27,8 +27,7 @@ void escrow::transfer( const name     from,
     check( sender == from, "[from] does not match `sender` using this `escrow_name`" );
 
     // escrow must be empty
-    check( quantity.amount > 0, "[quantity] must be positive");
-    check( escrow_itr->ext_asset.quantity.amount != 0, "`escrow_name` has already been filled");
+    check( escrow_itr->ext_asset.quantity.amount == 0, "`escrow_name` has already been filled (multiple deposits are not allowed)");
 
     // fill escrow quantity with transfer deposit
     escrows.modify(escrow_itr, get_self(), [&](auto & row) {
