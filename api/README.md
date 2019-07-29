@@ -25,11 +25,8 @@ $ python3 ./init_db
 
 
 ## set google translation credentials
-## set env via screen or tmux
-```shell
-$ apt install screen
-$ export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"
-```
+## copy the Google auth file in the api directory and rename it GOOGLE_APPLICATION_CREDENTIALS.json
+
 
 
 
