@@ -25,8 +25,9 @@ $ python3 ./init_db
 
 
 ## set google translation credentials
+## set env via screen or tmux
 ```shell
-$ 
+$ apt install screen
 $ export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"
 ```
 
