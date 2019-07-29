@@ -71,7 +71,7 @@ $ crontab -e
 0 0 * * * curl localhost:8000/getJson >> /path/to/crontab.log 2>&1
 0 0 * * * curl localhost:8000/getAuditorJson >> /path/to/crontab.log 2>&1
 # 3min call tally json files 
-4 0 * * * ./minutely_get_tally.sh >> /path/to/crontab.log 2>&1
+*/4 0 * * * ./minutely_get_tally.sh >> /path/to/crontab.log 2>&1
 /root/referendum/api/minutely_get_tally.sh
 ```
 
