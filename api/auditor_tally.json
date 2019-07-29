@@ -1,0 +1,358 @@
+{
+    "appleofmyeye": {
+        "id": "appleofmyeye",
+        "candidate": {
+            "candidate_name": "appleofmyeye",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 5001114665,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 2,
+                "total": 2,
+                "proxies": 1,
+                "accounts": 1
+            },
+            "accounts": {
+                "0": 0,
+                "1": 3100,
+                "total": 3100
+            },
+            "proxies": {
+                "0": 0,
+                "1": 5001111565,
+                "total": 5001111565
+            },
+            "staked": {
+                "0": 0,
+                "1": 5001114665,
+                "total": 5001114665
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "https://static.vecteezy.com/system/resources/previews/000/437/407/non_2x/vector-apple-icon.jpg",
+            "bio": "Aspire to become the best apple auditor",
+            "contact": "996996"
+        },
+        "is_auditor": false
+    },
+    "eoscityioeos": {
+        "id": "eoscityioeos",
+        "candidate": {
+            "candidate_name": "eoscityioeos",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 17835696967,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 6,
+                "total": 6,
+                "proxies": 1,
+                "accounts": 5
+            },
+            "accounts": {
+                "0": 0,
+                "1": 235519190,
+                "total": 235519190
+            },
+            "proxies": {
+                "0": 0,
+                "1": 17600177777,
+                "total": 17600177777
+            },
+            "staked": {
+                "0": 0,
+                "1": 17835696967,
+                "total": 17835696967
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "",
+            "bio": "Hello, this is chester and as co-funder from eosCityand, my background is cloud solution design as had been work in IBM/Intel as solution architect.\nI play as miner of ethernum/litcoin since 2015, since 2018, i'm mvoing focus into EOS as well, we are focus on the community building of EOS/BOS including training,  \neducation for EOS/BOS, we also have couple of articles published for BOS brief features and EOS smart contract code development. \nMeanwhile we also providng technology service support for DAPP dev and infrastructure service for DAPP needs, recently, we have business case to work with enterprise customer\nfor integration BOS as platform solution in the IOT.\nWe are actively in the Asia including Taiwan and Hongkong and continue to work on the EOS/BOS blockchain solution to enterprise and to end-user, we can provide\ndifferent point of view including technolgy and usability view to help to know what's most importnat feature for BOS chain.",
+            "contact": "chester.kuo@gmail.com"
+        },
+        "is_auditor": false
+    },
+    "happybeancat": {
+        "id": "happybeancat",
+        "candidate": {
+            "candidate_name": "happybeancat",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 0,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "total": 0,
+                "proxies": 0,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "https://images.pexels.com/photos/542502/pexels-photo-542502.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+            "bio": "I am a happy cat, hope to become a good wps auditor",
+            "contact": "happycat@cat.com"
+        },
+        "is_auditor": false
+    },
+    "icelandesert": {
+        "id": "icelandesert",
+        "candidate": {
+            "candidate_name": "icelandesert",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 0,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "2019-08-16T03:18:45"
+        },
+        "stats": {
+            "votes": {
+                "total": 0,
+                "proxies": 0,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "",
+            "bio": "I will do my best",
+            "contact": "zydiceland@gmail.com"
+        },
+        "is_auditor": false
+    },
+    "kuqwwiqyxuxt": {
+        "id": "kuqwwiqyxuxt",
+        "candidate": {
+            "candidate_name": "kuqwwiqyxuxt",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 10071381631,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 2,
+                "total": 2,
+                "proxies": 1,
+                "accounts": 1
+            },
+            "accounts": {
+                "0": 0,
+                "1": 150000,
+                "total": 150000
+            },
+            "proxies": {
+                "0": 0,
+                "1": 10071231631,
+                "total": 10071231631
+            },
+            "staked": {
+                "0": 0,
+                "1": 10071381631,
+                "total": 10071381631
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "",
+            "bio": "徐勇 DappPub联合创始人\n12年毕业于同济大学计算机系，曾工作于豆瓣网和饿了么，之前有一次创业经历。\n在区块链行业涉及的工作包括技术、产品、经济模型、行业研究等方面",
+            "contact": "xuyong@dap.pub"
+        },
+        "is_auditor": false
+    },
+    "sevenbos2345": {
+        "id": "sevenbos2345",
+        "candidate": {
+            "candidate_name": "sevenbos2345",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 17600179777,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 2,
+                "total": 2,
+                "proxies": 1,
+                "accounts": 1
+            },
+            "accounts": {
+                "0": 0,
+                "1": 2000,
+                "total": 2000
+            },
+            "proxies": {
+                "0": 0,
+                "1": 17600177777,
+                "total": 17600177777
+            },
+            "staked": {
+                "0": 0,
+                "1": 17600179777,
+                "total": 17600179777
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "",
+            "bio": "Economics Ph.D, graduated from Central University of Finance and Economics, had been a vising scholar in Georgia Institute of technology U.S.A, serve as the chief economist of KOFO Foundation and the former chief researcher fellow in Huobi Academy of Blockchain Application. Author of \"block chain: reshaping the economy and the world\" (CITIC Publishing House) and \"the application of blockchain in the insurance industry” included in the \"Chinese Fintech Development Report 2017\" (Social Scientific Publishing House); participate in the establishment and optimization of SMARTChain blockchain assets assessment model, has rich experience in technology trend, blockchain application and investment areas.\n",
+            "contact": "hypiota@sina.com"
+        },
+        "is_auditor": false
+    },
+    "sheldonhuang": {
+        "id": "sheldonhuang",
+        "candidate": {
+            "candidate_name": "sheldonhuang",
+            "locked_tokens": "0.0000 BOS",
+            "total_votes": 0,
+            "is_active": 0,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "total": 0,
+                "proxies": 0,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "https://stocksandwich.com/stock-images/thumbnails/mans-best-friend_large.jpg",
+            "bio": "### BIOS \n\nAim to become one of the best auditor (auditor test)\n*Lean*\n\n**Bold Size**",
+            "contact": "example@example.com"
+        },
+        "is_auditor": false
+    },
+    "testertester": {
+        "id": "testertester",
+        "candidate": {
+            "candidate_name": "testertester",
+            "locked_tokens": "0.0000 BOS",
+            "total_votes": 0,
+            "is_active": 0,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "total": 0,
+                "proxies": 0,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "https://66.media.tumblr.com/026b8fe1a1b843feff56babe49d2de51/tumblr_ppam2zwV0J1sfie3io1_1280.jpg",
+            "bio": "# Auditor Markdown Test\n---\n__Advertisement :)__\n\n- __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image\n  resize in browser.\n- __[babelfish](https://github.com/nodeca/babelfish/)__ - developer friendly\n  i18n with plurals support and easy syntax.\n\nYou will like those projects!\n\n---\n\n\n##### h5\n###### h6\n\n\n## Horizontal Rules\n\n___\n\n---\n\n***\n\n\n\n\n## Tables\n\n| Option | Description |\n| ------ | ----------- |\n| data   | path to data files to supply the data that will be passed into templates. |\n| engine | engine to be used for processing templates. Handlebars is the default. |\n| ext    | extension to be used for dest files. |\n\nRight aligned columns\n\n| Option | Description |\n| ------:| -----------:|\n| data   | path to data files to supply the data that will be passed into templates. |\n| engine | engine to be used for processing templates. Handlebars is the default. |\n| ext    | extension to be used for dest files. |\n\n\n### [Custom containers](https://github.com/markdown-it/markdown-it-container)\n\n::: warning\n*here be dragons*\n:::\n",
+            "contact": "example@example.com"
+        },
+        "is_auditor": false
+    },
+    "victor233333": {
+        "id": "victor233333",
+        "candidate": {
+            "candidate_name": "victor233333",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 17600179777,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "1970-01-01T00:00:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 2,
+                "total": 2,
+                "proxies": 1,
+                "accounts": 1
+            },
+            "accounts": {
+                "0": 0,
+                "1": 2000,
+                "total": 2000
+            },
+            "proxies": {
+                "0": 0,
+                "1": 17600177777,
+                "total": 17600177777
+            },
+            "staked": {
+                "0": 0,
+                "1": 17600179777,
+                "total": 17600179777
+            },
+            "block_num": 32204653
+        },
+        "bio": {
+            "avatar": "",
+            "bio": "Victor是区块链治理的深耕者，曾深度参与EOS、GXC、LAMB、BOS等多条公链的社区治理，并提出了多个对于社区发展有着导向性的提案。作为EOS华语治理社区的核心成员、EMAC911小组的创始成员、BOS核心仲裁庭仲裁员，累计参与过超过300场各大公链的治理会议，并与EMAC911小组成员一起冻结了超过价值1500万RMB的被盗EOS。同时对于区块链争议解决机制有着非常深入的研究和实操经验。Victor也是国内最大的高校区块链社区——Young区块链社区的创始人之一，Young社区目前有30+所高校加入，将为区块链行业输送更多的优质人才以及为区块链从业者对接各类高校资源提供帮助。\nVictor is a deep-rooted person in blockchain management. He has been deeply involved in community governance of EOS, GXC, LAMB, BOS and other public chains, and has proposed several proposals for community development. As a core member of the EOS Chinese language governance community, a founding member of the EMAC911 team, and an arbitrator of the BOS core arbitral tribunal, he has participated in more than 300 governance meetings of major public chains and has frozen more than 15 million RMB with the EMAC911 team members. Steal EOS. At the same time, it has very in-depth research and practical experience for the blockchain dispute resolution mechanism. Victor is also one of the founders of the Young Blockchain Community, the largest blockchain community in China. The Young community currently has 30+ colleges and universities to join, which will bring more talents and blockchains to the blockchain industry. Practitioners can help with the resources of various colleges and universities.",
+            "contact": "603409320@qq.com"
+        },
+        "is_auditor": false
+    }
+}

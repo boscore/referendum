@@ -3,31 +3,40 @@ from threading import Thread
 import re,logging
 import threading
 import time 
- 
+from init_db import *
+
+def checkSupportLang(lang):
+    list = ['af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'cn', 'tw', 'co', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'et', 'fi', 'fr', 'fy', 'gl', 'ka', 'de', 'el', 'gu', 'ht', 'ha', 'haw', 'he**', 'hi', 'hmn ', 'hu', 'is', 'ig', 'id', 'ga', 'it', 'ja', 'jw', 'kn', 'kk', 'km', 'ko', 'ku', 'ky',
+            'lo', 'la', 'lv', 'lt', 'lb', 'mk', 'mg', 'ms', 'ml', 'mt', 'mi', 'mr', 'mn', 'my', 'ne', 'no', 'ny', 'ps', 'fa', 'pl', 'pt', 'pa', 'ro', 'ru', 'sm', 'gd', 'sr', 'st', 'sn', 'sd', 'si', 'sk', 'sl', 'so', 'es', 'su', 'sw', 'sv', 'tl', 'tg', 'ta', 'te', 'th', 'tr', 'uk', 'ur', 'uz', 'vi', 'cy', 'xh', 'yi', 'yo', 'zu']
+    if lang in list:
+        return True
+    else:
+        return False
 
 # Check if condition match
 # proposal votes > 40% staked_total all net
 # Yes / No >= 1.5
-def proposal_base_condition_ckeck(bp_votes = 0, staked_total = 10, yes = 0, no = 0):
-    VOTE_RATIO = 0.4
-    YES_NO_RATIO = 1.5
-    if bp_votes * VOTE_RATIO <= staked_total and no == 0 and yes > 1.5:
-        return True
-    else:
-        return False
+
+
+def proposal_base_condition_ckeck(bp_votes=0, staked_total=10, yes=0, no=0):
+    VOTE_RATIO = cfg.PROPOSAL_VOTE_RATIO
+    YES_NO_RATIO = cfg.PROPOSAL_YES_NO_RATIO
     try:
-        if bp_votes * VOTE_RATIO <= staked_total and yes / no > YES_NO_RATIO:
+        if bp_votes * VOTE_RATIO <= staked_total and (no == 0 or yes / no > YES_NO_RATIO):
             return True
         else:
             return False
     except ZeroDivisionError as err:
         print(err)
 
-def auditor_base_condition_ckeck(bp_votes = 0, staked_total = 10, yes = 0, no = 0):
-    VOTE_RATIO = 0.03
-    YES_NO_RATIO = 1.5
+
+def auditor_base_condition_ckeck(bp_votes=0, staked_total=10, yes=0, no=0):
+    VOTE_RATIO = cfg.AUDITOR_VOTE_RATIO
+    YES_NO_RATIO = cfg.AUDITOR_YES_NO_RATIO
+    print(VOTE_RATIO)
+    print(YES_NO_RATIO)
     try:
-        if bp_votes * VOTE_RATIO <= staked_total and yes / no > YES_NO_RATIO:
+        if bp_votes * VOTE_RATIO <= staked_total and (no == 0 or yes / no > YES_NO_RATIO):
             return True
         else:
             return False

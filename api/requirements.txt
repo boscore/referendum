@@ -4,3 +4,4 @@ peewee
 gunicorn
 supervisor
 psycopg2-binary
+google-cloud-translate
