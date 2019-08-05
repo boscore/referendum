@@ -20,7 +20,7 @@ $ bosc tx create escrow.bos init '{"sender":"bet.bos","receiver":"<RECEIVER>","a
 > BOS funds must be `transfer` into the `escrow.bos` account before starting another escrow
 
 ```bash
-$ bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "Fund BOS escrow" -p bet.bos
+$ bosc transfer bet.bos escrow.bos "100.0000 BOS" -m "<ESCROW NAME>" -p bet.bos
 ```
 
 ### Approve Escrow
