@@ -398,10 +398,16 @@ def proposals(lang='en'):
 			if tpropos > 0:
 				tpropos = ProposalTanslate.get((ProposalTanslate.name == proposal) & (ProposalTanslate.lang == lang))
 				proposals[proposal]['proposal']['title'] = tpropos.title
-				proposals[proposal]['proposal']['proposal_json'] = tpropos.content
+				proposal_json = json.loads(
+					proposals[proposal]['proposal']['proposal_json'])
+
+				proposal_json['content'] = tpropos.content
+				proposals[proposal]['proposal']['proposal_json'] = json.dumps(proposal_json)
 			else:
 				ttitle = translate_text(proposals[proposal]['proposal']['title'], lang)
-				tcontent = translate_text(proposals[proposal]['proposal']['proposal_json'], lang)
+				proposal_json = json.loads(
+					proposals[proposal]['proposal']['proposal_json'])
+				tcontent = translate_text(proposal_json['content'], lang)
 				print(ttitle)
 				new_proposal = ProposalTanslate(
 				  name = proposal
@@ -411,7 +417,9 @@ def proposals(lang='en'):
 				)
 				new_proposal.save()  
 				proposals[proposal]['proposal']['title'] = ttitle
-				proposals[proposal]['proposal']['proposal_json'] = tcontent
+				proposal_json['content'] = tcontent
+				proposals[proposal]['proposal']['proposal_json'] = json.dumps(
+					proposal_json)
 		except Exception as err:
 				logger.error(err)
 	resp = flask.Response(json.dumps(proposals), mimetype='application/json')
@@ -509,11 +517,21 @@ def proposal(proposal_name, lang='en'):
 		if tpropos > 0:
 			tpropos = ProposalTanslate.get((ProposalTanslate.name == proposal_name) & (ProposalTanslate.lang == lang))
 			proposals[proposal_name]['proposal']['title'] = tpropos.title
-			proposals[proposal_name]['proposal']['proposal_json'] = tpropos.content
+			proposal_json = json.loads(
+                            proposals[proposal_name]['proposal']['proposal_json'])
+
+			proposals['content'] = tpropos.content
+			proposals[proposal_name]['proposal']['proposal_json'] = json.dumps(
+                            proposal_json)
 		else:
+			print('starting')
 			ttitle = translate_text(proposals[proposal_name]['proposal']['title'], lang)
-			tcontent = translate_text(proposals[proposal_name]['proposal']['proposal_json'], lang)
 			print(ttitle)
+
+			proposal_json = json.loads(
+				proposals[proposal_name]['proposal']['proposal_json'])
+			tcontent = translate_text(proposal_json['content'], lang)
+			# print(tcontent)
 			new_proposal = ProposalTanslate(
 				name = proposal_name
 			, lang = lang
@@ -521,8 +539,11 @@ def proposal(proposal_name, lang='en'):
 			, content = tcontent
 			)
 			new_proposal.save()  
-			proposals[proposal_name]['proposal']['title'] = ttitle
-			proposals[proposal_name]['proposal']['proposal_json'] = tcontent
+		proposals[proposal_name]['proposal']['title'] = ttitle
+		proposal_json['content'] = tcontent
+		proposals[proposal_name]['proposal']['proposal_json'] = json.dumps(
+					proposal_json)
+		
 	except Exception as err:
 			logger.error(err)
 	resp = flask.Response(json.dumps(proposals[proposal_name]), mimetype='application/json')
