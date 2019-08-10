@@ -1,6 +1,6 @@
 # BOS Referendum - Vote Tally
 
-> Aggregates proposals/votes/voter staked weights from `eosio.forum`.
+> Aggregates proposals/votes/voter staked weights from `eosio.forum` & `auditor.bos`.
 
 ## Install
 
@@ -51,39 +51,39 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 ## S3 Bucket URL template
 
-- [https://s3.amazonaws.com/bos.referendum/{scope}/{table}/{block_num}.json](https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json)
+- [https://api.boswps.com/{scope}/{table}/{block_num}.json](https://api.boswps.com/referendum/tallies/latest.json)
 
 ### `referendum` (tally) Aggregated Data
 
 **eosio.forum**
-- [referendum::forum.tallies](https://s3.amazonaws.com/bos.referendum/referendum/forum.tallies/latest.json)
-- [referendum::forum.accounts](https://s3.amazonaws.com/bos.referendum/referendum/forum.accounts/latest.json)
-- [referendum::forum.proxies](https://s3.amazonaws.com/bos.referendum/referendum/forum.proxies/latest.json)
+- [referendum::forum.tallies](https://api.boswps.com/referendum/forum.tallies/latest.json)
+- [referendum::forum.accounts](https://api.boswps.com/referendum/forum.accounts/latest.json)
+- [referendum::forum.proxies](https://api.boswps.com/referendum/forum.proxies/latest.json)
 
 **auditor.bos**
-- [referendum::auditor.tallies](https://s3.amazonaws.com/bos.referendum/referendum/auditor.tallies/latest.json)
-- [referendum::auditor.accounts](https://s3.amazonaws.com/bos.referendum/referendum/auditor.accounts/latest.json)
-- [referendum::auditor.proxies](https://s3.amazonaws.com/bos.referendum/referendum/auditor.proxies/latest.json)
+- [referendum::auditor.tallies](https://api.boswps.com/referendum/auditor.tallies/latest.json)
+- [referendum::auditor.accounts](https://api.boswps.com/referendum/auditor.accounts/latest.json)
+- [referendum::auditor.proxies](https://api.boswps.com/referendum/auditor.proxies/latest.json)
 
 **eosio**
-- [referendum::delband](https://s3.amazonaws.com/bos.referendum/referendum/delband/latest.json)
-- [referendum::voters](https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json)
+- [referendum::delband](https://api.boswps.com/referendum/delband/latest.json)
+- [referendum::voters](https://api.boswps.com/referendum/voters/latest.json)
 
 ## `auditor.bos` TABLES
 
-- [auditor.bos::votes](https://s3.amazonaws.com/bos.referendum/auditor.bos/votes/latest.json)
-- [auditor.bos::votejson](https://s3.amazonaws.com/bos.referendum/auditor.bos/votejson/latest.json)
-- [auditor.bos::candidates](https://s3.amazonaws.com/bos.referendum/auditor.bos/candidates/latest.json)
-- [auditor.bos::auditors](https://s3.amazonaws.com/bos.referendum/auditor.bos/auditors/latest.json)
-- [auditor.bos::config](https://s3.amazonaws.com/bos.referendum/auditor.bos/config/latest.json)
-- [auditor.bos::bios](https://s3.amazonaws.com/bos.referendum/auditor.bos/bios/latest.json)
+- [auditor.bos::votes](https://api.boswps.com/auditor.bos/votes/latest.json)
+- [auditor.bos::votejson](https://api.boswps.com/auditor.bos/votejson/latest.json)
+- [auditor.bos::candidates](https://api.boswps.com/auditor.bos/candidates/latest.json)
+- [auditor.bos::auditors](https://api.boswps.com/auditor.bos/auditors/latest.json)
+- [auditor.bos::config](https://api.boswps.com/auditor.bos/config/latest.json)
+- [auditor.bos::bios](https://api.boswps.com/auditor.bos/bios/latest.json)
 
 ## `eosio.forum` TABLES
 
-- [eosio.forum::vote](https://s3.amazonaws.com/bos.referendum/eosio.forum/vote/latest.json)
-- [eosio.forum::proposal](https://s3.amazonaws.com/bos.referendum/eosio.forum/proposal/latest.json)
+- [eosio.forum::vote](https://api.boswps.com/eosio.forum/vote/latest.json)
+- [eosio.forum::proposal](https://api.boswps.com/eosio.forum/proposal/latest.json)
 
 ### `eosio` TABLES
 
-- [eosio::voters](https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json)
-- [eosio::stats](https://s3.amazonaws.com/bos.referendum/eosio/stats/latest.json)
+- [eosio::voters](https://api.boswps.com/eosio/voters/latest.json)
+- [eosio::stats](https://api.boswps.com/eosio/stats/latest.json)
