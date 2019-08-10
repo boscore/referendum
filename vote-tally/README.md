@@ -1,6 +1,6 @@
 # BOS Referendum - Vote Tally
 
-> Aggregates proposals/votes/voter staked weights from `eosio.forum`.
+> Aggregates proposals/votes/voter staked weights from `eosio.forum` & `auditor.bos`.
 
 ## Install
 
@@ -51,46 +51,39 @@ bosc forum propose [proposer] [proposal_name] [title] [proposal_expiration_date]
 
 ## S3 Bucket URL template
 
-- [https://s3.amazonaws.com/bos.referendum/{scope}/{table}/{block_num}.json](https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json)
+- [https://api.boswps.com/{scope}/{table}/{block_num}.json](https://api.boswps.com/referendum/tallies/latest.json)
 
-### `referendum` (tally)
+### `referendum` (tally) Aggregated Data
 
-`referendum::tallies` (tallies for `eosio.forum` voters)
+**eosio.forum**
+- [referendum::forum.tallies](https://api.boswps.com/referendum/forum.tallies/latest.json)
+- [referendum::forum.accounts](https://api.boswps.com/referendum/forum.accounts/latest.json)
+- [referendum::forum.proxies](https://api.boswps.com/referendum/forum.proxies/latest.json)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/tallies/latest.json
+**auditor.bos**
+- [referendum::auditor.tallies](https://api.boswps.com/referendum/auditor.tallies/latest.json)
+- [referendum::auditor.accounts](https://api.boswps.com/referendum/auditor.accounts/latest.json)
+- [referendum::auditor.proxies](https://api.boswps.com/referendum/auditor.proxies/latest.json)
 
-`referendum::accounts` (account details for `eosio.forum` voters)
+**eosio**
+- [referendum::delband](https://api.boswps.com/referendum/delband/latest.json)
+- [referendum::voters](https://api.boswps.com/referendum/voters/latest.json)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/accounts/latest.json
+## `auditor.bos` TABLES
 
-`referendum::proxies` (proxies details for `eosio.forum` voters)
+- [auditor.bos::votes](https://api.boswps.com/auditor.bos/votes/latest.json)
+- [auditor.bos::votejson](https://api.boswps.com/auditor.bos/votejson/latest.json)
+- [auditor.bos::candidates](https://api.boswps.com/auditor.bos/candidates/latest.json)
+- [auditor.bos::auditors](https://api.boswps.com/auditor.bos/auditors/latest.json)
+- [auditor.bos::config](https://api.boswps.com/auditor.bos/config/latest.json)
+- [auditor.bos::bios](https://api.boswps.com/auditor.bos/bios/latest.json)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/proxies/latest.json
+## `eosio.forum` TABLES
 
-`referendum::delband` (self delegated bandwidth amount for all `eosio.forum` voters)
+- [eosio.forum::vote](https://api.boswps.com/eosio.forum/vote/latest.json)
+- [eosio.forum::proposal](https://api.boswps.com/eosio.forum/proposal/latest.json)
 
-- https://s3.amazonaws.com/bos.referendum/referendum/delband/latest.json
+### `eosio` TABLES
 
-`referendum::voters` (voters table for all `eosio.forum` voters)
-
-- https://s3.amazonaws.com/bos.referendum/referendum/voters/latest.json
-
-### `eosio.forum` (eosio.forum)
-
-`eosio.forum::vote` (all votes)
-
-- https://s3.amazonaws.com/bos.referendum/eosio.forum/vote/latest.json
-
-`eosio.forum::proposal` (all proposals)
-
-- https://s3.amazonaws.com/bos.referendum/eosio.forum/proposal/latest.json
-
-### `eosio` (voting weights)
-
-`eosio::voters` (entire voters table)
-
-- https://s3.amazonaws.com/bos.referendum/eosio/voters/latest.json
-
-`eosio::stats` (aggregated EOSIO statistics useful for UI's)
-
-- https://s3.amazonaws.com/bos.referendum/eosio/stats/latest.json
+- [eosio::voters](https://api.boswps.com/eosio/voters/latest.json)
+- [eosio::stats](https://api.boswps.com/eosio/stats/latest.json)

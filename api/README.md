@@ -59,6 +59,7 @@ $ vim /etc/crontab
 
 # add command
 0 0 * * * curl localhost:8000/getJson >> /path/to/crontab.log 2>&1
+0 0 * * * curl localhost:8000/getAuditorJson >> /path/to/crontab.log 2>&1
 
 ```
 

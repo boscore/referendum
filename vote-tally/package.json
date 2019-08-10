@@ -16,7 +16,7 @@
   "dependencies": {
     "aws-sdk": "^2.441.0",
     "cron": "^1.7.0",
-    "dapp-client": "^0.3.0",
+    "dapp-client": "*",
     "dotenv": "^7.0.0",
     "isomorphic-fetch": "^2.2.1",
     "load-json-file": "^5.3.0",
