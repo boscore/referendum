@@ -5,3 +5,4 @@ gunicorn
 supervisor
 psycopg2-binary
 google-cloud-translate
+requests

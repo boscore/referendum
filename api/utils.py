@@ -4,6 +4,8 @@ import re,logging
 import threading
 import time 
 from init_db import *
+import requests
+import json
 
 def checkSupportLang(lang):
     list = ['af', 'sq', 'am', 'ar', 'hy', 'az', 'eu', 'be', 'bn', 'bs', 'bg', 'ca', 'ceb', 'cn', 'tw', 'co', 'hr', 'cs', 'da', 'nl', 'en', 'eo', 'et', 'fi', 'fr', 'fy', 'gl', 'ka', 'de', 'el', 'gu', 'ht', 'ha', 'haw', 'he**', 'hi', 'hmn ', 'hu', 'is', 'ig', 'id', 'ga', 'it', 'ja', 'jw', 'kn', 'kk', 'km', 'ko', 'ku', 'ky',
@@ -194,11 +196,32 @@ def round4(num):
 def round3(num):
     return  round(float(num), 3)
 
+def alarm(msg):
+    api = 'http://monitor.enjoyshare.net/alarm_upload'
+    data = {
+        'type': 3,
+        'code': '86fcad64-5e8d-4b08-84af-c33f61faa428',
+        'node': 'wps hk server',
+        'extra': ''}
+    data["extra"] = msg
+    headers = {'Content-Type': 'application/json'}
+    res = requests.post(url=api, headers=headers, data=json.dumps(data))
+    print(res)
+
+
 
 if __name__ == '__main__':
-    result = proposal_base_condition_ckeck(100, 10, 7, 3)
-    print(result)
-
-    result = auditor_base_condition_ckeck(100, 10, 7, 3)
-    print(result)
+    # dict = {'hello':''}
+    # dict["hello"] = "123"
+    # print(dict)
+    pass
+    # api = 'http://monitor.enjoyshare.net/alarm_upload'
+    # data = {
+    #     'type': 3, 
+    #     'code': '86fcad64-5e8d-4b08-84af-c33f61faa428',
+    #     'node': 'wps hk server #2', 
+    #     'extra': 'for testing wps notifications 2'}
+    # headers = {'Content-Type': 'application/json'}
+    # res = requests.post(url=api, headers=headers, data=json.dumps(data))
+    # print(res)
 

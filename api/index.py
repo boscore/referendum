@@ -168,6 +168,7 @@ def jsoninfo():
 				new_proposal.save()  
 		except Exception as err:
 			logger.error(err)
+			alarm(err)
 		logger.info("proposal name: " + proposal)
 		logger.info("vote total: " + str(vote_total))
 		logger.info("staked total: " + str(staked_total))
@@ -266,6 +267,7 @@ def aujsoninfo():
 				new_auditor.save()  
 		except Exception as err:
 			logger.error(err)
+			alarm(err)
 		logger.info("auditor name: " + auditor)
 		logger.info("vote total: " + str(vote_total))
 		logger.info("staked total: " + str(staked_total))
@@ -320,6 +322,7 @@ def auditorsinfo(lang='en'):
 				auditors[auditor]['bio']['bio'] = tbio	 
 		except Exception as err:
 				logger.error(err)
+				alarm(err)
 	resp = flask.Response(json.dumps(auditors), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
@@ -346,6 +349,7 @@ def auditorsinfoorigin(lang='en'):
 				auditors[auditor]['approved_by_vote_date'] = ""
 		except Exception as err:
 				logger.error(err)
+				alarm(err)
 	resp = flask.Response(json.dumps(auditors), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
@@ -421,6 +425,7 @@ def proposals(lang='en'):
 				proposals[proposal]['proposal']['proposal_json'] = proposal_json
 		except Exception as err:
 				logger.error(err)
+				alarm(err)
 	resp = flask.Response(json.dumps(proposals), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
@@ -463,6 +468,7 @@ def proposalsorigin():
 			
 		except Exception as err:
 				logger.error(err)
+				alarm(err)
 	resp = flask.Response(json.dumps(proposals), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
@@ -543,6 +549,7 @@ def proposal(proposal_name, lang='en'):
 		
 	except Exception as err:
 			logger.error(err)
+			alarm(err)
 	resp = flask.Response(json.dumps(proposals[proposal_name]), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
@@ -584,6 +591,7 @@ def proposalorigin(proposal_name):
 			proposals[proposal_name]['finish_date'] = 0
 	except Exception as err:
 			logger.error(err)
+			alarm(err)
 	resp = flask.Response(json.dumps(proposals[proposal_name]), mimetype='application/json')
 	resp.headers['Access-Control-Allow-Origin'] = '*'
 	return resp
@@ -617,6 +625,7 @@ def review(proposal_name):
 			return resp
 	except Exception as err:
 			logger.error(err)
+			alarm(err)
 			resp = flask.Response(json.dumps({"result":"ERROR"}), mimetype='application/json')
 			resp.headers['Access-Control-Allow-Origin'] = '*'
 			return resp
@@ -648,6 +657,7 @@ def finish(proposal_name):
 			return resp
 	except Exception as err:
 			logger.error(err)
+			alarm(err)
 			resp = flask.Response(json.dumps({"result":"ERROR"}), mimetype='application/json')
 			resp.headers['Access-Control-Allow-Origin'] = '*'
 			return resp
