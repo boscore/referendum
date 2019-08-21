@@ -408,7 +408,7 @@ def proposals(lang='en'):
 				proposal_json['content'] = tpropos.content
 				proposals[proposal]['proposal']['proposal_json'] = proposal_json
 			else:
-				ttitle = translate_text(proposals[proposal]['proposal']['title'], lang)
+				ttitle = translate_text(proposals[proposal]['proposal']['title'], lang, True)
 				proposal_json = json.loads(
 					proposals[proposal]['proposal']['proposal_json'])
 				tcontent = translate_text(proposal_json['content'], lang)
@@ -529,7 +529,7 @@ def proposal(proposal_name, lang='en'):
 			proposals[proposal_name]['proposal']['proposal_json'] = proposal_json
 		else:
 			print('starting')
-			ttitle = translate_text(proposals[proposal_name]['proposal']['title'], lang)
+			ttitle = translate_text(proposals[proposal_name]['proposal']['title'], lang, True)
 			print(ttitle)
 
 			proposal_json = json.loads(

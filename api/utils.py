@@ -197,16 +197,17 @@ def round3(num):
     return  round(float(num), 3)
 
 def alarm(msg):
-    api = 'http://monitor.enjoyshare.net/alarm_upload'
-    data = {
-        'type': 3,
-        'code': '86fcad64-5e8d-4b08-84af-c33f61faa428',
-        'node': 'wps hk server',
-        'extra': ''}
-    data["extra"] = msg
-    headers = {'Content-Type': 'application/json'}
-    res = requests.post(url=api, headers=headers, data=json.dumps(data))
-    print(res)
+    pass
+    # api = 'http://monitor.enjoyshare.net/alarm_upload'
+    # data = {
+    #     'type': 3,
+    #     'code': '86fcad64-5e8d-4b08-84af-c33f61faa428',
+    #     'node': 'wps hk server',
+    #     'extra': ''}
+    # data["extra"] = str(msg)
+    # headers = {'Content-Type': 'application/json'}
+    # res = requests.post(url=api, headers=headers, data=json.dumps(data))
+    # print(res)
 
 
 

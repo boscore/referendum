@@ -10,14 +10,15 @@
         },
         "stats": {
             "votes": {
-                "total": 0,
+                "1": 1,
+                "total": 1,
                 "proxies": 0,
-                "accounts": 0
+                "accounts": 1
             },
             "accounts": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 28301,
+                "total": 28301
             },
             "proxies": {
                 "0": 0,
@@ -26,10 +27,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 28301,
+                "total": 28301
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "bosantifraud": {
@@ -43,15 +44,15 @@
         },
         "stats": {
             "votes": {
-                "1": 5,
-                "total": 5,
+                "1": 6,
+                "total": 6,
                 "proxies": 0,
-                "accounts": 5
+                "accounts": 6
             },
             "accounts": {
                 "0": 0,
-                "1": 9415332810,
-                "total": 9415332810
+                "1": 9054510111,
+                "total": 9054510111
             },
             "proxies": {
                 "0": 0,
@@ -60,10 +61,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 9415332810,
-                "total": 9415332810
+                "1": 9054510111,
+                "total": 9054510111
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "bosdacfcwp11": {
@@ -97,7 +98,7 @@
                 "1": 985134160,
                 "total": 985134160
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "boseagleeye1": {
@@ -118,21 +119,21 @@
                 "accounts": 4
             },
             "accounts": {
-                "0": 150000,
-                "1": 449369126,
-                "total": 449519126
+                "0": 150002,
+                "1": 67328326,
+                "total": 67478328
             },
             "proxies": {
                 "0": 0,
-                "1": 50064690160,
-                "total": 50064690160
+                "1": 54793835023,
+                "total": 54793835023
             },
             "staked": {
-                "0": 150000,
-                "1": 50514059286,
-                "total": 50514209286
+                "0": 150002,
+                "1": 54861163349,
+                "total": 54861313351
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "bosfirewallx": {
@@ -146,27 +147,27 @@
         },
         "stats": {
             "votes": {
-                "1": 1,
-                "total": 1,
+                "1": 3,
+                "total": 3,
                 "proxies": 1,
-                "accounts": 0
+                "accounts": 2
             },
             "accounts": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 6500767352,
+                "total": 6500767352
             },
             "proxies": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 20292187446,
+                "total": 20292187446
             },
             "staked": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 26792954798,
+                "total": 26792954798
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "bosmeetups": {
@@ -180,27 +181,60 @@
         },
         "stats": {
             "votes": {
-                "1": 6,
-                "total": 6,
+                "1": 7,
+                "total": 7,
                 "proxies": 1,
-                "accounts": 5
+                "accounts": 6
             },
             "accounts": {
                 "0": 0,
-                "1": 9415332810,
-                "total": 9415332810
+                "1": 9054510111,
+                "total": 9054510111
             },
             "proxies": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 20292187446,
+                "total": 20292187446
             },
             "staked": {
                 "0": 0,
-                "1": 27015510587,
-                "total": 27015510587
+                "1": 29346697557,
+                "total": 29346697557
             },
-            "block_num": 28954668
+            "block_num": 37284744
+        }
+    },
+    "bosnationwp2": {
+        "id": "bosnationwp2_20190814",
+        "proposal": {
+            "proposal_name": "bosnationwp2",
+            "proposer": "bosnationftw",
+            "title": "BOS WPS Enhancement Proposal",
+            "proposal_json": "{\"content\":\"# BOS WPS Enhancement Proposal\\n\\nEOS Nation is proud to have delivered a fully functional [Worker Proposal System (WPS)](https://boswps.io/#/poll_detail?proposal=bosnationwps) on the BOS network. It has already enabled over 2.1 million BOS to be deployed to 3 projects that bring value to BOS and EOSIO as a whole. And there are many more projects with proposals in progress waiting to earn funding for valuable development, governance, and community building initiatives.\\n\\nWe’ve learned a lot watching the system in action and have been gathering feedback from users and the BOS Core team. Based on these learnings, we’ve already deployed some upgrades and are continuing to work on new features to improve the system and unlock even more value for EOSIO chains.\\n\\n### Scope of work already deployed for version 2\\n\\n-   [auditor.bos - update auditor v2.0 smart contract](https://github.com/boscore/referendum/pull/73)\\n-   [auditor.bos - enforce JSON input](https://github.com/boscore/referendum/issues/68)\\n-   [vote tally - update tally to auditor v2.0](https://github.com/boscore/referendum/pull/75)\\n-   [vote tally - add features](https://github.com/boscore/referendum/pull/72)\\n-   [eosio.forum - set RAM payer as `get_self()`](https://github.com/boscore/referendum/pull/56)\\n-   [eosio.forum - update README](https://github.com/boscore/referendum/pull/67)\\n-   [eosio.forum - remove `expires_at`](https://github.com/boscore/referendum/pull/58)\\n\\n### Scope of work in development for version 3\\n\\n- [Allow multiple init escrows & fund escrow using memo name](https://github.com/boscore/referendum/issues/76)\\n  - This would allow multiple escrows to be initialized and funded at a later date.\\n- [Vote tally V3.0](https://github.com/boscore/referendum/tree/master/vote-tally)\\n  - Host vote tally results on Cloudflare to improve performance in China\\n  - Integrate Python API into Vote Tally\\n  - Store historical voting data\\n  - Calculate eligible proposals which meet conditions\\n- new action for anyone to submit the version of voluntary translated work\\n  - `submit_translation(proposal_id, lan_id, translator, translated_content)`\\n  - create another table\\n\\n### Request\\n\\nFor development of version 2 and 3 of the BOS WPS, EOS Nation is requesting **450,000 BOS**.\\n\\n# BOS WPS提案优化\\n\\n能够在BOS网络上提供功能齐全的[工人提案系统（WPS）](https://boswps.io/#/poll_detail?proposal=bosnationwps)，EOS Nation感到很自豪。 已经使超过210万个BOS部署到3个项目，这些项目为整个BOS和EOSIO带来了价值。 还有更多项目正在运行中，正在为有价值的发展，治理和社区建设计划\\n\\n筹集资金。\\n\\n我们已经从系统的实际操作运行中学到了很多，并且，我们一直在收集用户和BOS核心团队的反馈。 基于这些经验，我们已经部署了升级，并且正在继续开发新功能，以对系统做出改进，并为EOSIO链去创造更多价值。\\n\\n### 版本2已部署的工作范围\\n\\n- [auditor.bos - update auditor v2.0 smart contract](https://github.com/boscore/referendum/pull/73)\\n- [auditor.bos - enforce JSON input](https://github.com/boscore/referendum/issues/68)\\n- [vote tally - update tally to auditor v2.0](https://github.com/boscore/referendum/pull/75)\\n- [vote tally - add features](https://github.com/boscore/referendum/pull/72)\\n- [eosio.forum - set RAM payer as `get_self()`](https://github.com/boscore/referendum/pull/56)\\n- [eosio.forum - update README](https://github.com/boscore/referendum/pull/67)\\n- [eosio.forum - remove `expires_at`](https://github.com/boscore/referendum/pull/58)\\n\\n### 版本3的开发工作范围\\n\\n- [允许多个初始化托管和资金托管的使用备忘录名称](https://github.com/boscore/referendum/issues/76)\\n  - 这将使得多个托管在之后能被初始化并获取资助。\\n- [3.0版本计票机制](https://github.com/boscore/referendum/tree/master/vote-tally)\\n  - 主机计票结果显示，Cloudflare在中国的性能将有所改善\\n  - 将Python API集成到计票中\\n  - 存储历史投票数据\\n  - 计算符合条件的提案\\n-  提交主动翻译作品版本的新行动\\n  - `submit_translation(proposal_id, lan_id, translator, translated_content)`\\n  - 创建另一张表\\n\\n### 需求\\n\\n为了开发BOS WPS的第2版和第3版，EOS Nation正在提出450,000个BOS的需求。\\n\",\"type\":\"referendum-v1\",\"incentives\":\"450000.0000 BOS\",\"receiptor\":\"bosnationftw\"}",
+            "created_at": "2019-08-14T14:37:12"
+        },
+        "stats": {
+            "votes": {
+                "total": 0,
+                "proxies": 0,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "block_num": 37284744
         }
     },
     "bosnationwps": {
@@ -214,27 +248,27 @@
         },
         "stats": {
             "votes": {
-                "1": 59,
-                "total": 59,
+                "1": 65,
+                "total": 65,
                 "proxies": 19,
-                "accounts": 40
+                "accounts": 46
             },
             "accounts": {
                 "0": 0,
-                "1": 62934784360,
-                "total": 62934784360
+                "1": 58280644479,
+                "total": 58280644479
             },
             "proxies": {
                 "0": 0,
-                "1": 99507324957,
-                "total": 99507324957
+                "1": 106077254454,
+                "total": 106077254454
             },
             "staked": {
                 "0": 0,
-                "1": 162442109317,
-                "total": 162442109317
+                "1": 164357898933,
+                "total": 164357898933
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "bossnapshots": {
@@ -255,20 +289,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 5512138100,
-                "total": 5512138100
+                "1": 5300100000,
+                "total": 5300100000
             },
             "proxies": {
                 "0": 0,
-                "1": 18025907204,
-                "total": 18025907204
+                "1": 20711159080,
+                "total": 20711159080
             },
             "staked": {
                 "0": 0,
-                "1": 23538045304,
-                "total": 23538045304
+                "1": 26011259080,
+                "total": 26011259080
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "boswallets": {
@@ -283,30 +317,30 @@
         "stats": {
             "votes": {
                 "0": 1,
-                "1": 9,
+                "1": 11,
                 "255": 1,
-                "total": 11,
+                "total": 13,
                 "proxies": 1,
-                "accounts": 10
+                "accounts": 12
             },
             "accounts": {
-                "0": 108532000,
-                "1": 9417959532,
-                "total": 9526491532
+                "0": 108581501,
+                "1": 9059703637,
+                "total": 9168285138
             },
             "proxies": {
                 "0": 0,
                 "1": 0,
-                "255": 1217695707,
-                "total": 1217695707
+                "255": 1045711817,
+                "total": 1045711817
             },
             "staked": {
-                "0": 108532000,
-                "1": 9417959532,
-                "255": 1217695707,
-                "total": 10744187239
+                "0": 108581501,
+                "1": 9059703637,
+                "255": 1045711817,
+                "total": 10213996955
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "bprdproposal": {
@@ -320,15 +354,15 @@
         },
         "stats": {
             "votes": {
-                "1": 1,
-                "total": 1,
+                "1": 2,
+                "total": 2,
                 "proxies": 0,
-                "accounts": 1
+                "accounts": 2
             },
             "accounts": {
                 "0": 0,
-                "1": 382080800,
-                "total": 382080800
+                "1": 145335,
+                "total": 145335
             },
             "proxies": {
                 "0": 0,
@@ -337,10 +371,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 382080800,
-                "total": 382080800
+                "1": 145335,
+                "total": 145335
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "btconbos": {
@@ -354,27 +388,27 @@
         },
         "stats": {
             "votes": {
-                "1": 9,
-                "total": 9,
+                "1": 11,
+                "total": 11,
                 "proxies": 7,
-                "accounts": 2
+                "accounts": 4
             },
             "accounts": {
                 "0": 0,
-                "1": 108635910,
-                "total": 108635910
+                "1": 3933941156,
+                "total": 3933941156
             },
             "proxies": {
                 "0": 0,
-                "1": 39056180140,
-                "total": 39056180140
+                "1": 43367533678,
+                "total": 43367533678
             },
             "staked": {
                 "0": 0,
-                "1": 39164816050,
-                "total": 39164816050
+                "1": 47301474834,
+                "total": 47301474834
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "chintaionbos": {
@@ -407,7 +441,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "chintaitobos": {
@@ -421,27 +455,27 @@
         },
         "stats": {
             "votes": {
-                "1": 20,
-                "total": 20,
-                "proxies": 6,
-                "accounts": 14
+                "1": 25,
+                "total": 25,
+                "proxies": 8,
+                "accounts": 17
             },
             "accounts": {
                 "0": 0,
-                "1": 14778928071,
-                "total": 14778928071
+                "1": 28771124774,
+                "total": 28771124774
             },
             "proxies": {
                 "0": 0,
-                "1": 48608707999,
-                "total": 48608707999
+                "1": 60939296803,
+                "total": 60939296803
             },
             "staked": {
                 "0": 0,
-                "1": 63387636070,
-                "total": 63387636070
+                "1": 89710421577,
+                "total": 89710421577
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "constantstab": {
@@ -455,27 +489,27 @@
         },
         "stats": {
             "votes": {
-                "1": 9,
-                "total": 9,
-                "proxies": 1,
+                "1": 10,
+                "total": 10,
+                "proxies": 2,
                 "accounts": 8
             },
             "accounts": {
                 "0": 0,
-                "1": 384951215,
-                "total": 384951215
+                "1": 1962415,
+                "total": 1962415
             },
             "proxies": {
                 "0": 0,
-                "1": 385397532,
-                "total": 385397532
+                "1": 3102977984,
+                "total": 3102977984
             },
             "staked": {
                 "0": 0,
-                "1": 770348747,
-                "total": 770348747
+                "1": 3104940399,
+                "total": 3104940399
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "dappxlinkeco": {
@@ -489,10 +523,44 @@
         },
         "stats": {
             "votes": {
-                "1": 10,
-                "total": 10,
+                "1": 13,
+                "total": 13,
                 "proxies": 10,
-                "accounts": 0
+                "accounts": 3
+            },
+            "accounts": {
+                "0": 0,
+                "1": 231210792,
+                "total": 231210792
+            },
+            "proxies": {
+                "0": 0,
+                "1": 54793835023,
+                "total": 54793835023
+            },
+            "staked": {
+                "0": 0,
+                "1": 55025045815,
+                "total": 55025045815
+            },
+            "block_num": 37284744
+        }
+    },
+    "dcartmarket1": {
+        "id": "dcartmarket1_20190818",
+        "proposal": {
+            "proposal_name": "dcartmarket1",
+            "proposer": "qibdezknfhnh",
+            "title": "DCart - Digital Asset Marketplace",
+            "proposal_json": "{\"content\":\"Integrate DCart.io Digital asset marketplace with BOS blockchain. DCart is a digital asset marketplace where users can trade gaming items, digital art or any digital items. DCart also provides a portal where users can easily convert digital items to NFTs on BOS blockahin and start trading DCart. DCart is currently live on EOS,Wax and worbli chains. We would like to extend the functionality and support to BOS Chain.\",\"type\":\"referendum-v1\",\"incentives\":\"60000.0000 BOS\",\"receiptor\":\"qibdezknfhnh\"}",
+            "created_at": "2019-08-18T16:00:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 1,
+                "total": 1,
+                "proxies": 0,
+                "accounts": 1
             },
             "accounts": {
                 "0": 0,
@@ -501,15 +569,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 50064690160,
-                "total": 50064690160
+                "1": 0,
+                "total": 0
             },
             "staked": {
                 "0": 0,
-                "1": 50064690160,
-                "total": 50064690160
+                "1": 0,
+                "total": 0
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "derupromises": {
@@ -523,27 +591,27 @@
         },
         "stats": {
             "votes": {
-                "1": 4,
-                "total": 4,
-                "proxies": 0,
+                "1": 8,
+                "total": 8,
+                "proxies": 4,
                 "accounts": 4
             },
             "accounts": {
                 "0": 0,
-                "1": 557483310,
-                "total": 557483310
+                "1": 2078081310,
+                "total": 2078081310
             },
             "proxies": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 26059165716,
+                "total": 26059165716
             },
             "staked": {
                 "0": 0,
-                "1": 557483310,
-                "total": 557483310
+                "1": 28137247026,
+                "total": 28137247026
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "ecoboostwps1": {
@@ -557,30 +625,28 @@
         },
         "stats": {
             "votes": {
-                "1": 20,
-                "255": 1,
-                "total": 21,
-                "proxies": 14,
-                "accounts": 7
+                "0": 1,
+                "1": 32,
+                "total": 33,
+                "proxies": 15,
+                "accounts": 18
             },
             "accounts": {
-                "0": 0,
-                "1": 30619167504,
-                "total": 30619167504
+                "0": 2000,
+                "1": 75126473897,
+                "total": 75126475897
             },
             "proxies": {
                 "0": 0,
-                "1": 72771747131,
-                "255": 13152640689,
-                "total": 85924387820
+                "1": 111420002295,
+                "total": 111420002295
             },
             "staked": {
-                "0": 0,
-                "1": 103390914635,
-                "255": 13152640689,
-                "total": 116543555324
+                "0": 2000,
+                "1": 186546476192,
+                "total": 186546478192
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "engineertool": {
@@ -608,16 +674,16 @@
             "proxies": {
                 "0": 0,
                 "1": 0,
-                "255": 1217695707,
-                "total": 1217695707
+                "255": 1045711817,
+                "total": 1045711817
             },
             "staked": {
                 "0": 0,
                 "1": 412200,
-                "255": 1217695707,
-                "total": 1218107907
+                "255": 1045711817,
+                "total": 1046124017
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "eosiosg11112": {
@@ -638,20 +704,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 597637908,
-                "total": 597637908
+                "1": 216547909,
+                "total": 216547909
             },
             "proxies": {
                 "0": 0,
-                "1": 32464512383,
-                "total": 32464512383
+                "1": 34501647577,
+                "total": 34501647577
             },
             "staked": {
                 "0": 0,
-                "1": 33062150291,
-                "total": 33062150291
+                "1": 34718195486,
+                "total": 34718195486
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "eosstudioide": {
@@ -672,21 +738,21 @@
                 "accounts": 8
             },
             "accounts": {
-                "0": 150000,
-                "1": 4631285877,
-                "total": 4631435877
+                "0": 150002,
+                "1": 3576874604,
+                "total": 3577024606
             },
             "proxies": {
                 "0": 0,
-                "1": 50064690160,
-                "total": 50064690160
+                "1": 54793835023,
+                "total": 54793835023
             },
             "staked": {
-                "0": 150000,
-                "1": 54695976037,
-                "total": 54696126037
+                "0": 150002,
+                "1": 58370709627,
+                "total": 58370859629
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "historyindex": {
@@ -709,22 +775,22 @@
             },
             "accounts": {
                 "0": 2000,
-                "1": 1169701782,
-                "255": 1009200000,
-                "total": 2178903782
+                "1": 1168753782,
+                "255": 2609200002,
+                "total": 3777955784
             },
             "proxies": {
-                "0": 385397532,
+                "0": 386055542,
                 "1": 0,
-                "total": 385397532
+                "total": 386055542
             },
             "staked": {
-                "0": 385399532,
-                "1": 1169701782,
-                "255": 1009200000,
-                "total": 2564301314
+                "0": 386057542,
+                "1": 1168753782,
+                "255": 2609200002,
+                "total": 4164011326
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "hyperion.api": {
@@ -738,27 +804,60 @@
         },
         "stats": {
             "votes": {
-                "1": 18,
-                "total": 18,
-                "proxies": 5,
-                "accounts": 13
+                "1": 33,
+                "total": 33,
+                "proxies": 14,
+                "accounts": 19
             },
             "accounts": {
                 "0": 0,
-                "1": 13077499090,
-                "total": 13077499090
+                "1": 26178500218,
+                "total": 26178500218
             },
             "proxies": {
                 "0": 0,
-                "1": 38025927406,
-                "total": 38025927406
+                "1": 75212826859,
+                "total": 75212826859
             },
             "staked": {
                 "0": 0,
-                "1": 51103426496,
-                "total": 51103426496
+                "1": 101391327077,
+                "total": 101391327077
             },
-            "block_num": 28954668
+            "block_num": 37284744
+        }
+    },
+    "icelandesert": {
+        "id": "icelandesert_20190724",
+        "proposal": {
+            "proposal_name": "icelandesert",
+            "proposer": "icelandesert",
+            "title": "icelandesert",
+            "proposal_json": "{\"content\":\"icelandesert\",\"type\":\"referendum-v1\",\"incentives\":\"0.0000 BOS\",\"receiptor\":\"icelandesert\"}",
+            "created_at": "2019-07-24T09:25:57"
+        },
+        "stats": {
+            "votes": {
+                "total": 0,
+                "proxies": 0,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "block_num": 37284744
         }
     },
     "indextokenex": {
@@ -772,27 +871,27 @@
         },
         "stats": {
             "votes": {
-                "1": 5,
-                "total": 5,
-                "proxies": 1,
+                "1": 6,
+                "total": 6,
+                "proxies": 2,
                 "accounts": 4
             },
             "accounts": {
                 "0": 0,
-                "1": 9885736745,
-                "total": 9885736745
+                "1": 17922938073,
+                "total": 17922938073
             },
             "proxies": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 21337899263,
+                "total": 21337899263
             },
             "staked": {
                 "0": 0,
-                "1": 27485914522,
-                "total": 27485914522
+                "1": 39260837336,
+                "total": 39260837336
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "mansaboscomm": {
@@ -806,28 +905,28 @@
         },
         "stats": {
             "votes": {
-                "0": 1,
-                "1": 32,
-                "total": 33,
+                "0": 2,
+                "1": 33,
+                "total": 35,
                 "proxies": 17,
-                "accounts": 16
+                "accounts": 18
             },
             "accounts": {
-                "0": 101,
-                "1": 35562799658,
-                "total": 35562799759
+                "0": 2101,
+                "1": 44876259945,
+                "total": 44876262046
             },
             "proxies": {
                 "0": 0,
-                "1": 94911686970,
-                "total": 94911686970
+                "1": 102766526662,
+                "total": 102766526662
             },
             "staked": {
-                "0": 101,
-                "1": 130474486628,
-                "total": 130474486729
+                "0": 2101,
+                "1": 147642786607,
+                "total": 147642788708
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "omegaautodex": {
@@ -841,27 +940,27 @@
         },
         "stats": {
             "votes": {
-                "1": 22,
-                "total": 22,
+                "1": 23,
+                "total": 23,
                 "proxies": 4,
-                "accounts": 18
+                "accounts": 19
             },
             "accounts": {
                 "0": 0,
-                "1": 19623724212,
-                "total": 19623724212
+                "1": 19443786000,
+                "total": 19443786000
             },
             "proxies": {
                 "0": 0,
-                "1": 25272145689,
-                "total": 25272145689
+                "1": 29996277003,
+                "total": 29996277003
             },
             "staked": {
                 "0": 0,
-                "1": 44895869901,
-                "total": 44895869901
+                "1": 49440063003,
+                "total": 49440063003
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "operations11": {
@@ -876,27 +975,27 @@
         "stats": {
             "votes": {
                 "0": 1,
-                "1": 35,
-                "total": 36,
+                "1": 43,
+                "total": 44,
                 "proxies": 16,
-                "accounts": 20
+                "accounts": 28
             },
             "accounts": {
-                "0": 108532000,
-                "1": 35899540459,
-                "total": 36008072459
+                "0": 108581501,
+                "1": 44284052240,
+                "total": 44392633741
             },
             "proxies": {
                 "0": 0,
-                "1": 95593728468,
-                "total": 95593728468
+                "1": 102380471120,
+                "total": 102380471120
             },
             "staked": {
-                "0": 108532000,
-                "1": 131493268927,
-                "total": 131601800927
+                "0": 108581501,
+                "1": 146664523360,
+                "total": 146773104861
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "operations14": {
@@ -929,7 +1028,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 28954668
+            "block_num": 37284744
         }
     },
     "operations15": {
@@ -940,6 +1039,108 @@
             "title": "Community Governance & Daily Operations Stage 2",
             "proposal_json": "{\"content\":\"\\n\\nThe proposal will be implemented from May 1st.\\n\\n\\n\\n# Proposal background\\n\\n\\n\\nBOSCore is a community-initiated EOS side chain. We could see that any public chain is ultimately inseparable from governance. Governance is the catalyst for ecological growth. Governance is the cohesive force of community development. Community governance plays a different role in each stage of the public chain development. The role of organizing community members to participate in the discussion of ecological construction, could condense the BOSCore community consensus, expand the influence of BOSCore brand, and force to help BOSCore ecological prosperity.\\n\\n\\n\\nBOS Pacific is the BOSCore node team initiated by Node Pacific Tech. Node Pacific is the world's largest public chain operation crowdsourcing platform and node operator. Currently, it participates in the core block nodes of nearly 20 mainstream public chains domestic and overseas.In-depth participation in public chain ecological operations, and leading community governance, such as the successful creation of EOS core governance community EMAC, IOST core governance community ICAC, GXChain core governance community GCAC, Lambda core governance community LCAC.\\n\\n\\n\\nBOS Pacific is also looking forward a lot to contributing to the ecological management of BOSCore with a wealth of community governance experience.\\n\\n# Proposal information\\n\\n\\n\\nBasic information\\n\\n\\n\\n1. Proposal name: Proposal for the construction of core governance domestic and overseas communities & daily operation\\n\\n    \\n\\n2. Submit function points: core governance community\\n\\n    \\n\\n3. The latest submission time after the proposal is passed: two months\\n\\n    \\n\\n4. The proposal will be executed in the second phase ： June 1 - June 30\\n\\n\\n\\n# Proposal content\\n\\n\\n\\nBOS Pacific will launch the BOSCore core governance community, call on the partners who are interested in governance in the BOSCore ecosystem to join the BOSCore core governance community BCAC.\\n\\n\\n\\nBCAC does not have arbitration function, does not participate in governance implementation, and only conducts training and education for BOSCore governance, aiming to converge the BOSCore community consensus.\\n\\n\\n\\nBCAC hopes to continue to build and improve the BOSCore governance community, attract global blockchain technology and governance enthusiasts to understand and participate in BOSCore, build a rich and diverse governance communication community for BOSCore, and gradually transform BOSCore into community-based governance and expand continuously. The cohesiveness of BOSCore forms a powerful and irreplaceable consensus mechanism.\\n\\n\\n\\n# Proposal execute\\n\\n\\n\\n-- Governance community expansion\\n\\n\\n\\n-- Commission establishment & committee development\\n\\n\\n\\n--The media announcement\\n\\n\\n\\n--Community bounty Community governance\\n\\n\\n\\n\\n\\n### 1.Governance community expansion \\n\\n\\n\\nThe BOSCore core governance community has expanded to 400+, collecting user opinions and suggestions, and actively organizing and conducting a series of community activities, including: community user topic discussion, topic sharing, node interview, conference organization, etc.\\n\\n\\n\\na. Discussion topic introduction: Take a topic discussion as an example to prepare the process:\\n\\n\\n\\nBefore the topic discussion:\\n\\n\\n\\n-- Make a microphone form to collect community user questions and suggestions\\n\\n\\n\\n-- Communicate with community users and guide community users to fill out forms\\n\\n\\n\\n-- Discuss with the committee members to select topics to discuss and discuss in the BCAC community\\n\\n\\n\\n-- Identify topic discussion time and topic, communicate with community users, and prepare activity materials before the topic discussion (poster, media announcement, copy preparation)\\n\\n\\n\\nDuring the topic discussion:\\n\\n\\n\\n-- Hosting and guiding community users to discuss, after content discussion topics are discussed:\\n\\n\\n\\n-- Communicate with community users to understand the feelings and shortcomings of the experience, content dissemination (Chinese and English, domestic and overseas platforms)\\n\\n\\n\\nb. Topic sharing introduction: Take a topic sharing as an example to prepare the process:\\n\\n\\n\\nBefore sharing the topic:\\n\\n\\n\\n-- Communicate with the node, the application party, and the project party to determine the theme and time to share, and prepare the activity materials before the sharing (poster, media announcement, copy preparation)\\n\\n\\n\\nDuring the topic sharing: \\n\\n\\n\\n-- Hosting and guiding community users to participate and ask questions. After sharing the topic:\\n\\n\\n\\n-- Communicate with the users and share the guests to understand the feelings and experiences, and organize the articles (both Chinese and English, domestic and overseas platforms)\\n\\n\\n\\nc. Node exclusive interview: Take one node exclusive interview as an example to prepare the process:\\n\\n\\n\\nBefore the interview: \\n\\n\\n\\n-- Prepare an interview, contact the node and communicate the content and form of the interview, determine the theme and time, and prepare the activity materials before the sharing (poster, media announcement, copy preparation)\\n\\n\\n\\nDuring the interview: \\n\\n\\n\\n--hosting, and make questions\\n\\n\\n\\nAfter the interview: \\n\\n\\n\\n-- Organizing and publishing articles (Chinese and English, domestic and overseas platforms)\\n\\n\\n\\nd.Meeting: Take a meeting as an example to prepare the process:\\n\\n\\n\\nBefore the meeting:\\n\\n\\n\\n-- Communicate frequently with community users, node teams, committees, and identify and determine meeting themes and times\\n\\n\\n\\n-- Inviting guests to the meeting, and preparing to share the pre-event materials (poster, media announcement, copy preparation), and the notice of meeting\\n\\n\\n\\nDuring the meeting:\\n\\n\\n\\n-- Identify invited guests, host, guide community users to participate and express opinions and suggestions, content\\n\\n\\n\\nAfter the meeting: Communicate with the users and share the guests to understand the feelings and experiences, content dissemination (Chinese and English, domestic and overseas platforms)\\n\\n\\n\\n\\n\\n### 2.Commission establishment & committee development\\n\\n###  \\n\\nConduct committee recruitment activities (filtrating & communication & campaign & establishment); establish committee charter (write & modify & confirm); establish proposal application process; continue to export quality proposals for BOSCore community; frequently communicate with members to help promote committee members' work Track and execute the proposal; provide BOS rewards to committees that have made actual contributions, and call more people to join BOSCore's ecological construction.\\n\\n\\n\\nProposal: Prepare the process with a proposal as an example:\\n\\n\\n\\n-- Before the proposal: Communicate frequently with community users, nodes, project parties, and application parties, tap their expertise, promote feasibility proposals, and guide them to write proposals based on the proposal template; \\n\\n\\n\\n-- Proposal: Submit proposals and assist in advancing the work of the proposed members, follow up on the proposal process; and call for more people to join BOSCore's ecological construction;\\n\\n\\n\\n-- After the proposal: The designated secretary department follows up on the progress of the proposal and reports it regularly.\\n\\n\\n\\n\\n\\n### 3.Media announcement\\n\\n\\n\\nSet up channels for media outlets domestic and overseas export high-quality articles for BOSCore. Eacha article and official event will be announced in the communities and officials. Party platform promotion.\\n\\n\\n\\nThe publishing platform includes, but is not limited to, Wechat public web, Weibo, Bihu, Mars Finance, Gyro Finance, Facebook, Twitter,Reddit, steemit, medium, starteos, bos.sh, EOS newsletter, etc., each number of reading will over 10,000 totally.\\n\\n###  \\n\\n\\n\\n### 4.Community bounty\\n\\n\\n\\nIn order to encourage the community to develop better and mobilize more participating users, Bounty live domestic and overseas will be non scheduled (such as UGC,activity execution, interactive sharing, DApp recommendation, etc.)\\n\\n\\n\\n\\n\\n## Proposal target\\n\\n\\n\\n1. The total number of community members will be increased to 400+;\\n\\n    \\n\\n2. Unscheduled topic discussion or topic sharing (at least once a month), Chinese and English node exclusive interviews at least one week, online meeting 1-2 sessions per week;\\n\\n    \\n\\n3. Collect proposal 2+;\\n\\n    \\n\\n4. Original articles 5+, publishing platform: Wechat public web, Weibo,Bihu, Mars, Gyro Finance, Facebook, Twitter,Reddit, steemit, medium, starteos, bos.sh, EOS newsletter, etc. (Chinese and English channels, covering 100,000+ users, reading over 200,000+)\\n\\n    \\n\\nPs: The average number of single meetings is not less than 10% of the BCAC community.\\n\\n\\n\\n\\n\\n## Proposal budget\\n\\n\\n\\nApplication for funding at the second phase: total 200,000 BOS\\n\\n\\n\\nCommunity operating costs (manpower, material, market) 150,000\\n\\n\\n\\nCommunity Incentives (Committee & Community Bounty) - 500,000 (with invented clarity)\\n\\n\\n\\n\\n\\n------\\n\\n\\n\\n提案从5月1日开始执行\\n\\n\\n\\n\\n\\n## 提案背景\\n\\n\\n\\n\\n\\nBOSCore是由社区发起的EOS侧链，我们能看到任何一条公链最终都离不开治理，治理是生态壮大的催化剂，治理是社区发展的凝聚力量，社区治理在公链各个阶段发挥着不同的作用， 组织社区成员参与生态建设的讨论，能够凝聚BOSCore社区共识，扩大BOSCore品牌影响力，助力BOSCore生态繁荣。\\n\\n\\n\\nBOS Pacific是由Node Pacific Tech（节点亚太）发起的BOSCore节点团队，Node Pacific 是全球最大的公链运营众包平台和节点运营商，目前参与了国内外近20条主流公链的核心出块节点；深度参与公链生态运营，并主导社区治理，如成功打造EOS核心治理社区EMAC， IOST核心治理社区ICAC，公信链核心治理社区GCAC，Lambda核心治理社区LCAC等。\\n\\n\\n\\nBOS Pacific也非常期望能带着较为丰富的社区治理经验，为BOSCore的生态治理搭建贡献一份力量。\\n\\n\\n\\n\\n\\n## 提案信息\\n\\n\\n\\n基本信息\\n\\n\\n\\n1、提案名称：BOSCore海内外核心治理社区搭建&日常运营提案\\n\\n\\n\\n2、提交功能点：核心治理社区\\n\\n\\n\\n3、提案在公投通过后最晚提交时间：两个月\\n\\n\\n\\n4、提案第二阶段：6月1日-6月30日\\n\\n\\n\\n\\n\\n## 提案内容\\n\\n\\n\\nBOS Pacific会发起BOSCore核心治理社区，号召BOSCore生态中对治理感兴趣的小伙伴加入，共建BOSCore核心治理社区BCAC。\\n\\n\\n\\nBCAC不具备仲裁功能，不参与治理执行，仅做BOSCore治理的培训和教育，旨在凝聚BOSCore社区共识。\\n\\n\\n\\nBCAC希望能够持续推进搭建、完善BOSCore治理社区，吸引全球区块链技术以及治理爱好者了解，参与BOSCore，为BOSCore搭建一个丰富多样的治理交流社区，逐步将BOSCore向社区化治理逐步过渡，不断扩大BOSCore的凝聚力，形成强有力、不可替代的共识机制。\\n\\n\\n\\n\\n\\n## 提案执行\\n\\n\\n\\n--治理社区的扩展\\n\\n\\n\\n--委员会成立&委员会发展\\n\\n\\n\\n--媒体宣发\\n\\n\\n\\n--社区bounty\\n\\n\\n\\n社区治理\\n\\n\\n\\n\\n\\n### 1.治理社区的扩展\\n\\n\\n\\nBOSCore核心治理社区人员扩充至400+，收集用户意见和建议，积极组织和开展一系列社区活动，方式包括：社区用户话题讨论，主题分享，节点专访，会议组织等。\\n\\n\\n\\na. 话题讨论介绍：以一次话题讨论为例准备流程：\\n\\n\\n\\n话题讨论前：\\n\\n\\n\\n--制作麦克表单收集社区用户问题和建议\\n\\n\\n\\n--和社区用户沟通并引导社区用户填写表单\\n\\n\\n\\n--和委员会成员讨论选取可讨论的话题，在BCAC社区进行讨论\\n\\n\\n\\n--确定话题讨论时间与主题，和社区用户沟通，同时准备话题讨论前的活动材料（海报，媒体宣发，文案准备）\\n\\n\\n\\n话题讨论间：\\n\\n\\n\\n--主持、引导社区用户讨论，内容整理话题讨论后：\\n\\n\\n\\n--和社区用户沟通了解心得感受及不足之处，内容传播（中英文，海内外平台）\\n\\n\\n\\nb. 主题分享介绍：以一次主题分享为例准备流程：\\n\\n\\n\\n主题分享前：\\n\\n\\n\\n--和节点、应用方、项目方沟通确定可分享的主题和时间，同时准备分享前的活动材料（海报，媒体宣发，文案准备）\\n\\n\\n\\n主题分享间：\\n\\n\\n\\n--主持、引导社区用户参与并提出问题，内容整理主题分享后：\\n\\n\\n\\n--和提问用户及分享嘉宾沟通了解感受及心得，整理宣发文章（中英文，海内外平台）\\n\\n\\n\\nc. 节点专访：以一次节点专访为例准备流程：\\n\\n\\n\\n专访前：\\n\\n\\n\\n--准备专访问题，联系节点并沟通专访内容、形式，确定主题和时间，同时准备分享前的活动材料（海报，媒体宣发，文案准备）\\n\\n\\n\\n专访间：\\n\\n\\n\\n--主持、提问、内容整理专访后：\\n\\n\\n\\n--整理宣发文章（中英文，海内外平台）\\n\\n\\n\\nd. 会议：以一次会议为例准备流程：\\n\\n\\n\\n会议前：\\n\\n\\n\\n--和社区用户、节点团队、委员会频繁沟通，挖掘和确定会议主题和时间\\n\\n\\n\\n--邀请会议嘉宾，同时准备分享前的活动材料（海报，媒体宣发，文案准备）、预告会议中：\\n\\n\\n\\n--确定邀请嘉宾，主持，引导社区用户参与并发表意见和建议，内容整理\\n\\n\\n\\n会议后：和提问用户及分享嘉宾沟通了解感受及心得，内容传播（中英文，海内外平台）\\n\\n\\n\\n\\n\\n### 2.委员会成立&委员会发展\\n\\n\\n\\n展开委员会招募活动（筛选&沟通&竞选&成立）；确立委员会章程（撰写&修改&确认）； 确立提案申请流程；持续为BOSCore社区输出优质提案；频繁与成员沟通，协助推进委员会成员的工作内容；对提案进行跟踪和执行；对有实际贡献的委员会提供BOS奖励，号召更多人加入BOSCore的生态建设。\\n\\n\\n\\n提案：以一次提案为例准备流程：\\n\\n\\n\\n--提案前：和社区用户，节点、项目方、应用方频繁沟通，挖掘他们的擅长点，促成可行性提案，同时引导他们根据提案模版撰写提案；\\n\\n\\n\\n--提案间：提交提案，并协助推进提案成员的工作内容，跟进提案进程；同时号召更多人加入BOSCore的生态建设；\\n\\n\\n\\n--提案后：指定秘书部成员跟进提案进展，并定期汇报。\\n\\n###  \\n\\n\\n\\n### 3.媒体宣发\\n\\n\\n\\n搭建海内外媒体宣发渠道，为BOSCore输出优质文章，每一次文章和官方活动都会在社区和官方平台宣传。\\n\\n\\n\\n发布平台包括且不限于：公众号、微博、币乎、火星财经、陀螺财经、Facebook、Twitter、Reddit、steemit、medium、starteos、bos.sh、EOS快讯等，每篇总阅读量过1万。\\n\\n\\n\\n\\n\\n### 4.社区bounty\\n\\n\\n\\n为了激励社区更好发展，调动更多参与用户，会不定期进行海内外社区Bounty（如UGC，活动执行，互动分享，DApp推荐等）\\n\\n\\n\\n\\n\\n## 提案目标\\n\\n\\n\\n1. 社区总人数增至400+；\\n\\n    \\n\\n2. 不定期举行话题讨论或主题分享（每月至少一次）、中英文节点专访每周至少一篇、线上会议每周1-2 场；\\n\\n\\n\\n3. 收集提案2+；\\n\\n    \\n\\n4. 原创文章5+，发布平台：公众号、微博、币乎、火星、陀螺财经、Facebook、Twitter、Reddit、steemit、medium、starteos、bos.sh、EOS快讯等；\\n\\n    \\n\\n（中英文渠道，覆盖10万＋用户，阅读量过20万＋） 补充：平均单次会议人数不少于BCAC社群人数10%\\n\\n\\n\\n\\n\\n# 提案预算\\n\\n\\n\\n第一阶段申请经费：总额20万 BOS\\n\\n\\n\\n社区运营成本（人员，物料，市场）--15万\\n\\n\\n\\n社区激励（委员会&社区bounty）--5万（附带分发明晰）\",\"type\":\"referendum-v1\",\"incentives\":\"200000.0000\",\"receiptor\":\"bospacificok\"}",
             "created_at": "2019-05-29T06:11:31"
+        },
+        "stats": {
+            "votes": {
+                "1": 1,
+                "total": 1,
+                "proxies": 0,
+                "accounts": 1
+            },
+            "accounts": {
+                "0": 0,
+                "1": 28301,
+                "total": 28301
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 28301,
+                "total": 28301
+            },
+            "block_num": 37284744
+        }
+    },
+    "simpassets11": {
+        "id": "simpassets11_20190615",
+        "proposal": {
+            "proposal_name": "simpassets11",
+            "proposer": "dancinglions",
+            "title": "Improve Simple Assets and Deploy to Bos Core / ＃改进简单资产（Simple Assets）并部署至Bos Core",
+            "proposal_json": "{\"content\":\"-----\nImprove Simple Assets and Deploy to Bos Core / ＃改进简单资产（Simple Assets）并部署至Bos Core\nsimpassets11\n261875\ndec, 2019\n-----\n\n\n# Improve Simple Assets and Deploy to Bos Core\n\n\n## What is Simple Assets?\n\nSimple Assets is an elegant, powerful Digital Asset standard for EOSIO blockchains.\n\nFor users, it’s a guarantee of ownership of digital items.\n\nFor developers, it saves hundreds of hours, and also makes their assets available for buying, selling and borrowing on various market places.\n\nSimple Assets supports for fungible and non-fungible tokens, renting assets, containerizing them, batch functionality, alerts for easier tracking, and more.\n\n\n## How can a dapp use Simple Assets?\n\nThere are two ways:\n\n1) They can call the contract simpleassets on the EOS mainnet. (We are in the process of deploying it to sister chains as well.) The contract is like a Dapp for Dapps. To ensure that control of the contract is decentralized, we are creating the multisig described above.\n\n2) Dapps can take our opensource standard and deploy it themselves with our without modifications. The mutlisign described in this article would then not apply. In this case the onus is on the Dapp.\n\n\n## What Improvements do we want to make to Simple Assets?\n\n* Allow change of `author` . This will allow games to send their items to other games.\n\n* Create and maintain a separate Github repo from which developers can self-deploy Simple Assets.\n\n* Improve Chinese translation.\n\n* Create more supporting documentation.\n\n\n## Road Map\n\n![Simple Assets Roadmap English](https://cryptolions.io/wp-content/uploads/2019/06/bos-SA-roadmap-en.png)\n\n\n## Funding\n\n| **Task**                           | **est. hours**    | **BOS**  |\n| ------------------------------ |:-------------:| ----- |\n| New Features (change author)      | 120 | 112500 |\n| Github for self-deployment      | 60      |   56250 |\n| improved translations | 30      |    9375 |\n|  |       |     |\n| Deploy with improvements to BOS | 20      |    18750 |\n| Organize Multi Sig with BOS BPs | 40      |    25000 |\n| Organize Multi-Language Resources for Developers | 80      |    40000 |\n| **Total:** |       |   261,875  |\n\n\n## Contact\n\nEmail:\nroman@cryptolions.io\nshe@cryptolions.io\n\nTelegram: https://t.me/CryptoLions_io\n\nWeChat: SHE18347264709\n\nInformation:\n\nhttps://medium.com/@cryptolions\nhttps://github.com/cryptolions/simpleassets\n\nAnnouncing Simple Assets:\nhttps://medium.com/@cryptolions/announcing-simple-assets-v0-1-1-e04dce8f2c02\nhttps://medium.com/@cryptolions/eosio%E5%8C%BA%E5%9D%97%E9%93%BE%E6%95%B0%E5%AD%97%E4%BA%A7%E5%93%81-simple-assets-alpha-%E7%AE%80%E4%BB%8B-71e26d4cbb71\n\nOwnership Authority:\nhttps://medium.com/@cryptolions/digital-assets-we-need-to-think-about-ownership-authority-a2b0465c17f6\nhttps://medium.com/@cryptolions/%E6%95%B0%E5%AD%97%E8%B5%84%E4%BA%A7-%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E8%80%83%E8%99%91-%E6%89%80%E6%9C%89%E6%9D%83-b5f1a8368046\n\n\n==========\n\n\n＃改进简单资产（Simple Assets）并部署至Bos Core\n\n## 什么是简单资产（Simple Assets）？\n\n简单资产（Simple Assets）是EOSIO区块链的优雅，强大的数字资产标准。\n\n对于用户来说，它是数字项目所有权的保证。\n\n\n对于开发人员来说，它可以节省数百小时，并且还可以在各种市场上购买，出售和借用资产。\n\n简单资产（Simple Assets）支持可替代和不可替代的代币，租用资产，将其容纳，批处理功能，警报以便于跟踪等。\n\n## dapp如何使用简单资产（Simple Assets）？\n\n有两种方法：\n\n1）他们可以在EOS主网上调用simpleassets合约。\n\n（我们也正在将它部署到其它EOS姐妹链中。）合约就像Dapps的Dapp。为了确保合约的控制权是分散的，我们正在创建上述的多签（multisig）。\n\n2）Dapps可以采用我们的开源标准，并在没有修改的情况下自行部署。然后，本文中描述的多签（mutlisign）将不适用时。在这种情况下，责任在Dapp上。\n\n\n## 我们想对简单资产（Simple Assets）做哪些改进？\n\n* 允许更改`author`。这将允许游戏将他们的项目发送到其他游戏。\n\n* 创建并维护一个单独的Github库，开发人员可以从中自行部署Simple Assets.ddd\n\n* 改进中文翻译。\n\n* 创建更多支持文档。\n\n## 路线图\n\n![Simple Assets Roadmap Chinese](https://cryptolions.io/wp-content/uploads/2019/06/bos-SA-roadmap-cn.png)\n\n\n## 基金\n\n| **任务**                           | **时间， 小时**    | **BOS**  |\n| ------------------------------ |:-------------:| ----- |\n| 新功能（更改资产创建者）      | 120 | 112500 |\n| Github进行自我部署      | 60      |   56250 |\n| 改进翻译 | 30      |    9375 |\n|  |       |     |\n| 改进并部署至BOS | 20      |    18750 |\n| 在BOS中组织BPs 多签（Multi Sig） | 40      |    25000 |\n| 为开发人员提供更多语言版本资源 | 80      |    40000 |\n| **总计:** |       |   261,875  |\n\n\n## 联系\n\nEmail:\n\nroman@cryptolions.io\nshe@cryptolions.io\n\nTelegram: https：//t.me/CryptoLions_io\n\n微信： SHE18347264709\n\nInfo：\n\nhttps://medium.com/@cryptolions\nhttps://github.com/cryptolions/simpleassets\n\n宣布简单资产(Simple Assets)：/n/nhttps://medium.com/@cryptolions/announcing-simple-assets-v0-1-1-e04dce8f2c02\nhttps://medium.com/@cryptolions/eosio%E5%8C%BA%E5%9D%97%E9%93%BE%E6%95%B0%E5%AD%97%E4%BA%A7%E5%93%81-simple-assets-alpha-%E7%AE%80%E4%BB%8B-71e26d4cbb71\n\n所有权机构：\n\nhttps://medium.com/@cryptolions/digital-assets-we-need-to-think-about-ownership-authority-a2b0465c17f6\nhttps://medium.com/@cryptolions/%E6%95%B0%E5%AD%97%E8%B5%84%E4%BA%A7-%E6%88%91%E4%BB%AC%E9%9C%80%E8%A6%81%E8%80%83%E8%99%91-%E6%89%80%E6%9C%89%E6%9D%83-b5f1a8368046\n\n\",\"type\":\"referendum-v1\",\"incentives\":\"261875.0000\",\"receiptor\":\"bosbornforbb\"}",
+            "created_at": "2019-06-15T13:56:52"
+        },
+        "stats": {
+            "votes": {
+                "1": 6,
+                "total": 6,
+                "proxies": 2,
+                "accounts": 4
+            },
+            "accounts": {
+                "0": 0,
+                "1": 2121753126,
+                "total": 2121753126
+            },
+            "proxies": {
+                "0": 0,
+                "1": 3050055828,
+                "total": 3050055828
+            },
+            "staked": {
+                "0": 0,
+                "1": 5171808954,
+                "total": 5171808954
+            },
+            "block_num": 37284744
+        }
+    },
+    "trainingcpcp": {
+        "id": "trainingcpcp_20190529",
+        "proposal": {
+            "proposal_name": "trainingcpcp",
+            "proposer": "pacificproxy",
+            "title": "BOSCore Training Course",
+            "proposal_json": "{\"content\":\"## **Background to the proposal**\\n\\n\\n\\nBOS ecological management is developing, BCAC (BOS core governance community) has been completed. At present, the next development direction of the whole BOS community is not clear, the community members have different knowledge and understanding of BOS, and the understanding of BOS governance rules is not very clear. Therefore, professional training courses are needed to make a unified science popularization for community users, so that new users can also quickly and conveniently understand BOS, and participate in and invest in BOS, which is very important to expand the number of BOS users. Only when more and more people realize the advantages and irreplaceable nature of BOS More and more people are involved in BOS ecology. Therefore, this proposal will give a series of training programs, clear the direction of the initial development of the BCAC community.\\n\\n \\n\\n## **Proposal information** \\n\\n\\n\\n Essential information \\n\\n \\n\\n1. Proposal name: BOS Professional training Curriculum Construction and Curriculum Promotion proposal\\n\\n \\n\\n2. Submit functional points: training, promotion\\n\\n \\n\\n3. The latest submission time of the proposal after the referendum is adopted: (June 3-August 31）two months at the latest\\n\\n    \\n\\n\\n\\n## Content of the proposal\\n\\n\\n\\nSet up a series of BOS related education and training courses to systematically train community members.\\n\\n \\n\\nSyllabus (for reference only):\\n\\n \\n\\n①BOS basic knowledge and its Development course (2 times 3 classes)\\n\\n \\n\\n②BOS basic technical details, such as master network startup details, BOS intelligent contract writing, security issues, etc. (2 / 3 classes)\\n\\n \\n\\n③The composition of the BOS global community, the main BP introduction and the main character introduction, etc. (1 lesson)\\n\\n \\n\\n④A detailed explanation of BOS Ecological Management Model (1 / 2 classes)\\n\\n \\n\\n⑤Detailed explanation of BOS assessor system (1 / 2 classes)\\n\\n \\n\\n⑥Introduction by BCAF arbitral tribunal (1 class)\\n\\n \\n\\n⑦Detailed explanation of the EOS Convention, main issues for amending the Convention and preparations for referendums. (1 / 2 classes)\\n\\n \\n\\n\\n\\n \\n\\n## **Implementation of proposals**\\n\\n\\n\\n1.The ZOOM meeting discusses the proposal and confirms the final course.\\n\\n\\n\\n2.After the meeting, the host will pull the group and confirm the specific time of the lecturer.\\n\\n\\n\\n3.The propaganda of domestic media and overseas media.\\n\\n \\n\\n\\n\\n\\n\\n1.The proposal discussed at the ZOOM meeting and the confirmation of the final course.\\n\\n \\n\\nBCAC community launches meetings, poster production and community promotion\\n\\n \\n\\nA.The sponsor describes the content of the proposal and where it needs to be discussed at the meeting, and perfects the proposal at the meeting.\\n\\n \\n\\nPersonnel arrangement (operation 2 + design 1)\\n\\n \\n\\nPrior to the meeting:\\n\\n \\n\\nPrepare the PPT content of the training course, as well as the preheating (poster, personnel, copywriting, equipment preparation) meeting room before the meeting:\\n\\n \\n\\n2.after presiding over and maintaining the order of the meeting in Chinese and English, and guiding the participants to participate in the question meeting:\\n\\n \\n\\nCommunicate with participants to understand needs and facilitate proposals\\n\\n \\n\\n-collation and dissemination of the contents of the meeting\\n\\n \\n\\nAfter the meeting, the host pulled the group and confirmed the specific time of the lecturer.\\n\\n \\n\\nConfirmation of the specific time of the lecturer\\n\\n \\n\\nStaffing arrangements (operation 1)\\n\\n \\n\\nPreparation process:\\n\\n \\n\\n-pull the group and negotiate\\n\\n \\n\\nComplete the form of the specific lecturer and the teaching time\\n\\n \\n\\n3.Promotion of domestic media and overseas media\\n\\n \\n\\na. The push of the WeChat public number\\n\\n \\n\\nFollow-up:\\n\\n \\n\\nA follow-up report on the progress of the proposal\\n\\n \\n\\nb. The push of overseas Media\\n\\n \\n\\n\\n\\n## **Proposal objective**\\n\\n \\n\\n1.Identify BOS community systematic training courses, and determine trainers and training time.\\n\\n \\n\\n2.Complete the training course, than through the media channel to publish the training course to the entire community.\\n\\n \\n\\n3.Lower the threshold for new community members to understand BOS.\\n\\n \\n\\n4.Through this training course to explore the advantages and characteristics of BOS community members, to pave the way for the subsequent revision of the BOS Convention.\\n\\n \\n\\nAddition: the average number of single meetings is not less than 10 per cent of the BCAC community\\n\\n\\n\\n\\n\\n## **Proposed budget**\\n\\n \\n\\nApplication funds: total 250000 BOS (training courses, promotion)\\n\\n\\n\\n\\n\\n------\\n\\n\\n\\n## 提案背景\\n\\n\\n\\nBOS生态治理正在展开，BCAC（BOS核心治理社区）已经构建完成。目前整个BOS社区的下一步发展方向还未明确，社区成员对于BOS的认识和了解程度各不相同，对于BOS治理细则的了解还不是十分清楚，所以需要专业性的培训课程来对社区用户做一个统一的科普，使得新用户也可以快捷方便的了解BOS，从而参与和投资BOS，这对于扩大BOS的用户量是十分重要的。只有越来越多的人认识到了BOS的优势和不可替代性才有越来越多的人参与到BOS生态之中。所以本提案将给出一系列的培训大纲，明确BCAC社区初期发展的方向。\\n\\n\\n\\n## 提案信息\\n\\n\\n\\n基本信息\\n\\n\\n\\n1、提案名称：BOS专业性培训课程构建及课程推广提案\\n\\n\\n\\n2、提交功能点：培训、推广\\n\\n\\n\\n3、提案在公投通过后最晚提交时间：两个月（6月3日-8月31日）\\n\\n \\n\\n \\n\\n## 提案内容\\n\\n\\n\\n创立一系列的BOS相关教育培训课程，对社区成员进行系统化培训。\\n\\n\\n\\n课程大纲（仅供参考）：\\n\\n\\n\\n①BOS基础知识及其发展历程（2-3次课）\\n\\n\\n\\n②BOS基础技术细节，如主网启动细节，BOS智能合约的编写，安全问题等（2-3次课）\\n\\n\\n\\n③BOS全球社区的构成，主要的BP简介以及主要的人物介绍等（1次课）\\n\\n\\n\\n④BOS生态治理模式详解（1-2次课）\\n\\n\\n\\n⑤BOS评审员制度详解（1-2次课）\\n\\n\\n\\n⑥BCAF仲裁庭介绍（1次课）\\n\\n\\n\\n⑦EOS公约详解，修订公约的主要问题以及公投的准备工作。（1-2次课）\\n\\n \\n\\n \\n\\n \\n\\n \\n\\n## 提案执行\\n\\n\\n\\n1. ZOOM会议进行提案的讨论以及最终课程的确认。\\n\\n    \\n\\n2. 会后由主持人进行拉群并进行授课人具体时间确认。\\n\\n    \\n\\n3. 国内媒体及海外媒体的宣传。\\n\\n \\n\\n\\n\\n \\n\\n### 1.ZOOM会议进行的提案讨论以及最终课程的确认。\\n\\n\\n\\n\\n\\nBCAC社区进行发起会议、海报的制作及社区的推广\\n\\n\\n\\na. 提案人讲述提案内容以及需要会议讨论的地方，并在会议上进行提案的完善。\\n\\n\\n\\nb. 人员安排（运营2+设计1）\\n\\n\\n\\n会议前：\\n\\n\\n\\n--准备培训课程讲演PPT内容，同时准备会议前的预热（海报，人员，文案，设备准备） 会议间：\\n\\n\\n\\n--中英文主持与维持会议秩序，并引导参会人员参与提问会议后：\\n\\n\\n\\n--和参会人员沟通了解需求和促成提案\\n\\n\\n\\n--会议内容的整理和宣发\\n\\n \\n\\n \\n\\n\\n\\n### 2.会后主持人拉群并进行授课人具体时间确认。\\n\\n \\n\\na. 授课人具体时间确认\\n\\n\\n\\n人员安排（运营1）\\n\\n\\n\\n准备流程：\\n\\n\\n\\n--拉群并协商\\n\\n\\n\\n--完成具体授课人及授课时间的表单\\n\\n\\n\\n \\n\\n \\n\\n \\n\\n### 3.国内媒体及海外媒体的宣传\\n\\n \\n\\na.微信公众号的推送\\n\\n\\n\\n后续：\\n\\n\\n\\n提案进展的跟踪报道\\n\\n\\n\\nB. 海外媒体的推送\\n\\n \\n\\n \\n\\n \\n\\n## 提案目标\\n\\n \\n\\n1. 确定BOS社区系统化培训课程，并确定培训人员以及培训时间。\\n\\n    \\n\\n2. 完成整套培训课程，比通过媒体渠道将培训课程发布到整个社区。\\n\\n    \\n\\n3. 降低新进社区成员了解BOS的门槛。\\n\\n    \\n\\n4. 通过此次培训课程发掘BOS社区成员的优势以及特点，为之后的BOS公约修订做铺垫。\\n\\n    \\n\\n补充：平均单次会议人数不少于BCAC社群人数10%\\n\\n \\n\\n \\n\\n \\n\\n## 提案预算\\n\\n \\n\\n申请经费：总额 25万 BOS（培训课程、推广）\\n\\n\",\"type\":\"referendum-v1\",\"incentives\":\"250000.0000\",\"receiptor\":\"victor233333\"}",
+            "created_at": "2019-05-29T08:45:49"
+        },
+        "stats": {
+            "votes": {
+                "1": 4,
+                "total": 4,
+                "proxies": 1,
+                "accounts": 3
+            },
+            "accounts": {
+                "0": 0,
+                "1": 24000,
+                "total": 24000
+            },
+            "proxies": {
+                "0": 0,
+                "1": 1045711817,
+                "total": 1045711817
+            },
+            "staked": {
+                "0": 0,
+                "1": 1045735817,
+                "total": 1045735817
+            },
+            "block_num": 37284744
+        }
+    },
+    "unicocaptain": {
+        "id": "unicocaptain_20190816",
+        "proposal": {
+            "proposal_name": "unicocaptain",
+            "proposer": "unicocaptain",
+            "title": "Unico平台-BOS游戏专属推广基金",
+            "proposal_json": "{\"content\":\"## 提案名称\\n您的提案名称叫什么？\\nUnico平台-BOS游戏专属推广基金\\n## 问题\\n* BOS生态的问题，用户基数少，用户以僵尸用户和羊毛党为主，游戏日活很低；\\n* EOSIO游戏生态流量分散问题，当前市场缺乏可以对接多个公链的游戏，将各个公链的流量进行整合、汇总和相互倒流的游戏平台；\\n* 目前链游领域还无专业的发行平台，导致游戏开发者需要分散大量精力对接不同渠道，协同推进游戏发行和运营，无法专注在开发优质游戏上。\\n## Unico游戏平台\\nUnico搭建了BOS全网的首个游戏平台，引入BOS全网首款高质量RPG“驯龙大师”，并且为“驯龙大师”提供了全面的运营资源，包括并且不限于免费BOS账户、客服、直播资源、PR、BOS空投等；Unico游戏平台为BOS生态做出了独特的贡献。\\n## 激励细则\\n由Unico积极引进优质的游戏dApp到BOS上；对表现优秀的游戏dApp给予激励；按照以下的规则发放给游戏dApp：\\n1. 综合考虑游戏dApp的活跃用户数和交易量决定排名，根据排名进行激励发放；\\n\\n2. 游戏dApp活跃度排名越靠前，所获激励越多；\\n\\n3. 分批把币直接打到游戏dApp分红合约账户，一旦发现他们私自挪用就剥夺资格并且拉黑；\\n\\n4. 奖励以 BOS 形式发放。\\n\\n**要求**\\n启动初期：dApp必须拥有超过50个每日活跃用户（DAU）或其24小时交易量（VOL）必须超过2000BOS。\\n注明：后期会根据实际情况进行调整；\\n\\n**注意**\\n数据收集从每周一00:00开始（UTC），每周日（UTC）23:59结束。每日活跃用户是指每周平均DAU，每日交易量是每周平均每日交易量。\\n\\n如果排名中的合格dApp数量低于20，则前5名dApp将根据其活动和每日交易量每周共享20,000 BOS 的奖金池。\\n如果排名中合格的dApp数量在20到50之间，前十名dApp将根据其活动和每日交易量每周共享50,000BOS的奖池。\\n\\n启动初期：按照游戏日活激励\\n50人起步，奖励2万个BOS\\n100人起步，奖励5万个BOS\\n200人起步，奖励10万个BOS\\n注明：后期会根据实际情况进行调整；\\n## 基金拨款和配置\\n项目成本是多少，资金应该如何配置？\\n50万，unico平台空投致游戏分红合约账户；10万账户补贴，40万游戏基金。\\n专款专用，unico不会挪用，全部按照严格的标准和规则发放BOS生态里的dApp，帮助dApp提高对客户激励奖池以及进行媒体PR。\\n## 6Unico平台介绍方案\\n1. 游戏发行  \\n* Unico为DApp游戏开发者提供全套游戏发行服务，包含定制化的游戏预售和游戏运营服务； \\n* 对于传统游戏开发商，Unico可以为其做链改，并且对接相应的公链团队争取基金会奖励； \\n* 0渠道分成！任何游戏可以轻松入驻；\\n\\n![图片](https://uploader.shimo.im/f/BUhzRwN6GKAljLjr.png!thumbnail)\\n\\n1. 用户社区  \\n* 用户社区涵盖了OGC、PGC和UGC内容； \\n* UT的运用会大大激励玩家社区中的内容产出质量和数量，并且有多种创意玩法激活用户的激情，营造良好的游戏社区氛围；  \\n* 社区POS节点设计，让用户积极参与社区治理；\\n\\n![图片](https://uploader.shimo.im/f/q8SDrZcLwecB75TA.png!thumbnail)  \\n\\n2. 通过第三方OTC提供游戏付费通道\\n* 为入驻链游提供**稳定**的链上结算方案 —— UB游戏积分支付体系\\n  * UB购买价格恒定 1 UB = 1 RMB\\n  * 进行游戏购买\\n  * 游戏内消费  （通过道具交易/领取分红）获取UB\\n  * 由合规的专业OTC商家提供，保证7*24小时稳定\\n\\n![图片](https://uploader.shimo.im/f/dlUDmPCudDAh4dSJ.png!thumbnail)\\n\\n3. 游戏交易市场\\n* **游戏资产代币化和多链钱包**\\n\\n 提供通用的标准化游戏资产协议（含NFT），可以在不同游戏中继承和共享游戏资产。\\n* **内置代币交易合约**\\n\\nUB-BOS交易合约和游戏币-UB交易对，所有Unico的游戏都可免费调用，用户可以在游戏内快速进行代币转换。\\n* **FT资产交易所+NFT资产交易所**\\n\\nUnico自带FT&NFT交易所，用户可以直接在交易所交易自己的链游游戏资产，无需登录游戏。\\n采用标准：dGoods轻量化和灵活化的模式，并通过提供强大的虚拟物品标准为EOSIO生态提供代币逻辑扩展能力。（曾接受EOS Galaxy投资的游戏Mythical.Games，提出广为接受的代币标准dGoods。）\\n具体参考: \\n[https://github.com/MythicalGames/dgoods](https://github.com/MythicalGames/dgoods)\\n## 相关链接\\n[https://unico.one](https://unico.one)\\n\\n\",\"type\":\"referendum-v1\",\"incentives\":\"500000.0000 BOS\",\"receiptor\":\"unicocaptain\"}",
+            "created_at": "2019-08-16T15:23:44"
         },
         "stats": {
             "votes": {
@@ -962,7 +1163,109 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 28954668
+            "block_num": 37284744
+        }
+    },
+    "unicorntube1": {
+        "id": "unicorntube1_20190605",
+        "proposal": {
+            "proposal_name": "unicorntube1",
+            "proposer": "nicholasyao1",
+            "title": "UnicornTube —— A Bos Storge",
+            "proposal_json": "{\"content\":\"【UnicornTube proposal】\\nProposal background：\\n1. The BOS block has limited storage space and needs a distributed network that can handle large file storage.\\nAt the end of 2017, Ethereum was congested by the whole network because of “a cat”. This cat is a CryptoKitties. Secondly, Bitcoin is also often congested by the network, which leads to huge transactions that cannot be confirmed. One of the reasons is that the block size is limited. This is like our computer, the capacity is getting smaller and smaller, the computer will become more and more stuck, and even crashes. As the strongest side chain BOS of EOS, it also needs to face the problem of expansion. In the future, there will be more DApp access and more people participating, which will generate more and more transactions and data. New solutions to meet future needs, and combining with IPFS technology is a good attempt.\\n\\n2. Unsafe centralized storage\\nEquifax, one of the three major US credit rating agencies, learned of the hacker attack on July 29 and announced the news more than a month later. About 209,000 people have stolen their credit card numbers and 182,000 people have their personal identification information stolen, causing huge losses. The largest information disclosure case in history warns of the potential problems with centralized management of this data, and distributed storage technology can reduce this large data breach.\\n\\nThe main content of the proposal:\\nThe proposal name is UnicornTube, the project 1.0 product will realize the global movie video sharing and aggregation platform based on BOS blockchain + IPFS technology; UnicornTube 2.0 realizes the cloud document management platform of distributed storage on the chain. IPFS technology enables large file transfer and distributed storage, helping users to commercialize idle storage space through sharing, and realize content value through video sharing.( more pictures: https://mp.weixin.qq.com/s/OLvAMjibOKwtvpXZHUS5Qg)\\n\\nTechnically, it is based on the combination of IPFS and BOS networking technologies. IPFS network technology is responsible for the distributed storage and distribution of files, and then the BOS network is responsible for the basic operations of smart contracts, IPFS file hashing, and account management and network connections.\\n\\n1.0 launched the UnicornTube video platform. Users can perform registration, login, video browsing, uploading, etc., while supporting interactive operations such as likes, comments, rewards, and related management functions of digital wallets. The UnicornTube video platform has two main smart contracts, one for video uploads and one for ad bidding. When users upload files, they need to use BOS to pay a certain fee. The video files will be transmitted to the operation team for review. After the audit is successful, the video files will be added to the IPFS network, and the hash value obtained by the IPFS calculation file (in the form of Memo) is chained to the BOS blockchain. Advertising bidding smart contracts, different positions or types of ads will have a minimum bid price for advertisers to bid, for example, 10 BOS start, the successful bidder can hang in the approximate position to maintain a week of advertising. Advertisers can bid through our official portal. He can select the ad slot and the number of BOS he wants to bid, and use the BOS wallet to call the smart contract method on our webpage to complete the auction. At the same time, the official will show the current real-time auction details. Then, after the auction is over, the smart contract judges that the bidding order with the highest bid wins and can choose to upload the advertising content, which will be displayed at the corresponding moment. Advertisers who fail to bid will refund BOS.\\n\\nSo what is the difference between UnicornTube and traditional video platforms?\\n1, using HLS live broadcast technology, allowing users to watch smooth, and reduce unnecessary bandwidth overhead, using IPFS technology to distribute content, faster than traditional video platform, with a better viewing experience.\\n2, the traditional video platform storage once the hacker breaks through, the loss is huge, and UnicornTube decentralized storage uses P2P distributed technology to allow the accessed resources to be scattered in each user's software client, fragmentation The resources are stored and the files are encrypted. The security is higher than that of the centralized video platform.\\n3, the traditional advertising by the platform side unified pricing, pricing is not free, is not conducive to advertisers; and UnicornTube platform advertising market determines the final price, pricing is free, the market demand determines the price.\\n4, the traditional film and television platform requires the platform to bear the high cost of bandwidth and hardware alone, so that the profit margin that can be distributed to the creators is relatively small, and UnicornTube is to use the idle resources shared by the society, naturally there is more profit space. Give to the creator. At the same time, the creators who browse the total timetable will have high token rewards.\\n5. On UnicornTube, active behaviors such as frequent viewing, praise and commentary have the opportunity to obtain certain airdrop rewards, so that viewers can make money by watching movies. This is the advantage that traditional video platforms do not have.\\n\\nHowever, the blockchain video platform is not what we ultimately want to do. The 1.0 version is a product transition phase. After the 1.0 version of the video platform is completed, we will develop more challenging office application scenarios and bring the real charm of distributed storage. It is the highlight of the life of everyone.\\n\\nProject 2.0 will introduce a distributed file management client that supports more file type storage. It allows each user to customize a cloud of blockchain technology. All files have a hash link, designed to Everyone provides permanent storage capacity. The user can purchase the storage capacity package on the client and upload the file to the private cloud disk. The private cloud disk cannot be directly viewed.\\n\\nSo how is privatization done? \\nFirst, the user chooses to upload the private file. At this time, the system will use the user's BOS public key address to encrypt the file and upload it to IPFS. The file hash value is on the BOS chain. This file is externally encrypted. For the user, the user can obtain the source file by decrypting the file with his private key. In short, it is like a decentralized Dropbox client, which is a distributed file supporting large files on the BOS network. The way it is stored.\\n\\nTechnical difficulties:\\n1. (Project 1.0) The above two smart contracts need to be guaranteed for security and high availability, and will be submitted to the professional organization for code review after development.\\n2. (Project 2.0) Design and develop the UnicornTube client that ordinary users will use. Everyone mines and improves P2P efficiency. (The client automatically synchronizes certain data, spends a certain amount of storage space and bandwidth, and rewards UTC based on contribution)\\n3, (Project 2.0) to achieve PoSt space-time certification, that is to achieve the above reward mechanism, as an incentive layer to allow users to provide storage services, while designing UTC file storage protocol (a control of the number of backups of each file in the IPFS network, Readability, connectivity protocols) enable stored files to maintain integrity, multiple backups, and fast synchronization.\\n\\nProposal budget：\\nThe total application amount is 850,000 BOS, including the development expenses and operating activities of the R&D team of more than 8 people.\\n\\nThe first phase，the development cycle is about March, the total amount is 420,000 BOS, UnicornTube phase one, using IPFS technology to realize the distributed UnicornTube film and television platform in the BOS network, third-party smart contract code review, smart contract upload review process, IPFS Document retrieval and transmission, smart contract advertising bidding, member users login system.\\n\\nThe second phase，the development cycle is about 3 months, the amount is 430,000 BOS, the distributed file management client, the Dropchain of the blockchain. Privatization uploads, manages files, supports distributed storage of multiple document types (PDF, Words, Png etc...), and exposes and shares files.\\n---------------------------------------------------------------------------\\n\\n【UnicornTube提案】\\n提案背景（痛点）\\n1、BOS区块存储空间有限，需要可处理大文件存储的分布式网络\\n2017年年底，以太坊因为“一只猫”而导致全网拥堵，这只猫就是以太猫。其次比特币也时常网络拥堵，导致巨额交易无法确认，其中的原因之一，就是区块容量大小有限。这就好比我们的电脑，容量越来越小，电脑也会越来越卡，甚至出现死机情况。作为 EOS 的最强侧链 BOS，也一样需要面对扩容问题，未来将会有更多的DApp接入和更多的人参与，就会产生越来越多的交易和数据，此刻就需要加入新的方案来满足未来的需求，而与 IPFS 技术结合就是一个不错的尝试。\\n\\n2、中心化存储不安全\\n美国三大个人信用评估机构之一的Equifax 在7月29日得知了遭到黑客袭击的消息，并在一个多月后宣布了这一消息。约有20.9万人的信用卡号码被盗，18.2万人的个人识别信息被窃取，产生了巨额的损失。这起史上最大的信息泄露案件，警示这数据的集中管理可能产生的问题，而分布式储存的技术能够降低这种大型数据泄露事件的发生。\\n\\n提案的主要内容:\\n提案名称为UnicornTube，该项目1.0 产品将实现基于BOS区块链 + IPFS技术的全球电影视频分享、聚合平台；UnicornTube 2.0实现链上分布式存储的云文档管理平台。IPFS 技术，能够实现大文件的传输和分布式存储，帮助用户将闲置的存储空间通过共享实现商品化，通过视频分享实现内容价值化。（想看更多图片：https://mp.weixin.qq.com/s/OLvAMjibOKwtvpXZHUS5Qg）\\n\\n技术上，它是基于星际文件系统（IPFS）和BOS网络技术结合开发的。IPFS 网络技术负责文件的分布式储存和分发，然后BOS网络负责智能合约、IPFS文件哈希上链，以及账户管理和网络连接等基础操作。\\n\\n产品形态上，1.0推出UnicornTube视频平台。用户可以进行注册、登陆、视频的浏览、上传等操作，同时支持比如点赞、评论、打赏的互动操作和数字钱包的相关管理功能。其中UnicornTube 视频平台主要的智能合约有两个，一个发生在视频上传，另一个发生在广告竞标。用户上传文件时，需要利用BOS支付一定的费用，视频文件会先传输给运营团队审核，审核成功后视频文件会加入到IPFS网络中，并把IPFS计算文件得到的哈希值（文件唯一标识）（以Memo的形式）上链到BOS区块链上。而广告竞标智能合约，不同位置或类型的广告都会有个最低竞拍价，供广告商竞标，比方说，10个BOS起拍，中标者可在约好的位置上挂维持一周的广告。广告商可通过我们官方的入口进行竞标广告，他可以选择广告位以及他想竞标的BOS数量，并直接使用BOS钱包在我们的网页上调用智能合约方法，即可完成竞拍。同时官方会展示当前实时竞拍详情。那么竞拍结束后，智能合约判断出价最高的竞拍单获胜并可以选择上传广告内容，会在对应的时刻展示。竞拍失败的广告商会退还BOS。\\n\\n那么UnicornTube 与中心化影视平台有哪些区别呢？\\n1、使用HLS 直播技术，让用户观看流畅，且减少不必要的额带宽开销，使用IPFS技术来分发内容，比中心服务器的网站更迅速，具有更好的观影体验。\\n2、中心化的影视平台存储一旦被黑客突破，造成的损失是巨大的，而UnicornTube 去中心化的存储利用P2P分布式技术，让被访问的资源分散地保存在每个用户的软件客户端，碎片化地储存资源，并且文件都使用了加密技术，相比中心化影视平台安全性会更高。\\n3、中心化的广告由平台方统一定价，定价不自由，不利于广告商；而UnicornTube 平台广告又市场决定最终价格，定价自由，由市场需求决定价格。\\n4、中心化影视平台需要平台独自承担带宽与硬件的高额成本，使得可以分给创作者的利润空间比较少，而UnicornTube 则是将社会共享的闲置资源利用起来，自然有更多的利润空间可以给到创作者。同时浏览总时长排行进榜的创作者会活动高额的代币奖励。\\n5、在UnicornTube 上，观众观影时常、点赞和评论等活跃行为有机会获得一定的空投奖励，让观众的看电影都可以挣钱，这是传统影视平台没有的好处。\\n\\n然而，区块链影视平台不是我们最终想做的，1.0版本作为一个产品过渡阶段，影视平台落地后，我们将会研发更具挑战的办公应用场景，发挥分布式存储真正的魅力，能融入每个人的生活，这才是重头戏。\\n\\n项目2.0版本将推出分布式文件管理客户端，支持更多的文件类型存储，它允许每个用户都可自定义一个区块链技术的云盘，所有文件都有个哈希链接，旨在为每个人提供永久的存储能力。用户可以在客户端购买存储容量套餐，上传文件到私有的云盘中，私有云盘无法被直接查看。\\n\\n那么是怎么做到私有化？ 首先用户选择上传私有文件，此时系统会使用用户的BOS公钥地址去加密文件并上传至IPFS，文件哈希值上BOS链。此文件对外是加密的，对用户而言，用户使用其私钥解密文件即可获得源文件，简单来说，就好比一个去中心化的Dropbox客户端，成为BOS网络上支持大文件的分布式存储的方式。\\n\\n技术难点：\\n1、（项目1.0）上述的两个智能合约，需要保证其安全性和高可用性，会在开发完后提交专业机构进行代码审核\\n2、（项目2.0）设计并开发出普通用户都会使用的UnicornTube客户端，人人挖矿，提高P2P效率。（客户端自动同步一定的数据，花费用户一定的存储空间和带宽，并根据贡献奖励UTC）\\n3、（项目2.0）实现PoSt时空证明，即实现上述的奖励机制，作为激励层来让用户提供存储服务，同时设计出UTC文件存储协议（一种控制各个文件在IPFS网络中的备份数、可读性、连通性的协议），使得存储的文件能够保持完整性、多备份性、可快速同步等状态。\\n\\n提案周期预算:\\n申请经费总额85万个BOS，包含投入8人以上研发团队的开发开支和运营活动的成本。\\n第一期：开发周期约3月，金额42万BOS，UnicornTube 阶段一，利用IPFS技术，实现在BOS网络中的分布式UnicornTube影视平台，第三方智能合约代码审核， 智能合约上传审核流程， IPFS文件检索和传输，智能合约广告位竞标，会员用户登陆系统。\\n第二期：开发周期约3月，金额43万BOS，推出分布式文件管理客户端，区块链的Dropbox。私有化上传、管理文件， 支持多种文档类型的分布式存储 （ PDF，Words，Png etc...),文件的公开与分享。\",\"type\":\"referendum-v1\",\"incentives\":\"850000.0000\",\"receiptor\":\"bosjobcasino\"}",
+            "created_at": "2019-06-05T12:46:31"
+        },
+        "stats": {
+            "votes": {
+                "1": 5,
+                "total": 5,
+                "proxies": 0,
+                "accounts": 5
+            },
+            "accounts": {
+                "0": 0,
+                "1": 2375577,
+                "total": 2375577
+            },
+            "proxies": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "staked": {
+                "0": 0,
+                "1": 2375577,
+                "total": 2375577
+            },
+            "block_num": 37284744
+        }
+    },
+    "universal": {
+        "id": "universal_20190605",
+        "proposal": {
+            "proposal_name": "universal",
+            "proposer": "bosauthority",
+            "title": "Comprehensive, Universal and fully Integrated Explorer/Wallet for BOS",
+            "proposal_json": "{\"type\":\"referendum-v1\",\"content\":\"## Comprehensive, Universal and fully Integrated Explorer/Wallet for BOS\\n\\nBOS Improvement Proposal  \\nBy EOS Authority\\n\\n## Brief\\n\\nEOS Authority is a founding block producer of the EOS Mainnet and BOS chain. We gathered a huge experience working with the community and helping them out. We have extensive support lines (Email, Telegram, Social Media and phone calls). We have taken our experience from all of the interaction with the community and want to encourage transparency, accountability, fairness and promote mass adoption. Solid knowledge or user problems combined with incredible engineering talent allow us to build blockchain-based solutions for the community.\\n\\n## Problems to be addressed\\n\\n1.  Multiple accounts held by token holders\\n    1.  Token holders have several accounts on-chain\\n    2.  Current explorers don’t present an unified version of accounts\\n2.  No symbiosis between chains\\n    1.  A lot of EOS Mainnet token holders don’t know about BOS\\n    2.  Improve access to side-chains - Interoperability\\n    3.  How to scale, how to improve the EOSIO ecosystem\\n3.  Raising barrier against Scams\\n    1.  Education to token holders\\n    2.  Security Audits are required\\n    3.  Secure and reliable messaging - No more scam websites\\n    4.  Best practices\\n    5.  Real-time account monitoring\\n4.  Support multiple wallets\\n    1.  Constant support for new mobile wallets\\n    2.  New hardware wallets - Ledger\\n    3.  Up and coming list of wallets and systems\\n5.  Discoverability of functionality & community\\n    1.  Increase token holder participation - Referendum & Polls\\n    2.  Airgrabs/Airdrops\\n    3.  Education and Usability focus\\n\\n## The EOS Authority Solution\\n\\nHere is how our Comprehensive, Universal and fully Integrated Explorer/Wallet for BOS will help BOS token holders grow the ecosystem and how it addresses the problems.\\n\\n## Solution 1: Multiple accounts held by token holders\\n\\nAddressing the issues of  \\n  -   Multiple accounts on chain  \\n  -   Unified accounts list  \\n  -   Combined security dashboard  \\n\\n**Exhibit 1.1: At a glance view of several accounts**  \\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img1.png)\\n\\n<center>**Combines all BOS accounts (multiple) includes BOS Testnet**</center>\\n\\nThis will be a great resource for BOS holders and BOS developers.\\n\\n**Exhibit 1.2: Add several accounts**  \\nClicking on “Add account” will let you add several accounts into the list of accounts\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img2.png)\\n\\nSimply click on “Add account” and manage a whole list. The Testnet accounts can be hidden if required, the TestNet accounts can also be deleted.\\n\\n## Solution 2: Increasing participation cross chain - BOS & EOS and other EOSIO Chains\\n\\nHere we address these issues  \\n  -   Increasing awareness of different EOSIO side chains  \\n  -   Improve access to side-chains - Interoperability  \\n  -   How to scale, how to improve the EOSIO ecosystem  \\n\\n**Exhibit 2.1: Manage multiple accounts across multiple chains**  \\nGet a combined view of standing of multiple EOS accounts and multiple chains.  \\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img3.png)\\n\\n**Exhibit 2.2: Easily add or remove different accounts on various chains**  \\nThis includes the various testnets.\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img4.png)\\n\\nWe believe this will raise awareness among token holders of the different chains and will feature heavily as EOSIO moves into IBC and more.\\n\\n## Solution 3: Raising barriers against scams\\n\\nHow do we address these problems  \\n  -   Education to token holders  \\n  -   Security Audits are required  \\n  -   Secure and reliable messaging - No more scam websites  \\n  -   Best practices  \\n  -   Real-time account monitoring  \\n\\n**Exhibit 3.1: Account security audit**  \\nWe make recommendations to token holders to improve account security and increase voter participation\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img5.png)\\n\\n  -   Indication and guidance on separate owner and active keys  \\n  -   Recommendation to keep tokens staked  \\n  -   Voting for Block Producers  \\n  -   Real time notifications of actions on Telegram and on email.\\n\\n**Exhibit 3.2: Secure and reliable messaging**  \\nEasy to view alerts that indicate new messages that can show users notification about the account and further details.\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img6.png)\\n\\nExpanding the messages list will show a detailed history, secure way to access airdrops, more information about the chain, etc.\\n\\nEasy side-bar to get notifications\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img7.png)\\n\\n**Exhibit 3.3: Secure messages on Email and Telegram**  \\nThis forms a key part of our system. We are able to let users know that their account has been undelegated and how they can restore access to their account if they have separate keys. We will alert users on every transaction and show a balance.\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img8.png)\\n\\n<center>**Alerts on both email and telegram**</center>\\n\\n## Solution 4: Support for multiple wallets\\n\\nThe main problems to solve are  \\n  -   Constant support for new mobile wallets  \\n  -   New hardware wallets - Ledger  \\n  -   Up and coming list of wallets and systems  \\n\\nWe want to be able to solve the widest possible range of wallets and solutions\\n\\n**Exhibit 4.1: Support for wide range of wallets**  \\nWe want to be able to support - Adding by account name, Scatter, Ledger, Mobile - All wallets and many more. We expect to see many powerful wallets appear in the future. We hope to support them all in the hope that we can fully integrate them and support all their features.\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img9.png)\\n\\n**Exhibit 4.2: Developer friendly**  \\nIn addition to support with a lot of variety of wallets, we also support cleos command generation from within the platform for every action on the system.\\n\\nWe do this by making the contracts available\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img10.png)\\n\\nAlso making the cleos statements available\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img11.png)\\n\\n## Solution 5: Discoverability of functionality & community\\n\\nWe aim to solve these problems:  \\n  -   Increase token holder participation - Referendum & Polls  \\n  -  Education and Usability focus\\n\\n**Exhibit 5.1 - Polls system**  \\nWe were one of the first to present a polls system to the community. We want BOS token holders to enjoy similar aspects.\\n\\nWe understand that BOS will have auditors and several roles. We hope to customise what we have to reach these token holders.\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img12.png)\\n\\n  -   List of all the polls and referendums on the system  \\n  -   Easily accessible from the left menu\\n\\nCombined view of all aggregate statistics\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img13.png)\\n\\nEasy view of all the comments and participation\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img14.png)\\n\\nDetailed voting statistics\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img15.png)\\n\\nVoting breakdown and analysis\\n\\n![](https://eosauthority.com/common/images/authority-polls/bos/poll1/img16.png)\\n\\n**Exhibit 5.2 - Education and usability**  \\nWith detailed information on how to use the various parts of the system and video and written guides, FAQs\\n\\n## Constant video guides\\n\\n![](http://deveos.eosauthority.com/common/images/authority-polls/bos/poll1/img17.png)\\n\\n## FAQs\\n\\n![](http://deveos.eosauthority.com/common/images/authority-polls/bos/poll1/img18.png)\\n\\nDetailed step by step articles and more.\\n\\n## Competitors\\n\\nIn simple words, we aim to be Comprehensive, Universal and fully Integrated Explorer/Wallet for BOS.\\n\\nComprehensive - We want to support all the features on the BOS chain  \\nUniversal - We want to integrate with all the chains connecting them all to BOS  \\nFully integrated - All the features in one place  \\nExplorer - We will have a full explorer to view all the accounts, contracts and more\\n\\nWe have competitors or parties working on each of the aspects but we believe we are unique in trying to address all of the various challenges in one place.\\n\\n## Execution Plan\\n\\n800,000 BOS that goes for developing and testing\\n\\nPhase 1  -  Project start to integrate with BOS\\n\\nPhase 2  -  Full integration of available chain features with BOS  \\n  -   BOS explorer  \\n  -  BOS Dashboard / Account security  \\n  -  Integrating all the features of the wallet/explorer  \\n  -  Support for Scatter, Ledger (Hardware wallet), Cleos, Mobile wallets\\n\\nPhase 3  -  Poll system  \\n  -  Ability to list polls  \\n  -  Vote on Polls  \\n  -  Detailed statistics  \\n  -  BOS specific functionality.\\n\\nPhase 4  -  Promotion to the BOS ecosystem and larger audience  \\n  -  We want to take an agile development approach, we will deploy each phase as it is ready for the community to use.\\n\\n## Fund Release Plan\\n\\nThe funding from the WPS will help us but will not cover the entire cost of team, salaries, servers and infrastructure. We aim to absorb the extra costs to give the BOS ecosystem a boost with our incredible tool set. The contribution from the WPS will help bolster our funding and help us do more for the BOS community and wider EOSIO community as a whole.\\n\\nFunding goal is 800,000 BOS that goes for developing and testing with the aim of hosting the system and running associated servers.\\n\\n<table style=\\\"border-collapse: collapse;\\\" border=\\\"1\\\">\\n\\n<tbody>\\n\\n<tr>\\n\\n<th>Phase 1</th>\\n\\n<th>Phase 2</th>\\n\\n<th>Phase 3</th>\\n\\n<th>Phase 4</th>\\n\\n</tr>\\n\\n<tr>\\n\\n<td>0 BOS</td>\\n\\n<td>400,000 BOS</td>\\n\\n<td>400,000 BOS</td>\\n\\n<td>0 BOS</td>\\n\\n</tr>\\n\\n<tr>\\n\\n<td>Project Start</td>\\n\\n<td>5 weeks</td>\\n\\n<td>6 weeks</td>\\n\\n<td>Ongoing</td>\\n\\n</tr>\\n\\n</tbody>\\n\\n</table>\\n\\nPhase 3, the dates are dependent on the time it takes to complete the specification for the polls system.\\n\\n**Total funding - 800,000 BOS  \\nTotal duration - 11 weeks (2.5 months)**\\n\\n## Team\\n\\nThis project is in safe hands. It will be driven by the team behind EOS Authority that has delivered similar projects on the EOS Mainnet successfully. We understand the wide range of audience, the nature of projects on EOSIO.\\n\\nThe delivery team will be led by Rohan Abraham of EOS Authority. The team formed for BOS project. It will be led by 1 Project Director and additionally staffed by 3 other web developers, 1 designer, 1 tester and a project assistant.\\n\\n## Relevant links\\n\\n[https://eosauthority.com](https://eosauthority.com)\\n\\n[https://eosauthority.com/dashboard](https://eosauthority.com/dashboard)\"}",
+            "created_at": "2019-06-05T17:03:19"
+        },
+        "stats": {
+            "votes": {
+                "1": 8,
+                "total": 8,
+                "proxies": 4,
+                "accounts": 4
+            },
+            "accounts": {
+                "0": 0,
+                "1": 3649259000,
+                "total": 3649259000
+            },
+            "proxies": {
+                "0": 0,
+                "1": 33756882088,
+                "total": 33756882088
+            },
+            "staked": {
+                "0": 0,
+                "1": 37406141088,
+                "total": 37406141088
+            },
+            "block_num": 37284744
+        }
+    },
+    "wpspromotion": {
+        "id": "wpspromotion_20190603",
+        "proposal": {
+            "proposal_name": "wpspromotion",
+            "proposer": "pacificproxy",
+            "title": "BOSCore WPS global promotion",
+            "proposal_json": "{\"content\":\"The proposal will be implemented from May 10st.\\n\\n\\n\\n## Proposal Background\\n\\n\\n\\nBOSCore is a EOS side chain initiated by the community. We can see that any public chain cannot be separated from governance in the end. Governance is the cohesion of community development. Community governance plays different roles in each stage of the public chain. Organizing community members to participate in the discussion of ecological construction can gather the consensus of BOSCore community, expand the influence of BOSCore brand, and help BOSCore ecological prosperity.\\n\\n\\n\\nBOS Pacific is a BOSCore Node team initiated by Node Pacific Tech, which is the world's largest public chain and crowdsourcing platform operator.At present, it is the core BP node of nearly 20 mainstream public chains at home and abroad. It is deeply involved in the public chain ecological operation and leads the community governance, such as successfully building the EOS core governance community EMAC, IOST core governance community ICAC, GXChain core governance community GCAC, Lambda core governance community LCAC, etc.\\n\\n\\n\\nBOS Pacific is also looking forward to contributing to BOSCore's ecological governance with rich experience in community governance.\\n\\n\\n\\n## Proposal Information\\n\\n\\n\\nThe basic information\\n\\n\\n\\n1. Proposal name: BOSCore referendum system /WPS global promotion proposal\\n\\n    \\n\\n2. Submit function points: Core promotion\\n\\n\\n\\n3. The latest time for the proposal to be submitted after passed in the referendum: May 10-June25（long-term operation in the future)\\n\\n    \\n\\n\\n\\n## Proposal Content\\n\\n\\n\\nBOS Pacific will launch the BOSCore core governance community and call on partners who are interested in governance in the BOSCore ecology to join in and build the BOSCore core governance community together.\\n\\n\\n\\nBCAC does not have the function of arbitration, does not participate in the implementation of governance, and only does the training and education of BOSCore governance, aiming to gather the consensus of BOSCore community.\\n\\n\\n\\nBCAC hopes to continuously promote the construction and improvement of BOSCore governance community, attract global blockchain technology and governance enthusiasts to understand and participate in BOSCore, build a rich and diverse governance communication community for BOSCore, and gradually improve BOSCore to community governance, constantly expand the cohesion of BOSCore, and form a strong and irreplaceable consensus mechanism.\\n\\n\\n\\n## Proposal Perform\\n\\n\\n\\n--BOSCore referendum system promotion\\n\\n\\n\\n-- recruitment and election of reviewers\\n\\n\\n\\n-- community presentation of the proposal (meeting)\\n\\n\\n\\n\\n\\n### 1.Promotion of BOSCore referendum system\\n\\n\\n\\nPresentation of Referendum system /WPS global conference -- 2 meetings in English and Chinese\\n\\n\\n\\nReferendum system presentation meeting: (taking a meeting as an example)\\n\\n\\n\\nPersonnel arrangement (operation 2+ design 1)\\n\\n\\n\\nBefore the meeting:\\n\\n\\n\\n-- Prepared PPT contents of the referendum system speech, and prepared the preheating before the meeting (posters, personnel, copywriting, equipment preparation).\\n\\n\\n\\nDuring the meeting:\\n\\n\\n\\n-- Presided over and maintained the order of the meeting in both Chinese and English, and guided participants to participate in the questions\\n\\n\\n\\nAfter the meeting:\\n\\n\\n\\n-- Communicate with participants to understand requirements and promote proposals\\n\\n\\n\\n-- Organizing and publicizing the content of the meeting\\n\\n\\n\\n\\n\\n### 2.Recruitment, election and establishment of reviewers\\n\\n\\n\\nA. Recruitment of reviewers\\n\\n\\n\\nPersonnel arrangement (operation 1)\\n\\n\\n\\nPreparation process:\\n\\n\\n\\n-- Prepare the reviewers recruitment articles and make the registration form\\n\\n\\n\\n-- Communicate with community users and relevant personnel and guide them to fill in the form\\n\\n\\n\\nB. Reviewer election conference\\n\\n\\n\\nPersonnel arrangement (operation 2+ design 1)\\n\\n\\n\\nBefore the meeting:\\n\\n\\n\\n-- Confirm the meeting time according to the candidates for the registration reviewer\\n\\n\\n\\n-- Guide candidates to prepare for the reviewer manifesto\\n\\n\\n\\n-- Prepare the preheating before the meeting (posters, personnel, copywriting, equipment preparation)\\n\\n\\n\\nDuring the meeting:\\n\\n\\n\\n-- Interpret the standards of reviewers in detail, and guide each participant to make their own declaration, opinions and opinions\\n\\n\\n\\nAfter the meeting:\\n\\n\\n\\n-- Communicate with the candidate reviewers and give a definite response time\\n\\n\\n\\n-- Organizing and publicizing the content of the meeting\\n\\n\\n\\n\\n\\n### 3.Community presentation of the proposal\\n\\n\\n\\nA. Proposal presentation: (take a proposal as an example)\\n\\n\\n\\nPersonnel arrangement (operation 2+ design 1)\\n\\n\\n\\nBefore the meeting:\\n\\n\\n\\n-- Prepare the preheating before the meeting (posters, personnel, copywriting, equipment preparation)\\n\\n\\n\\n--Invite the proposer to introduce the proposal at the meeting\\n\\n\\n\\nDuring the meeting:\\n\\n\\n\\n-- Presided over and maintained the order of the meeting in both Chinese and English\\n\\n\\n\\nAfter the meeting:\\n\\n\\n\\n-- Organizing the content and publicizing the media after the meeting\\n\\n\\n\\nFollow-up:\\n\\n\\n\\nReport on the progress of the proposal\\n\\n\\n\\n\\n\\n## Proposal Target\\n\\n\\n\\n1. Detailed explanation of the proposal process in both Chinese and English;\\n\\n    \\n\\n2. Referendum system /WPS global conference -- 1-2 meetings, in Chinese and English\\n\\n    \\n\\n3. Selection of reviewers (recruitment, election, establishment) -- one month, at least two meetings, both in Chinese and English\\n\\n    \\n\\n4. Proposal meeting publicity -- no less than once a week (no limit on the number of proposals within 2 months)\\n\\n    \\n\\n5. Over 15+ original articles published on Wechat official accounts, Weibo, Bihu,Huoxing24, Tuoluocaijing, Facebook, Twitter, Reddit,Steemit, Medium, Starteos, Bos.sh,IMEOS, etc.; (Chinese and English channels, covering more than 100,000 users, and reading volume more than 200,000)\\n\\n    \\n\\nAddition: the average number of participants in a single meeting is no less than 10% of the BCAC community\\n\\n\\n\\n\\n\\n## Proposal Budget\\n\\n\\n\\nApplied funds: 350,000 BOS (personnel, materials, marketing)\\n\\n\\n\\n\\n\\n------\\n\\n\\n\\n提案从5月10日开始执行\\n\\n\\n\\n## 提案背景\\n\\n\\n\\nBOSCore是由社区发起的EOS侧链，我们能看到任何一条公链最终都离不开治理，治理是生态壮大的催化剂，治理是社区发展的凝聚力量，社区治理在公链各个阶段发挥着不同的作用， 组织社区成员参与生态建设的讨论，能够凝聚BOSCore社区共识，扩大BOSCore品牌影响力，助力BOSCore生态繁荣。\\n\\n\\n\\nBOS Pacific是由Node Pacific Tech（节点亚太）发起的BOSCore节点团队，Node Pacific 是全球最大的公链运营众包平台和节点运营商，目前参与了国内外近20条主流公链的核心出块节点；深度参与公链生态运营，并主导社区治理，如成功打造EOS核心治理社区EMAC， IOST 核心治理社区ICAC，公信链核心治理社区GCAC，Lambda核心治理社区LCAC等。\\n\\n\\n\\nBOS Pacific也非常期望能带着较为丰富的社区治理经验，为BOSCore的生态治理搭建贡献一份力量。\\n\\n\\n\\n\\n\\n## 提案信息\\n\\n\\n\\n基本信息\\n\\n\\n\\n1、提案名称：BOSCore公投系统/WPS全球推广提案\\n\\n\\n\\n2、提交功能点：BOSCore WPS公投系统核心推广\\n\\n\\n\\n3、提案在公投通过后最晚提交时间：5月10日-6月25日（未来会长期运营）\\n\\n\\n\\n## 提案内容\\n\\n\\n\\nBOS Pacific会发起BOSCore核心治理社区，号召BOSCore生态中对治理感兴趣的小伙伴加入，共建BOSCore核心治理社区BCAC。\\n\\n\\n\\nBCAC不具备仲裁功能，不参与治理执行，仅做BOSCore治理的培训和教育，旨在凝聚BOSCore社区共识。\\n\\n\\n\\nBCAC希望能够持续推进搭建、完善BOSCore治理社区，吸引全球区块链技术以及治理爱好者了解，参与BOSCore，为BOSCore搭建一个丰富多样的治理交流社区，逐步将BOSCore向社区化治理逐步过渡，不断扩大BOSCore的凝聚力，形成强有力、不可替代的共识机制。\\n\\n\\n\\n\\n\\n## 提案执行\\n\\n\\n\\n--BOSCore公投系统推广\\n\\n\\n\\n--评审员招募与选举\\n\\n\\n\\n--提案的社区展示（会议）\\n\\n\\n\\n\\n\\n### 1.BOSCore公投系统推广\\n\\n\\n\\n公投系统/WPS全球会议展演—2次会议，中英文\\n\\n\\n\\na. 公投系统讲演会议：以一次会议为例人员安排（运营2+设计1）\\n\\n\\n\\n会议前：\\n\\n\\n\\n--准备公投系统讲演PPT内容，同时准备会议前的预热（海报，人员，文案，设备准备） 会议间：\\n\\n\\n\\n--中英文主持与维持会议秩序，并引导参会人员参与提问会议后：\\n\\n\\n\\n--和参会人员沟通了解需求和促成提案\\n\\n\\n\\n--会议内容的整理和宣发\\n\\n\\n\\n\\n\\n### 2.评审员招募、选举、成立\\n\\n\\n\\na. 评审员招募\\n\\n\\n\\n人员安排（运营1）\\n\\n\\n\\n准备流程：\\n\\n\\n\\n--准备评审员招募文章、制作报名表单\\n\\n\\n\\n--和社区用户及相关人员沟通并引导社区用户及相关人员填写表单\\n\\n\\n\\nb.评审员选举会议\\n\\n\\n\\n人员安排（运营2+设计1）\\n\\n\\n\\n会议前：\\n\\n\\n\\n--根据报名评审员的候选人沟通及确定会议时间\\n\\n\\n\\n--引导候选人准备竞选评审员宣言\\n\\n\\n\\n--准备会议前的预热（海报，人员，文案，设备准备）\\n\\n\\n\\n会议中：\\n\\n\\n\\n--详细解读评审员标准，并引导每一位参会人员发表自己的宣言、看法和意见会议后：\\n\\n\\n\\n--和候选评审员沟通并给予确定回复的时间\\n\\n\\n\\n--会议内容的整理和宣发\\n\\n\\n\\n\\n\\n### 3.提案的社区展示\\n\\n\\n\\na.提案展示：以一个提案为例人员安排（运营2+设计1） 会议前：\\n\\n\\n\\n--准备会议前的预热（海报，人员，文案，设备准备）\\n\\n\\n\\n--邀请提案者在会上介绍提案相关内容会议中：\\n\\n\\n\\n--会上的中英文主持与维持会议秩序， 会议后：\\n\\n\\n\\n--会后的内容整理与媒体宣发后续：\\n\\n\\n\\n提案进展的跟踪报道\\n\\n\\n\\n\\n\\n## 提案目标\\n\\n\\n\\n1. 提案流程中英文详解；\\n\\n    \\n\\n2. 公投系统/WPS全球会议展演—1-2次会议，中英文\\n\\n\\n\\n3. 评审员评选（招募，选举，成立）—周期1个月，至少2次会议，中英文\\n\\n\\n\\n4. 提案会议公示—每周不少于1次（2个月内，提案数不限）\\n\\n\\n\\n5. 原创文章15+，发布平台：公众号、微博、币乎、火星、陀螺财经、Facebook、Twitter、Reddit、steemit、medium、starteos、bos.sh、EOS快讯等；\\n\\n\\n\\n（中英文渠道，覆盖10万＋用户，阅读量过20万＋）\\n\\n\\n\\n补充：平均单次会议人数不少于BCAC社群人数10%\\n\\n\\n\\n\\n\\n## 提案预算\\n\\n\\n\\n申请经费：总额 35万 BOS（人员，物料，市场）\\n\\n\",\"type\":\"referendum-v1\",\"incentives\":\"350000.0000\",\"receiptor\":\"bospacificok\"}",
+            "created_at": "2019-06-03T06:21:39"
+        },
+        "stats": {
+            "votes": {
+                "1": 48,
+                "total": 48,
+                "proxies": 17,
+                "accounts": 31
+            },
+            "accounts": {
+                "0": 0,
+                "1": 43093011819,
+                "total": 43093011819
+            },
+            "proxies": {
+                "0": 0,
+                "1": 102766526662,
+                "total": 102766526662
+            },
+            "staked": {
+                "0": 0,
+                "1": 145859538481,
+                "total": 145859538481
+            },
+            "block_num": 37284744
         }
     }
 }
