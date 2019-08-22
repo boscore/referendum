@@ -517,7 +517,7 @@ def proposal(proposal_name, lang='en'):
 			proposals[proposal_name]['review_date'] = ""
 			proposals[proposal_name]['finish'] = ""
 			proposals[proposal_name]['finish_date'] = 0
-		tpropos = ProposalTanslate.select().where((ProposalTanslate.name == proposal) & (ProposalTanslate.lang == lang)).count()
+		tpropos = ProposalTanslate.select().where((ProposalTanslate.name == proposal_name) & (ProposalTanslate.lang == lang)).count()
 		# tanslate part
 		if tpropos > 0:
 			tpropos = ProposalTanslate.get((ProposalTanslate.name == proposal_name) & (ProposalTanslate.lang == lang))
