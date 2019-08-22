@@ -4,14 +4,17 @@ import os
 import markdown
 
 def translate_text(text, target='en',title=False):
-    text = markdown.markdown(text, output_format='html5', extensions=['extra']) if title == False else text
-    credentials_path = os.path.dirname(os.path.realpath(__file__)) + os.sep + 'GOOGLE_APPLICATION_CREDENTIALS.json'
-    credentials = service_account.Credentials.from_service_account_file(credentials_path)
-    translate_client = translate.Client(
-        credentials=credentials)
-    result = translate_client.translate(
-        text, target_language=target, format_ = 'html')
-    return result['translatedText']
+    try:
+        text = markdown.markdown(text, output_format='html5', extensions=['extra']) if title == False else text
+        credentials_path = os.path.dirname(os.path.realpath(__file__)) + os.sep + 'GOOGLE_APPLICATION_CREDENTIALS.json'
+        credentials = service_account.Credentials.from_service_account_file(credentials_path)
+        translate_client = translate.Client(
+            credentials=credentials)
+        result = translate_client.translate(
+            text, target_language=target, format_ = 'html')
+        return result['translatedText']
+    except Exception as err:
+        print(err)
 
 
 if __name__ == '__main__':

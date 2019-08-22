@@ -30,7 +30,41 @@
                 "1": 28301,
                 "total": 28301
             },
-            "block_num": 37284744
+            "block_num": 37437599
+        }
+    },
+    "betbospropos": {
+        "id": "betbospropos_20190821",
+        "proposal": {
+            "proposal_name": "betbospropos",
+            "proposer": "sheldonhuang",
+            "title": "BET选举设计和DPOS波达计数法实现 / Design of BET Election and Implementation of DPOS Borda Count ",
+            "proposal_json": "{\"content\":\"English Version: https://docs.google.com/document/d/1V96w3L5BGPtrvLpoUYsJUUNsC6yH0RFB7LSByghYx50/\\n# 1. 提案背景\\n\\nBOSCore是一个由社区发起的技术驱动的EOSIO侧链，成功推出了BOS提案系统（WPS）。[BOS执行团队](https://boscore.io/en/team.html)是 [WPS流程](https://boswps.io/#/help/process)的一个关键组成部分。 根据最初的设计，我们的目标是让BOS社区治理特别是WPS更加去中心化。  该提案旨在提供一种设计模型：DPOS波达计数法投票方案，该投票方案让投票更加**基于共识**而**不是大户主导**，让整个BOS生态和WPS系统更加开放和平衡。\\n\\n\\n\\n# 2. BET介绍\\n\\nBOSCore Executive Team 简称 BET，是一群由EOSIO社区成员组成针对BOSCore项目进行社区化运作的组织。该组织最多包含25名成员，通过BOS持币者投票表决的方式选举出主席和副主席两个职位。\\n\\n决策规则如下：\\n\\n- **多数决议**：重要决定需要得到N / 2 + 1 BET成员的批准和支持。【majority decision】\\n- **少数决议**：日常决定需要得到N / 3 + 1 BET成员的批准和支持。【minority decision】\\n- 只有BET成员可参与BET会议：BET成员不能委派成员资格。\\n\\n为了敦促BET成员为BOSCore项目建设作出贡献，主席和BET成员必须在当选后签署《BET成员准则》 *BET Members Code of Ethic*。\\n\\n\\n\\n## 2.1 BET选举\\n\\nBET候选人在必须在竞选前将10,000枚BOS质押到到bet.bos合约中。所质押的BOS必须在竞选期间和成功当选的整个任期内保持质押状态。如果该BET成员从BET离职，BET成员该成员质押的BOS将在三个月退还给该BET成员。\\n\\n首届BET成员选举暂定于2020年1月底举行。\\n\\n要正式当选为BET成员，必须满足以下两个门槛：\\n\\n- 选举开始时，投票数至少是当前现有选票的15％;和，\\n- 满足投票的比例连续20天。\\n\\n选举将在[boswps.io](http://boswps.io)网站上进行。\\n\\nBET成员的任期为6个月。在任期结束时，BET成员可以通过**多数决议**再次连任6个月。 BET成员职位没有任期限制，只要他们继续通过**多数决议**即可再次当选。\\n\\n可以在**多数决议**的任何时候启动对BET成员的移除。但是，连续错过两次或更多连续预定会议的BET成员可能会被**少数决议**决定删除。\\n\\n注意：如果BET成员决定在结束任期之前退出和/或根据**多数决议**将其移除，则10,000 BOS将在退回之前的预期期限结束日期之后保留3个月。\\n\\n##  2.2 BET成员责任：\\n\\n- 持续不断地促进BOS及其生态系统的发展;\\n- 配合主席的工作;\\n- 持续监督BET主席的工作\\n- 通过**多数决议**选择和/或弹劾主席。\\n\\n## 2.3 BOS BET主席\\n\\nBOS BET将对主席和副主席进行内部选举。主席从活跃的BET成员中选出。每个主席职位的任期为1年。主席必须由**多数决议**选出。在选举过程中，主席不得为自己投票。在第一个任期结束时，主席可以通过**多数决议**再次连任1年。主席最多可连续两个任期。如果主席未能当选为BET，则该职位将由BETs重新选举。\\n\\n#### 主席责任：\\n\\n- 每3个月为BET成员分配激励津贴，包括分配给主席自己;\\n- 制定BOS生态系统整体改进战略计划\\n- 为开发者和基础设施指定的0.8％通货膨胀的激励策略并进行分配\\n\\n## 2.4 评审员激励：\\n\\nBOS整体通胀的0.15％将作为BET的运营资金和工资。另外0.05％的通货膨胀将留给BOS WPS系统的评审员。\\n\\n## 2.5 BET规则变更：\\n\\nBOS持有者社区可以通过BOS WPS提交提案来更改BOS BET 的规则，此提案必须符合以下阈值：\\n\\n- 投票数至少占当前BP选票的60％\\n- 上一个阈值连续20天满足。\\n\\n## 2.6 BET成员准则\\n\\n我已同意担任BOS执行团队成员，并且我同意在作为成员的整个任期内认真遵守以下BET成员准则：\\n\\n- 诚实和诚信 - 我将诚实地行事。不会做任何辜负和有害于我所服务的社区的信任的事情。\\n\\n- 关心，勤奋和专业 -  我将用勤奋，能力，全心全意地参加和所有的我需要参加的BET相关会议。我将以负责任的态度，尽职尽责地促进BOS生态系统的发展。\\n\\n- 利益冲突 - 我不会做任何与BOS BET团队有关的实际或潜在利益冲突以及对BOS有害的事。如果我发现任何BET成员有违反利益冲突原则的行为，我会立即向主席报告。我不会为我自己或任何利益相关方而损害BOS生态系统。作为BET成员，我不会寻求任何特殊利益或特权。我的行为只会符合BET的最佳利益。\\n\\n# 3. BET DPOS波达计数法投票方案\\n## 3.1 序言\\n\\n自从 BM 将 DPOS 引入 EOS 以来，如何更好的选出超级节点就成了社区争论的焦点，一票多投，一票多投可弃权制，一票一投等等，BOS 沿用了 EOS 的投票机制即一票多投（一票25投，可弃权）机制，然而由于帕累托法则的存在，导致票权会集中在少数人手中，再加上一票多投的机制允许持票人间可以进行换票，从而最终导致超级节点被控制在少数持票人手中，进而加剧筹码的不平衡，进一步导致贫富差距增大。\\n\\n为此在投票方案设计中我们尝试着引入改进的“波达计数法”[^1]投票机制来缓解这一问题。“波达计数法”曾是罗马议会采用的投票制度，BET 将采用基于 DPOS 改进的“波达计数法”来进行选举，并以期找到一个更为合理的投票方案，从而在保证 DPOS 系统安全和公平上能做出积极的改进。\\n\\n## 3.2 关于股权证明机制和投票选举\\n\\n关于股权证明机制文章有很多这里不再进行原理性的重复论述。本文仅就筹码集中与安全性方面进行讨论。为便于理解，我们将对上述进行简化：\\n\\n1. 假设所有投票所用票权皆来自投票者本人\\n2. 将简化原模型为概率发现模型\\n\\n接下来我们假设：\\n\\n- 某个持有人持股占比为 Q\\n- 作弊隐秘度函数 H\\n- 作弊被发现后损失函数 F(Q）\\n- 维护系统稳定情形下一般收益函数为 X(Q）\\n- 作弊收益 W\\n\\n*注意：这里假设的函数只用来做定性分析*\\n\\n于是我们可以简单的得到该持股人的策略关系即：\\n\\n```\\n根据 W+(H-1)*F(Q) 与 X(Q) 的大小关系进而决定相应的策略\\n```\\n\\n因为 F 是 Q 的正相关函数，X 也是 Q 的正相关函数，而 W 是带有投机性的随机参数，因此可以断定随着 Q 的增大其作弊收益会显著降低。在理性自然人假设下其选择维持公正是优势策略，因此从这个角度来看 POS 机制是稳定的模型。\\n事实上更进一步的分析时当我们加入道德参数，并将可监督性量化可以的得到股权结构与股东收益之间的如下关系和结论：\\n\\nA) 股权绝对集中结构\\n\\n```\\n股权绝对集中于经营者，则监督困难，经营者道德值减小乃至变为负值。\\n经营者责任心(→min)=经营者道德(→-)×{1+经营者资产所有权(max)}\\n股东收益(→min)=经营者责任心(→min）×经营者能力×经营条件\\n```\\n\\nB) 股权相对集中结构\\n\\n```\\n 股权相对集中，可以激励经营者，稳定骨干队伍，产生制衡监督。\\n 经营者责任心(→max)=经营者道德(→max)×{1+经营者资产所有权(max)}\\n 股东收益(→max)=经营者责任心(→max）×经营者能力×经营条件\\n```\\n\\nC) 股权分散结构\\n\\n```\\n股权过于分散，监督动力不足，经营者道德值也会减小乃至变为负值。\\n经营者责任心(→min)=经营者道德(→-)×{1+经营者资产所有权(min)}\\n股东收益(→min)=经营者责任心(→min）×经营者能力×经营条件\\n```\\n\\n所以，股权相对集中是优先选择的股权结构（详细的知识请参见股权结构相关书籍和论文）。\\n\\n因此我们需要在系统主体稳定的前提下尽量避免大户集权，那么有没有一种选票方案是理想的解决之法呢？\\n\\n## 3.3 投票与选举\\n\\n在详细讨论这个问题之前我们先来尝试着定义一下问题：\\n\\n```\\n假设有 N 个人参加选举，共有 K 个人进行投票，且每个投票者心中对于候选人的满意程度存在着一个排列，  \\n目的是制定一个选举方案，最终可以得到多数“公正”的投票结果。\\n```\\n\\n那么什么是公正的呢？这里我们采用 Arrow 的五条规则[^2]：\\n\\n1. 每一个选民的影响力都一样，更进一步说，就是非独裁的\\n2. 选民除了不能不理性之外，没有其他任何关于其心目中排序的限制\\n3. 如果所有选民都认为 A>B，则选举结果也要显示 A>B\\n4. 选举结果关于 A 和 B 的排序，应该只由卷宗内 A 和 B 的相对顺序决定，与任何第三者无关\\n5. 如果所有选民都是理性地将选择对象排序，而且诚实投票，则选举的结果也要显示理性的排序\\n\\n但不幸的是有多种证明方法[^3][^4][^5]可以证明这样的“公正”是不存在的，这也是 Arrow 不可能定理的内容。因为我们的方案会在“波达计数法”的方案基础上进行修改，这里我们对其情形下的定理给出证明：\\n\\n设给定的 k 个整数 m1、m2、...mk，令 σ(1,2,...,n) 为 (1,2,...,n) 的置换群，定义如下映射：\\n\\n[![math01](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math01.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math01.png)\\n\\n对于任意一组数 t1>t2>...>tn，用上述 k 个置换做一个 n×k 矩阵：\\n\\n[![math02](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math02.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math02.png)\\n\\n依次定义n个数：\\n\\n[![math03](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math03.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math03.png)\\n\\n于是有：\\n\\n[![math04](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math04.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math04.png)\\n\\n我们知道对于上述等式可以找到n组数：\\n\\n[![math05](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math05.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math05.png)\\n\\n使得对应的：\\n\\n[![math06](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math06.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math06.png)\\n\\n满足：\\n\\n[![math07](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math07.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math07.png)\\n\\n从上面的推导可以看出存在多个解，也就是说“波达计数法”同样是不稳定的。 那么问题出在哪里呢？事实上是因为我们的假设条件制约了这样的公正性。\\n\\n学者 Saari[^6] 在他的论文中对上述问题进行了详细的论述。Saari 的论点之一就是 Arrow 的第4、5条的条件会互相「抵销」，因此其对上述第四条规则有进行了修正，如下：\\n\\n```\\n4'.选举结果关于 A 和 B 的排序，应该只由卷宗内 A 和 B 的相对顺序和距离决定，与任何第三者无关。\\n```\\n\\n那么在这样的假设下 Saari 证明了：\\n\\n```\\n在多于两个候选人前提下“波达计数法”选举程序是『公正』的 \\n```\\n\\n具体的技术细节请参考 Saari 的相关论文。也就是说从这个意义上来说“波达计数法”选举程序是更优的。因此我们尝试着在该结论下结合 DPOS 方案进行 BET 投票的适配。\\n\\n## 3.3 BET 投票方案\\n\\n接下来我们先给出投票方案的整体描述：\\n\\n设参加选举人数为N，K个人进行投票。我们的投票规则如下：\\n\\n1. 对于任意的投票人要求其给出一个序列 Ln，该序列的顺序即为其心目中候选人适合与否的排列顺序\\n\\n2. 投票人投票权重为其所持有并抵押的 Token 数量记为 Pi\\n\\n3. 给定一个函数 F(i)，该函数返回对于序列不同序号的打分\\n\\n4. 对于任意的候选人其记分规则如下：\\n\\n   Vk = ∑ F(i,j)*Pi\\n\\n5. 排序所有参加选举候选人，得出最终当选序列。\\n\\nBET 将采用如下 F 函数：\\n\\n```\\nF(i) = (N+1-i)/N\\n```\\n\\n证明：\\n\\n> 假设任何投票人其手中所持 Token 数⌊Pi⌋即是票数，且每次只能投1票， \\n> 如此可将**每个投票人**看作是一个具有相同投票意愿投票者的集合。 \\n> 在此假设下，进一步来看这就变成了 ∑⌊Pi⌋ 人进行“波达计数法”投票的模型， \\n> 因此其具有与“波达计数法”方案相同的理论特性。\\n\\n进一步来看对于任意的持票人 Pi 由于他需要对所有的参选人都进行投票（排序），也就是说其对于任意一个参选人都做了贡献，只不过贡献的程度是按照函数 F 来进行的，也就是说设 Pi>Pj 且对于任意的 k>l 有 F(k)<F(l)，于是有:\\n\\n```\\nPi/Pj > (∑F(i) * Pi)/(∑F(i) * Pj)\\n```\\n\\n其中 i，j 分别排在在对方的序列中劣势位置，因此对比一票多投的方案明显的削弱了其票权的作用。\\n\\n下面是不同 F 函数下与一票多投控制力进行的对比。\\n\\n> 线下面积为一票多投制投票者的投票最大值\\n\\n[![math08](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math08.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math08.png)\\n\\n> 线下面积为 F 为“波达计数法”时的投票最大值\\n\\n[![math09](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math09.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math09.png)\\n\\n> 线下面积为 F 为 X^(-σ) 方案时的投票最大值\\n\\n[![math10](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math10.png)](https://raw.githubusercontent.com/boscore/Documentation/master/imgs/dops_borad_count_math10.png)\\n\\n虽然并不严谨但可以直观的感受到它们之间的不同之处。接下来我们通过几个简单的例子来说明该方案的特性与优势。\\n\\n#### 案例一\\n\\n假设存在三个投票人 A，B，C，为了讨论方便我们假设候选人也是同样的三人，并假设其优先投票给自己，我们的投票准则是在三人中选择两人胜出。\\n\\n我们假设 A，B，C 分别持有 Token 数量为 at，bt，ct，假设在 A 与 B 进行串谋，如果采用 EOS 现行的投票方案，只要 `at+bt>ct` 则 C 将丧失了最终的权利，但在 BET 的方案下需要 `at+2bt>2ct`（这里假设 a>b ），才能得到相应的结果。在各个候选人相差不悬殊的情形下，可以实现 A，C 当选。\\n\\n#### 案例二\\n\\n假设有一个拥有2000万 Token 的大户 A，另外的一些候选人的支持者只在100万到600万之间，如果采用 EOS 的策略，那么在其他候选人无法达成一致的前提下，A几乎可以控制整个当选人顺序。由于 A 的强大控制力导致许多候选人会选择和 A 进行交易，最终导致 A 的控制力进一步加强。\\n\\n但对于 BET 方案来说，情况将变得不一样了，例如我们采用`(n+1-i)/n`作为 F 函数，n 这里假设为25，那么对大户 A 来说其对于某第 i 个支持账户所能提供的贡献值为`(n+1-i)/n*2*10^7` ，例如当 i 为20时其贡献值为480万；也就是说当有一个投票者手中持有的 Token 超过该值时，那么选择和这个 Token 持有者合作是比与 A 合作更优的策略。\\n\\n因此这能在一定程度上减弱 A 的控制力同时又能保证尽可能多的利益相关者的利益，同时由于该方案是**必需投满**票方案，在理性人假设下投票者为了利益最大化除了投给自己之外一定会将剩余的票权投给对系统稳定性最大的候选人，进而保证系统的安全和稳定。\\n\\n## 3.4 总结\\n\\n该方案是对现有 EOS 投票方案的进一步探索，借助 Saari 等人的研究成果，以期能使 BET 投票方案更加完善，该方案相较于现行的 EOS 方案有更强的抗大票权者控制能力，同时又保证委托制的安全性。但正如 Arrow 不可能定理说的那样，当限定在某些条件下时完美的投票方案是不存在的。因此我们希望在合理的假设的前提下能够变得更好。\\n\\n[^1]: [波达计数法，Borda Count](https://en.wikipedia.org/wiki/Borda_count)   \\n[^2]: Kenneth J. Arrow: A Difficulty in the concept of social welfare. In Journal of Political Economy Vol. 58, No. 4 (Aug., 1950), pp. 328-346    \\n[^3]: B steven j Paradoxes in Politics: An Introduction to the Nonobvious in Political Science    \\n[^4]: Michel A. Habib and Alexander Ljungqvist Firm Value and Managerial Incentives: A Stochastic Frontier Approach   \\n[^5]: Charles R. Hadlock. • ”Discrete Mathematical Models: With Applications to Social, Biological, and Environmental. Problems” byFred Roberts. ...... Prentice-Hall, Englewood Cliffs, N.J., 1976.    \\n[^6]: D.G.Saari choice electration Mathematics and Voting    \",\"type\":\"referendum-v1\",\"incentives\":\"0.0000 BOS\",\"receiptor\":\"sheldonhuang\"}",
+            "created_at": "2019-08-21T18:01:00"
+        },
+        "stats": {
+            "votes": {
+                "1": 9,
+                "total": 9,
+                "proxies": 9,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 34501647577,
+                "total": 34501647577
+            },
+            "staked": {
+                "0": 0,
+                "1": 34501647577,
+                "total": 34501647577
+            },
+            "block_num": 37437599
         }
     },
     "bosantifraud": {
@@ -64,7 +98,7 @@
                 "1": 9054510111,
                 "total": 9054510111
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bosdacfcwp11": {
@@ -98,7 +132,7 @@
                 "1": 985134160,
                 "total": 985134160
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "boseagleeye1": {
@@ -133,7 +167,7 @@
                 "1": 54861163349,
                 "total": 54861313351
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bosfirewallx": {
@@ -167,7 +201,7 @@
                 "1": 26792954798,
                 "total": 26792954798
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bosmeetups": {
@@ -201,7 +235,7 @@
                 "1": 29346697557,
                 "total": 29346697557
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bosnationwp2": {
@@ -234,7 +268,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bosnationwps": {
@@ -255,8 +289,8 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 58280644479,
-                "total": 58280644479
+                "1": 58280721377,
+                "total": 58280721377
             },
             "proxies": {
                 "0": 0,
@@ -265,10 +299,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 164357898933,
-                "total": 164357898933
+                "1": 164357975831,
+                "total": 164357975831
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bossnapshots": {
@@ -302,7 +336,7 @@
                 "1": 26011259080,
                 "total": 26011259080
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "boswallets": {
@@ -331,16 +365,16 @@
             "proxies": {
                 "0": 0,
                 "1": 0,
-                "255": 1045711817,
-                "total": 1045711817
+                "255": 1045749822,
+                "total": 1045749822
             },
             "staked": {
                 "0": 108581501,
                 "1": 9059703637,
-                "255": 1045711817,
-                "total": 10213996955
+                "255": 1045749822,
+                "total": 10214034960
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "bprdproposal": {
@@ -374,7 +408,7 @@
                 "1": 145335,
                 "total": 145335
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "btconbos": {
@@ -408,7 +442,7 @@
                 "1": 47301474834,
                 "total": 47301474834
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "chintaionbos": {
@@ -441,7 +475,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "chintaitobos": {
@@ -462,20 +496,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 28771124774,
-                "total": 28771124774
+                "1": 28771201672,
+                "total": 28771201672
             },
             "proxies": {
                 "0": 0,
-                "1": 60939296803,
-                "total": 60939296803
+                "1": 60939334808,
+                "total": 60939334808
             },
             "staked": {
                 "0": 0,
-                "1": 89710421577,
-                "total": 89710421577
+                "1": 89710536480,
+                "total": 89710536480
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "constantstab": {
@@ -509,7 +543,7 @@
                 "1": 3104940399,
                 "total": 3104940399
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "dappxlinkeco": {
@@ -543,7 +577,7 @@
                 "1": 55025045815,
                 "total": 55025045815
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "dcartmarket1": {
@@ -577,7 +611,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "derupromises": {
@@ -603,15 +637,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 26059165716,
-                "total": 26059165716
+                "1": 26059203721,
+                "total": 26059203721
             },
             "staked": {
                 "0": 0,
-                "1": 28137247026,
-                "total": 28137247026
+                "1": 28137285031,
+                "total": 28137285031
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "ecoboostwps1": {
@@ -633,8 +667,8 @@
             },
             "accounts": {
                 "0": 2000,
-                "1": 75126473897,
-                "total": 75126475897
+                "1": 75126560371,
+                "total": 75126562371
             },
             "proxies": {
                 "0": 0,
@@ -643,10 +677,10 @@
             },
             "staked": {
                 "0": 2000,
-                "1": 186546476192,
-                "total": 186546478192
+                "1": 186546562666,
+                "total": 186546564666
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "engineertool": {
@@ -674,16 +708,16 @@
             "proxies": {
                 "0": 0,
                 "1": 0,
-                "255": 1045711817,
-                "total": 1045711817
+                "255": 1045749822,
+                "total": 1045749822
             },
             "staked": {
                 "0": 0,
                 "1": 412200,
-                "255": 1045711817,
-                "total": 1046124017
+                "255": 1045749822,
+                "total": 1046162022
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "eosiosg11112": {
@@ -717,7 +751,7 @@
                 "1": 34718195486,
                 "total": 34718195486
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "eosstudioide": {
@@ -752,7 +786,7 @@
                 "1": 58370709627,
                 "total": 58370859629
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "historyindex": {
@@ -790,7 +824,7 @@
                 "255": 2609200002,
                 "total": 4164011326
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "hyperion.api": {
@@ -811,8 +845,8 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 26178500218,
-                "total": 26178500218
+                "1": 26178577116,
+                "total": 26178577116
             },
             "proxies": {
                 "0": 0,
@@ -821,10 +855,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 101391327077,
-                "total": 101391327077
+                "1": 101391403975,
+                "total": 101391403975
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "icelandesert": {
@@ -857,7 +891,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "indextokenex": {
@@ -878,20 +912,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 17922938073,
-                "total": 17922938073
+                "1": 17923014971,
+                "total": 17923014971
             },
             "proxies": {
                 "0": 0,
-                "1": 21337899263,
-                "total": 21337899263
+                "1": 21337937268,
+                "total": 21337937268
             },
             "staked": {
                 "0": 0,
-                "1": 39260837336,
-                "total": 39260837336
+                "1": 39260952239,
+                "total": 39260952239
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "mansaboscomm": {
@@ -913,8 +947,8 @@
             },
             "accounts": {
                 "0": 2101,
-                "1": 44876259945,
-                "total": 44876262046
+                "1": 44876336843,
+                "total": 44876338944
             },
             "proxies": {
                 "0": 0,
@@ -923,10 +957,10 @@
             },
             "staked": {
                 "0": 2101,
-                "1": 147642786607,
-                "total": 147642788708
+                "1": 147642863505,
+                "total": 147642865606
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "omegaautodex": {
@@ -960,7 +994,7 @@
                 "1": 49440063003,
                 "total": 49440063003
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "operations11": {
@@ -982,8 +1016,8 @@
             },
             "accounts": {
                 "0": 108581501,
-                "1": 44284052240,
-                "total": 44392633741
+                "1": 44284129138,
+                "total": 44392710639
             },
             "proxies": {
                 "0": 0,
@@ -992,10 +1026,10 @@
             },
             "staked": {
                 "0": 108581501,
-                "1": 146664523360,
-                "total": 146773104861
+                "1": 146664600258,
+                "total": 146773181759
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "operations14": {
@@ -1028,7 +1062,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "operations15": {
@@ -1062,7 +1096,7 @@
                 "1": 28301,
                 "total": 28301
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "simpassets11": {
@@ -1088,15 +1122,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 3050055828,
-                "total": 3050055828
+                "1": 3050093833,
+                "total": 3050093833
             },
             "staked": {
                 "0": 0,
-                "1": 5171808954,
-                "total": 5171808954
+                "1": 5171846959,
+                "total": 5171846959
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "trainingcpcp": {
@@ -1122,30 +1156,31 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 1045711817,
-                "total": 1045711817
+                "1": 1045749822,
+                "total": 1045749822
             },
             "staked": {
                 "0": 0,
-                "1": 1045735817,
-                "total": 1045735817
+                "1": 1045773822,
+                "total": 1045773822
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "unicocaptain": {
-        "id": "unicocaptain_20190816",
+        "id": "unicocaptain_20190821",
         "proposal": {
             "proposal_name": "unicocaptain",
             "proposer": "unicocaptain",
             "title": "Unico平台-BOS游戏专属推广基金",
-            "proposal_json": "{\"content\":\"## 提案名称\\n您的提案名称叫什么？\\nUnico平台-BOS游戏专属推广基金\\n## 问题\\n* BOS生态的问题，用户基数少，用户以僵尸用户和羊毛党为主，游戏日活很低；\\n* EOSIO游戏生态流量分散问题，当前市场缺乏可以对接多个公链的游戏，将各个公链的流量进行整合、汇总和相互倒流的游戏平台；\\n* 目前链游领域还无专业的发行平台，导致游戏开发者需要分散大量精力对接不同渠道，协同推进游戏发行和运营，无法专注在开发优质游戏上。\\n## Unico游戏平台\\nUnico搭建了BOS全网的首个游戏平台，引入BOS全网首款高质量RPG“驯龙大师”，并且为“驯龙大师”提供了全面的运营资源，包括并且不限于免费BOS账户、客服、直播资源、PR、BOS空投等；Unico游戏平台为BOS生态做出了独特的贡献。\\n## 激励细则\\n由Unico积极引进优质的游戏dApp到BOS上；对表现优秀的游戏dApp给予激励；按照以下的规则发放给游戏dApp：\\n1. 综合考虑游戏dApp的活跃用户数和交易量决定排名，根据排名进行激励发放；\\n\\n2. 游戏dApp活跃度排名越靠前，所获激励越多；\\n\\n3. 分批把币直接打到游戏dApp分红合约账户，一旦发现他们私自挪用就剥夺资格并且拉黑；\\n\\n4. 奖励以 BOS 形式发放。\\n\\n**要求**\\n启动初期：dApp必须拥有超过50个每日活跃用户（DAU）或其24小时交易量（VOL）必须超过2000BOS。\\n注明：后期会根据实际情况进行调整；\\n\\n**注意**\\n数据收集从每周一00:00开始（UTC），每周日（UTC）23:59结束。每日活跃用户是指每周平均DAU，每日交易量是每周平均每日交易量。\\n\\n如果排名中的合格dApp数量低于20，则前5名dApp将根据其活动和每日交易量每周共享20,000 BOS 的奖金池。\\n如果排名中合格的dApp数量在20到50之间，前十名dApp将根据其活动和每日交易量每周共享50,000BOS的奖池。\\n\\n启动初期：按照游戏日活激励\\n50人起步，奖励2万个BOS\\n100人起步，奖励5万个BOS\\n200人起步，奖励10万个BOS\\n注明：后期会根据实际情况进行调整；\\n## 基金拨款和配置\\n项目成本是多少，资金应该如何配置？\\n50万，unico平台空投致游戏分红合约账户；10万账户补贴，40万游戏基金。\\n专款专用，unico不会挪用，全部按照严格的标准和规则发放BOS生态里的dApp，帮助dApp提高对客户激励奖池以及进行媒体PR。\\n## 6Unico平台介绍方案\\n1. 游戏发行  \\n* Unico为DApp游戏开发者提供全套游戏发行服务，包含定制化的游戏预售和游戏运营服务； \\n* 对于传统游戏开发商，Unico可以为其做链改，并且对接相应的公链团队争取基金会奖励； \\n* 0渠道分成！任何游戏可以轻松入驻；\\n\\n![图片](https://uploader.shimo.im/f/BUhzRwN6GKAljLjr.png!thumbnail)\\n\\n1. 用户社区  \\n* 用户社区涵盖了OGC、PGC和UGC内容； \\n* UT的运用会大大激励玩家社区中的内容产出质量和数量，并且有多种创意玩法激活用户的激情，营造良好的游戏社区氛围；  \\n* 社区POS节点设计，让用户积极参与社区治理；\\n\\n![图片](https://uploader.shimo.im/f/q8SDrZcLwecB75TA.png!thumbnail)  \\n\\n2. 通过第三方OTC提供游戏付费通道\\n* 为入驻链游提供**稳定**的链上结算方案 —— UB游戏积分支付体系\\n  * UB购买价格恒定 1 UB = 1 RMB\\n  * 进行游戏购买\\n  * 游戏内消费  （通过道具交易/领取分红）获取UB\\n  * 由合规的专业OTC商家提供，保证7*24小时稳定\\n\\n![图片](https://uploader.shimo.im/f/dlUDmPCudDAh4dSJ.png!thumbnail)\\n\\n3. 游戏交易市场\\n* **游戏资产代币化和多链钱包**\\n\\n 提供通用的标准化游戏资产协议（含NFT），可以在不同游戏中继承和共享游戏资产。\\n* **内置代币交易合约**\\n\\nUB-BOS交易合约和游戏币-UB交易对，所有Unico的游戏都可免费调用，用户可以在游戏内快速进行代币转换。\\n* **FT资产交易所+NFT资产交易所**\\n\\nUnico自带FT&NFT交易所，用户可以直接在交易所交易自己的链游游戏资产，无需登录游戏。\\n采用标准：dGoods轻量化和灵活化的模式，并通过提供强大的虚拟物品标准为EOSIO生态提供代币逻辑扩展能力。（曾接受EOS Galaxy投资的游戏Mythical.Games，提出广为接受的代币标准dGoods。）\\n具体参考: \\n[https://github.com/MythicalGames/dgoods](https://github.com/MythicalGames/dgoods)\\n## 相关链接\\n[https://unico.one](https://unico.one)\\n\\n\",\"type\":\"referendum-v1\",\"incentives\":\"500000.0000 BOS\",\"receiptor\":\"unicocaptain\"}",
-            "created_at": "2019-08-16T15:23:44"
+            "proposal_json": "{\"content\":\"## 提案名称\\n\\nUnico平台-BOS游戏专属推广基金\\n\\n## 问题\\n\\n- BOS生态的问题，用户基数少，用户以僵尸用户和羊毛党为主，游戏日活很低；\\n\\n- EOSIO游戏生态流量分散问题，当前市场缺乏可以对接多个公链的游戏，将各个公链的流量进行整合、汇总和相互倒流的游戏平台；\\n\\n- 目前链游领域还无专业的发行平台，导致游戏开发者需要分散大量精力对接不同渠道，协同推进游戏发行和运营，无法专注在开发优质游戏上。\\n\\n## Unico游戏平台\\n\\n  Unico搭建了BOS全网的首个游戏平台，引入BOS全网首款高质量RPG“驯龙大师”，并且为“驯龙大师”提供了全面的运营资源，包括并且不限于免费BOS账户、客服、直播资源、PR、BOS空投等；Unico游戏平台为BOS生态做出了独特的贡献。\\n\\n## 激励细则\\n\\n  由Unico积极引进优质的游戏dApp到BOS上；对表现优秀的游戏dApp给予激励；按照以下的规则发放给游戏dApp：\\n\\n1. 综合考虑游戏dApp的活跃用户数和交易量决定排名，根据排名进行激励发放；\\n2. 游戏dApp活跃度排名越靠前，所获激励越多；\\n3. 分批把币直接打到游戏dApp分红合约账户，一旦发现他们私自挪用就剥夺资格并且拉黑；\\n4. 奖励以 BOS 形式发放。\\n\\n**要求** 启动初期：dApp必须拥有超过50个每日活跃用户（DAU）或其24小时交易量（VOL）必须超过2000BOS。 注明：后期会根据实际情况进行调整；\\n\\n**注意** 数据收集从每周一00:00开始（UTC），每周日（UTC）23:59结束。每日活跃用户是指每周平均DAU，每日交易量是每周平均每日交易量。\\n\\n如果排名中的合格dApp数量低于20，则前5名dApp将根据其活动和每日交易量每周共享20,000 BOS 的奖金池。 如果排名中合格的dApp数量在20到50之间，前十名dApp将根据其活动和每日交易量每周共享50,000BOS的奖池。\\n\\n启动初期：按照游戏日活激励 50人起步，奖励2万个BOS 100人起步，奖励5万个BOS 200人起步，奖励10万个BOS 注明：后期会根据实际情况进行调整；\\n\\n## 基金拨款和配置\\n\\n项目成本是多少，资金应该如何配置？ 50万，unico平台空投致游戏分红合约账户；10万账户补贴，40万游戏基金。 专款专用，unico不会挪用，全部按照严格的标准和规则发放BOS生态里的dApp，帮助dApp提高对客户激励奖池以及进行媒体PR。\\n\\n## Unico平台介绍方案\\n\\n1. 游戏发行\\n\\n- Unico为DApp游戏开发者提供全套游戏发行服务，包含定制化的游戏预售和游戏运营服务；\\n- 对于传统游戏开发商，Unico可以为其做链改，并且对接相应的公链团队争取基金会奖励；\\n- 0渠道分成！任何游戏可以轻松入驻；\\n\\n![图片](https://wx3.sinaimg.cn/mw690/006mODl1gy1g67g9ag4iqj3091054414.jpg)\\n\\n2. 用户社区\\n\\n- 用户社区涵盖了OGC、PGC和UGC内容；\\n- UT的运用会大大激励玩家社区中的内容产出质量和数量，并且有多种创意玩法激活用户的激情，营造良好的游戏社区氛围；\\n- 社区POS节点设计，让用户积极参与社区治理；\\n\\n![图片](https://wx2.sinaimg.cn/mw690/006mODl1gy1g67g9dwgtuj309l05mgng.jpg)\\n\\n3. 通过第三方OTC提供游戏付费通道\\n\\n- 为入驻链游提供\\n\\n  稳定\\n\\n  的链上结算方案 —— UB游戏积分支付体系\\n\\n  - UB购买价格恒定 1 UB = 1 RMB\\n  - 进行游戏购买\\n  - 游戏内消费 （通过道具交易/领取分红）获取UB\\n  - 由合规的专业OTC商家提供，保证7*24小时稳定\\n\\n![图片](https://wx2.sinaimg.cn/mw690/006mODl1gy1g67g9g482dj306d09nmxq.jpg)\\n\\n4. 游戏交易市场\\n\\n- **游戏资产代币化和多链钱包**\\n\\n  提供通用的标准化游戏资产协议（含NFT），可以在不同游戏中继承和共享游戏资产。\\n\\n- **内置代币交易合约**\\n\\nUB-BOS交易合约和游戏币-UB交易对，所有Unico的游戏都可免费调用，用户可以在游戏内快速进行代币转换。\\n\\n- **FT资产交易所+NFT资产交易所**\\n\\nUnico自带FT&NFT交易所，用户可以直接在交易所交易自己的链游游戏资产，无需登录游戏。 采用标准：dGoods轻量化和灵活化的模式，并通过提供强大的虚拟物品标准为EOSIO生态提供代币逻辑扩展能力。（曾接受EOS Galaxy投资的游戏Mythical.Games，提出广为接受的代币标准dGoods。） 具体参考: https://github.com/MythicalGames/dgoods\\n\\n## 相关链接\\n\\n[https://unico.one](https://unico.one/)\",\"type\":\"referendum-v1\",\"incentives\":\"500000.0000 BOS\",\"receiptor\":\"unicocaptain\"}",
+            "created_at": "2019-08-21T11:27:11"
         },
         "stats": {
             "votes": {
-                "total": 0,
-                "proxies": 0,
+                "1": 9,
+                "total": 9,
+                "proxies": 9,
                 "accounts": 0
             },
             "accounts": {
@@ -1155,15 +1190,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 34501647577,
+                "total": 34501647577
             },
             "staked": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 34501647577,
+                "total": 34501647577
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "unicorntube1": {
@@ -1197,7 +1232,7 @@
                 "1": 2375577,
                 "total": 2375577
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "universal": {
@@ -1231,7 +1266,7 @@
                 "1": 37406141088,
                 "total": 37406141088
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     },
     "wpspromotion": {
@@ -1252,8 +1287,8 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 43093011819,
-                "total": 43093011819
+                "1": 43093088717,
+                "total": 43093088717
             },
             "proxies": {
                 "0": 0,
@@ -1262,10 +1297,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 145859538481,
-                "total": 145859538481
+                "1": 145859615379,
+                "total": 145859615379
             },
-            "block_num": 37284744
+            "block_num": 37437599
         }
     }
 }

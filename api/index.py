@@ -308,7 +308,8 @@ def auditorsinfo(lang='en'):
 			tpropos = AuditorTanslate.select().where((AuditorTanslate.name == auditor) & (AuditorTanslate.lang == lang)).count()
 			# tanslate part
 			if tpropos > 0:
-				tpropos = AuditorTanslate.get((AuditorTanslate.name == auditor) & (AuditorTanslate.lang == lang))
+				tpropos = AuditorTanslate.select().where((AuditorTanslate.name == auditor)
+                                             & (AuditorTanslate.lang == lang)).get()
 				auditors[auditor]['bio']['bio'] = tpropos.bio
 			else:
 				tbio = translate_text(auditors[auditor]['bio']['bio'],lang)
@@ -400,7 +401,7 @@ def proposals(lang='en'):
 			tpropos = ProposalTanslate.select().where((ProposalTanslate.name == proposal) & (ProposalTanslate.lang == lang)).count()
 			# tanslate part
 			if tpropos > 0:
-				tpropos = ProposalTanslate.get((ProposalTanslate.name == proposal) & (ProposalTanslate.lang == lang))
+				tpropos = ProposalTanslate.select().where((ProposalTanslate.name == proposal) & (ProposalTanslate.lang == lang)).get()
 				proposals[proposal]['proposal']['title'] = tpropos.title
 				proposal_json = json.loads(
 					proposals[proposal]['proposal']['proposal_json'])
@@ -518,14 +519,20 @@ def proposal(proposal_name, lang='en'):
 			proposals[proposal_name]['finish'] = ""
 			proposals[proposal_name]['finish_date'] = 0
 		tpropos = ProposalTanslate.select().where((ProposalTanslate.name == proposal_name) & (ProposalTanslate.lang == lang)).count()
+		tpropos = int(tpropos)
+		print(tpropos)
+		print(proposal_name)
+		print(lang)
 		# tanslate part
 		if tpropos > 0:
-			tpropos = ProposalTanslate.get((ProposalTanslate.name == proposal_name) & (ProposalTanslate.lang == lang))
-			proposals[proposal_name]['proposal']['title'] = tpropos.title
+			rpropos = ProposalTanslate.select().where(
+				(ProposalTanslate.name == proposal_name) & (ProposalTanslate.lang == lang)).get()
+			
+			proposals[proposal_name]['proposal']['title'] = rpropos.title
 			proposal_json = json.loads(
                             proposals[proposal_name]['proposal']['proposal_json'])
 
-			proposals['content'] = tpropos.content
+			proposal_json['content'] = rpropos.content
 			proposals[proposal_name]['proposal']['proposal_json'] = proposal_json
 		else:
 			print('starting')
@@ -543,9 +550,9 @@ def proposal(proposal_name, lang='en'):
 			, content = tcontent
 			)
 			new_proposal.save()  
-		proposals[proposal_name]['proposal']['title'] = ttitle
-		proposal_json['content'] = tcontent
-		proposals[proposal_name]['proposal']['proposal_json'] = proposal_json
+			proposals[proposal_name]['proposal']['title'] = ttitle
+			proposal_json['content'] = tcontent
+			proposals[proposal_name]['proposal']['proposal_json'] = proposal_json
 		
 	except Exception as err:
 			logger.error(err)
