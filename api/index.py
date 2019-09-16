@@ -104,7 +104,9 @@ def jsoninfo():
 				# the proposal exists
 				if propos > 0:
 					# check if the proposal is passed
-					if proposal_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
+					if propos.approved_by_vote == 1:
+						pass
+					elif proposal_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
 						propos = Proposal.get(Proposal.name == proposal)
 						meet = propos.meet_conditions_days
 						# abv = propos.approved_by_vote 
