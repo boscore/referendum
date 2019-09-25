@@ -30,7 +30,7 @@
                 "1": 28301,
                 "total": 28301
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "betbospropos": {
@@ -44,27 +44,27 @@
         },
         "stats": {
             "votes": {
-                "1": 9,
-                "total": 9,
-                "proxies": 9,
-                "accounts": 0
+                "1": 38,
+                "total": 38,
+                "proxies": 23,
+                "accounts": 15
             },
             "accounts": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 55676366693,
+                "total": 55676366693
             },
             "proxies": {
                 "0": 0,
-                "1": 34501647577,
-                "total": 34501647577
+                "1": 130179999674,
+                "total": 130179999674
             },
             "staked": {
                 "0": 0,
-                "1": 34501647577,
-                "total": 34501647577
+                "1": 185856366367,
+                "total": 185856366367
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bosantifraud": {
@@ -85,8 +85,8 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 9054510111,
-                "total": 9054510111
+                "1": 9057658615,
+                "total": 9057658615
             },
             "proxies": {
                 "0": 0,
@@ -95,10 +95,10 @@
             },
             "staked": {
                 "0": 0,
-                "1": 9054510111,
-                "total": 9054510111
+                "1": 9057658615,
+                "total": 9057658615
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bosdacfcwp11": {
@@ -132,7 +132,7 @@
                 "1": 985134160,
                 "total": 985134160
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "boseagleeye1": {
@@ -154,20 +154,20 @@
             },
             "accounts": {
                 "0": 150002,
-                "1": 67328326,
-                "total": 67478328
+                "1": 67568381,
+                "total": 67718383
             },
             "proxies": {
                 "0": 0,
-                "1": 54793835023,
-                "total": 54793835023
+                "1": 54800610003,
+                "total": 54800610003
             },
             "staked": {
                 "0": 150002,
-                "1": 54861163349,
-                "total": 54861313351
+                "1": 54868178384,
+                "total": 54868328386
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bosfirewallx": {
@@ -188,20 +188,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 6500767352,
-                "total": 6500767352
+                "1": 6580948913,
+                "total": 6580948913
             },
             "proxies": {
                 "0": 0,
-                "1": 20292187446,
-                "total": 20292187446
+                "1": 20292805272,
+                "total": 20292805272
             },
             "staked": {
                 "0": 0,
-                "1": 26792954798,
-                "total": 26792954798
+                "1": 26873754185,
+                "total": 26873754185
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bosmeetups": {
@@ -222,53 +222,55 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 9054510111,
-                "total": 9054510111
+                "1": 9057658615,
+                "total": 9057658615
             },
             "proxies": {
                 "0": 0,
-                "1": 20292187446,
-                "total": 20292187446
+                "1": 20292805272,
+                "total": 20292805272
             },
             "staked": {
                 "0": 0,
-                "1": 29346697557,
-                "total": 29346697557
+                "1": 29350463887,
+                "total": 29350463887
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bosnationwp2": {
-        "id": "bosnationwp2_20190814",
+        "id": "bosnationwp2_20190823",
         "proposal": {
             "proposal_name": "bosnationwp2",
             "proposer": "bosnationftw",
-            "title": "BOS WPS Enhancement Proposal",
-            "proposal_json": "{\"content\":\"# BOS WPS Enhancement Proposal\\n\\nEOS Nation is proud to have delivered a fully functional [Worker Proposal System (WPS)](https://boswps.io/#/poll_detail?proposal=bosnationwps) on the BOS network. It has already enabled over 2.1 million BOS to be deployed to 3 projects that bring value to BOS and EOSIO as a whole. And there are many more projects with proposals in progress waiting to earn funding for valuable development, governance, and community building initiatives.\\n\\nWe’ve learned a lot watching the system in action and have been gathering feedback from users and the BOS Core team. Based on these learnings, we’ve already deployed some upgrades and are continuing to work on new features to improve the system and unlock even more value for EOSIO chains.\\n\\n### Scope of work already deployed for version 2\\n\\n-   [auditor.bos - update auditor v2.0 smart contract](https://github.com/boscore/referendum/pull/73)\\n-   [auditor.bos - enforce JSON input](https://github.com/boscore/referendum/issues/68)\\n-   [vote tally - update tally to auditor v2.0](https://github.com/boscore/referendum/pull/75)\\n-   [vote tally - add features](https://github.com/boscore/referendum/pull/72)\\n-   [eosio.forum - set RAM payer as `get_self()`](https://github.com/boscore/referendum/pull/56)\\n-   [eosio.forum - update README](https://github.com/boscore/referendum/pull/67)\\n-   [eosio.forum - remove `expires_at`](https://github.com/boscore/referendum/pull/58)\\n\\n### Scope of work in development for version 3\\n\\n- [Allow multiple init escrows & fund escrow using memo name](https://github.com/boscore/referendum/issues/76)\\n  - This would allow multiple escrows to be initialized and funded at a later date.\\n- [Vote tally V3.0](https://github.com/boscore/referendum/tree/master/vote-tally)\\n  - Host vote tally results on Cloudflare to improve performance in China\\n  - Integrate Python API into Vote Tally\\n  - Store historical voting data\\n  - Calculate eligible proposals which meet conditions\\n- new action for anyone to submit the version of voluntary translated work\\n  - `submit_translation(proposal_id, lan_id, translator, translated_content)`\\n  - create another table\\n\\n### Request\\n\\nFor development of version 2 and 3 of the BOS WPS, EOS Nation is requesting **450,000 BOS**.\\n\\n# BOS WPS提案优化\\n\\n能够在BOS网络上提供功能齐全的[工人提案系统（WPS）](https://boswps.io/#/poll_detail?proposal=bosnationwps)，EOS Nation感到很自豪。 已经使超过210万个BOS部署到3个项目，这些项目为整个BOS和EOSIO带来了价值。 还有更多项目正在运行中，正在为有价值的发展，治理和社区建设计划\\n\\n筹集资金。\\n\\n我们已经从系统的实际操作运行中学到了很多，并且，我们一直在收集用户和BOS核心团队的反馈。 基于这些经验，我们已经部署了升级，并且正在继续开发新功能，以对系统做出改进，并为EOSIO链去创造更多价值。\\n\\n### 版本2已部署的工作范围\\n\\n- [auditor.bos - update auditor v2.0 smart contract](https://github.com/boscore/referendum/pull/73)\\n- [auditor.bos - enforce JSON input](https://github.com/boscore/referendum/issues/68)\\n- [vote tally - update tally to auditor v2.0](https://github.com/boscore/referendum/pull/75)\\n- [vote tally - add features](https://github.com/boscore/referendum/pull/72)\\n- [eosio.forum - set RAM payer as `get_self()`](https://github.com/boscore/referendum/pull/56)\\n- [eosio.forum - update README](https://github.com/boscore/referendum/pull/67)\\n- [eosio.forum - remove `expires_at`](https://github.com/boscore/referendum/pull/58)\\n\\n### 版本3的开发工作范围\\n\\n- [允许多个初始化托管和资金托管的使用备忘录名称](https://github.com/boscore/referendum/issues/76)\\n  - 这将使得多个托管在之后能被初始化并获取资助。\\n- [3.0版本计票机制](https://github.com/boscore/referendum/tree/master/vote-tally)\\n  - 主机计票结果显示，Cloudflare在中国的性能将有所改善\\n  - 将Python API集成到计票中\\n  - 存储历史投票数据\\n  - 计算符合条件的提案\\n-  提交主动翻译作品版本的新行动\\n  - `submit_translation(proposal_id, lan_id, translator, translated_content)`\\n  - 创建另一张表\\n\\n### 需求\\n\\n为了开发BOS WPS的第2版和第3版，EOS Nation正在提出450,000个BOS的需求。\\n\",\"type\":\"referendum-v1\",\"incentives\":\"450000.0000 BOS\",\"receiptor\":\"bosnationftw\"}",
-            "created_at": "2019-08-14T14:37:12"
+            "title": "BOS WPS Enhancement Proposal / BOS WPS提案优化",
+            "proposal_json": "{\"content\":\"# BOS WPS Enhancement Proposal\\n\\nEOS Nation is proud to have delivered a fully functional [Worker Proposal System (WPS)](https://boswps.io/#/poll_detail?proposal=bosnationwps) on the BOS network. It has already enabled over 2.1 million BOS to be deployed to 3 projects that bring value to BOS and EOSIO as a whole. And there are many more projects with proposals in progress waiting to earn funding for valuable development, governance, and community building initiatives.\\n\\nWe’ve learned a lot watching the system in action and have been gathering feedback from users and the BOS Core team. Based on these learnings, we’ve already deployed some upgrades and are continuing to work on new features to improve the system and unlock even more value for EOSIO chains.\\n\\n### Scope of work already deployed for version 2\\n\\n- [auditor.bos - update auditor v2.0 smart contract](https://github.com/boscore/referendum/pull/73)\\n- [auditor.bos - enforce JSON input](https://github.com/boscore/referendum/issues/68)\\n- [vote tally - update tally to auditor v2.0](https://github.com/boscore/referendum/pull/75)\\n- [vote tally - add features](https://github.com/boscore/referendum/pull/72)\\n- [eosio.forum - set RAM payer as `get_self()`](https://github.com/boscore/referendum/pull/56)\\n- [eosio.forum - update README](https://github.com/boscore/referendum/pull/67)\\n- [eosio.forum - remove `expires_at`](https://github.com/boscore/referendum/pull/58)\\n\\n### Scope of work in development for version 3\\n\\n- [Allow multiple init escrows & fund escrow using memo name](https://github.com/boscore/referendum/issues/76)\\n  - This would allow multiple escrows to be initialized and funded at a later date.\\n- [Vote tally V3.0](https://github.com/boscore/referendum/tree/master/vote-tally)\\n  - Host vote tally results on Cloudflare to improve performance in China\\n  - Integrate Python API into Vote Tally\\n  - Store historical voting data\\n  - Calculate eligible proposals which meet conditions\\n  - create another table\\n- [BOS Executive Team smart contract](https://github.com/boscore/bet.bos/blob/develop/README.md)\\n\\n### Request\\n\\nFor development of version 2 and 3 of the BOS WPS, EOS Nation is requesting **450,000 BOS**.\\n\\n# BOS WPS提案优化\\n\\n能够在BOS网络上提供功能齐全的[工人提案系统（WPS）](https://boswps.io/#/poll_detail?proposal=bosnationwps)，EOS Nation感到很自豪。 已经使超过210万个BOS部署到3个项目，这些项目为整个BOS和EOSIO带来了价值。 还有更多项目正在运行中，正在为有价值的发展，治理和社区建设计划\\n\\n筹集资金。\\n\\n我们已经从系统的实际操作运行中学到了很多，并且，我们一直在收集用户和BOS核心团队的反馈。 基于这些经验，我们已经部署了升级，并且正在继续开发新功能，以对系统做出改进，并为EOSIO链去创造更多价值。\\n\\n### 版本2已部署的工作范围\\n\\n- [auditor.bos - update auditor v2.0 smart contract](https://github.com/boscore/referendum/pull/73)\\n- [auditor.bos - enforce JSON input](https://github.com/boscore/referendum/issues/68)\\n- [vote tally - update tally to auditor v2.0](https://github.com/boscore/referendum/pull/75)\\n- [vote tally - add features](https://github.com/boscore/referendum/pull/72)\\n- [eosio.forum - set RAM payer as `get_self()`](https://github.com/boscore/referendum/pull/56)\\n- [eosio.forum - update README](https://github.com/boscore/referendum/pull/67)\\n- [eosio.forum - remove `expires_at`](https://github.com/boscore/referendum/pull/58)\\n\\n### 版本3的开发工作范围\\n\\n- [允许多个初始化托管和资金托管的使用备忘录名称](https://github.com/boscore/referendum/issues/76)\\n  - 这将使得多个托管在之后能被初始化并获取资助。\\n- [3.0版本计票机制](https://github.com/boscore/referendum/tree/master/vote-tally)\\n  - 主机计票结果显示，Cloudflare在中国的性能将有所改善\\n  - 将Python API集成到计票中\\n  - 存储历史投票数据\\n  - 计算符合条件的提案\\n- [BOS执行团队智能合约](https://github.com/boscore/bet.bos/blob/develop/README.md)\\n\\n### 需求\\n\\n为了开发BOS WPS的第2版和第3版，EOS Nation正在提出450,000个BOS的需求。\\n\",\"type\":\"referendum-v1\",\"incentives\":\"450000.0000 BOS\",\"receiptor\":\"bosnationftw\"}",
+            "created_at": "2019-08-23T03:38:20"
         },
         "stats": {
             "votes": {
-                "total": 0,
-                "proxies": 0,
-                "accounts": 0
+                "0": 1,
+                "1": 3,
+                "total": 4,
+                "proxies": 3,
+                "accounts": 1
             },
             "accounts": {
                 "0": 0,
-                "1": 0,
-                "total": 0
+                "1": 6580948912,
+                "total": 6580948912
             },
             "proxies": {
-                "0": 0,
-                "1": 0,
-                "total": 0
+                "0": 2392754800,
+                "1": 23009727714,
+                "total": 25402482514
             },
             "staked": {
-                "0": 0,
-                "1": 0,
-                "total": 0
+                "0": 2392754800,
+                "1": 29590676626,
+                "total": 31983431426
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bosnationwps": {
@@ -282,27 +284,27 @@
         },
         "stats": {
             "votes": {
-                "1": 65,
-                "total": 65,
+                "1": 66,
+                "total": 66,
                 "proxies": 19,
-                "accounts": 46
+                "accounts": 47
             },
             "accounts": {
                 "0": 0,
-                "1": 58280721377,
-                "total": 58280721377
+                "1": 54091554763,
+                "total": 54091554763
             },
             "proxies": {
                 "0": 0,
-                "1": 106077254454,
-                "total": 106077254454
+                "1": 110236907511,
+                "total": 110236907511
             },
             "staked": {
                 "0": 0,
-                "1": 164357975831,
-                "total": 164357975831
+                "1": 164328462274,
+                "total": 164328462274
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bossnapshots": {
@@ -328,15 +330,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 20711159080,
-                "total": 20711159080
+                "1": 20709607239,
+                "total": 20709607239
             },
             "staked": {
                 "0": 0,
-                "1": 26011259080,
-                "total": 26011259080
+                "1": 26009707239,
+                "total": 26009707239
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "boswallets": {
@@ -358,23 +360,23 @@
                 "accounts": 12
             },
             "accounts": {
-                "0": 108581501,
-                "1": 9059703637,
-                "total": 9168285138
+                "0": 8805746,
+                "1": 9066006487,
+                "total": 9074812233
             },
             "proxies": {
                 "0": 0,
                 "1": 0,
-                "255": 1045749822,
-                "total": 1045749822
+                "255": 1146991705,
+                "total": 1146991705
             },
             "staked": {
-                "0": 108581501,
-                "1": 9059703637,
-                "255": 1045749822,
-                "total": 10214034960
+                "0": 8805746,
+                "1": 9066006487,
+                "255": 1146991705,
+                "total": 10221803938
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "bprdproposal": {
@@ -408,7 +410,7 @@
                 "1": 145335,
                 "total": 145335
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "btconbos": {
@@ -429,20 +431,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 3933941156,
-                "total": 3933941156
+                "1": 4039445759,
+                "total": 4039445759
             },
             "proxies": {
                 "0": 0,
-                "1": 43367533678,
-                "total": 43367533678
+                "1": 43372091885,
+                "total": 43372091885
             },
             "staked": {
                 "0": 0,
-                "1": 47301474834,
-                "total": 47301474834
+                "1": 47411537644,
+                "total": 47411537644
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "chintaionbos": {
@@ -475,7 +477,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "chintaitobos": {
@@ -489,27 +491,27 @@
         },
         "stats": {
             "votes": {
-                "1": 25,
-                "total": 25,
+                "1": 28,
+                "total": 28,
                 "proxies": 8,
-                "accounts": 17
+                "accounts": 20
             },
             "accounts": {
                 "0": 0,
-                "1": 28771201672,
-                "total": 28771201672
+                "1": 25763075329,
+                "total": 25763075329
             },
             "proxies": {
                 "0": 0,
-                "1": 60939334808,
-                "total": 60939334808
+                "1": 61407733123,
+                "total": 61407733123
             },
             "staked": {
                 "0": 0,
-                "1": 89710536480,
-                "total": 89710536480
+                "1": 87170808452,
+                "total": 87170808452
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "constantstab": {
@@ -535,15 +537,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 3102977984,
-                "total": 3102977984
+                "1": 3100808317,
+                "total": 3100808317
             },
             "staked": {
                 "0": 0,
-                "1": 3104940399,
-                "total": 3104940399
+                "1": 3102770732,
+                "total": 3102770732
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "dappxlinkeco": {
@@ -557,27 +559,27 @@
         },
         "stats": {
             "votes": {
-                "1": 13,
-                "total": 13,
+                "1": 14,
+                "total": 14,
                 "proxies": 10,
-                "accounts": 3
+                "accounts": 4
             },
             "accounts": {
                 "0": 0,
-                "1": 231210792,
-                "total": 231210792
+                "1": 231353792,
+                "total": 231353792
             },
             "proxies": {
                 "0": 0,
-                "1": 54793835023,
-                "total": 54793835023
+                "1": 54800610003,
+                "total": 54800610003
             },
             "staked": {
                 "0": 0,
-                "1": 55025045815,
-                "total": 55025045815
+                "1": 55031963795,
+                "total": 55031963795
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "dcartmarket1": {
@@ -611,7 +613,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "derupromises": {
@@ -632,20 +634,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 2078081310,
-                "total": 2078081310
+                "1": 2118381310,
+                "total": 2118381310
             },
             "proxies": {
                 "0": 0,
-                "1": 26059203721,
-                "total": 26059203721
+                "1": 26161803840,
+                "total": 26161803840
             },
             "staked": {
                 "0": 0,
-                "1": 28137285031,
-                "total": 28137285031
+                "1": 28280185150,
+                "total": 28280185150
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "ecoboostwps1": {
@@ -660,27 +662,27 @@
         "stats": {
             "votes": {
                 "0": 1,
-                "1": 32,
-                "total": 33,
+                "1": 34,
+                "total": 35,
                 "proxies": 15,
-                "accounts": 18
+                "accounts": 20
             },
             "accounts": {
                 "0": 2000,
-                "1": 75126560371,
-                "total": 75126562371
+                "1": 59120124541,
+                "total": 59120126541
             },
             "proxies": {
                 "0": 0,
-                "1": 111420002295,
-                "total": 111420002295
+                "1": 106244392381,
+                "total": 106244392381
             },
             "staked": {
                 "0": 2000,
-                "1": 186546562666,
-                "total": 186546564666
+                "1": 165364516922,
+                "total": 165364518922
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "engineertool": {
@@ -708,16 +710,16 @@
             "proxies": {
                 "0": 0,
                 "1": 0,
-                "255": 1045749822,
-                "total": 1045749822
+                "255": 1146991705,
+                "total": 1146991705
             },
             "staked": {
                 "0": 0,
                 "1": 412200,
-                "255": 1045749822,
-                "total": 1046162022
+                "255": 1146991705,
+                "total": 1147403905
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "eosiosg11112": {
@@ -738,20 +740,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 216547909,
-                "total": 216547909
+                "1": 217424843,
+                "total": 217424843
             },
             "proxies": {
                 "0": 0,
-                "1": 34501647577,
-                "total": 34501647577
+                "1": 34507804731,
+                "total": 34507804731
             },
             "staked": {
                 "0": 0,
-                "1": 34718195486,
-                "total": 34718195486
+                "1": 34725229574,
+                "total": 34725229574
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "eosstudioide": {
@@ -766,27 +768,27 @@
         "stats": {
             "votes": {
                 "0": 1,
-                "1": 17,
-                "total": 18,
+                "1": 19,
+                "total": 20,
                 "proxies": 10,
-                "accounts": 8
+                "accounts": 10
             },
             "accounts": {
                 "0": 150002,
-                "1": 3576874604,
-                "total": 3577024606
+                "1": 12232807654,
+                "total": 12232957656
             },
             "proxies": {
                 "0": 0,
-                "1": 54793835023,
-                "total": 54793835023
+                "1": 54800610003,
+                "total": 54800610003
             },
             "staked": {
                 "0": 150002,
-                "1": 58370709627,
-                "total": 58370859629
+                "1": 67033417657,
+                "total": 67033567659
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "historyindex": {
@@ -809,22 +811,22 @@
             },
             "accounts": {
                 "0": 2000,
-                "1": 1168753782,
-                "255": 2609200002,
-                "total": 3777955784
+                "1": 1505363180,
+                "255": 2609200003,
+                "total": 4114565183
             },
             "proxies": {
-                "0": 386055542,
+                "0": 383885875,
                 "1": 0,
-                "total": 386055542
+                "total": 383885875
             },
             "staked": {
-                "0": 386057542,
-                "1": 1168753782,
-                "255": 2609200002,
-                "total": 4164011326
+                "0": 383887875,
+                "1": 1505363180,
+                "255": 2609200003,
+                "total": 4498451058
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "hyperion.api": {
@@ -838,60 +840,27 @@
         },
         "stats": {
             "votes": {
-                "1": 33,
-                "total": 33,
-                "proxies": 14,
-                "accounts": 19
+                "1": 49,
+                "total": 49,
+                "proxies": 26,
+                "accounts": 23
             },
             "accounts": {
                 "0": 0,
-                "1": 26178577116,
-                "total": 26178577116
+                "1": 43322465220,
+                "total": 43322465220
             },
             "proxies": {
                 "0": 0,
-                "1": 75212826859,
-                "total": 75212826859
+                "1": 120328251514,
+                "total": 120328251514
             },
             "staked": {
                 "0": 0,
-                "1": 101391403975,
-                "total": 101391403975
+                "1": 163650716734,
+                "total": 163650716734
             },
-            "block_num": 37437599
-        }
-    },
-    "icelandesert": {
-        "id": "icelandesert_20190724",
-        "proposal": {
-            "proposal_name": "icelandesert",
-            "proposer": "icelandesert",
-            "title": "icelandesert",
-            "proposal_json": "{\"content\":\"icelandesert\",\"type\":\"referendum-v1\",\"incentives\":\"0.0000 BOS\",\"receiptor\":\"icelandesert\"}",
-            "created_at": "2019-07-24T09:25:57"
-        },
-        "stats": {
-            "votes": {
-                "total": 0,
-                "proxies": 0,
-                "accounts": 0
-            },
-            "accounts": {
-                "0": 0,
-                "1": 0,
-                "total": 0
-            },
-            "proxies": {
-                "0": 0,
-                "1": 0,
-                "total": 0
-            },
-            "staked": {
-                "0": 0,
-                "1": 0,
-                "total": 0
-            },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "indextokenex": {
@@ -905,27 +874,27 @@
         },
         "stats": {
             "votes": {
-                "1": 6,
-                "total": 6,
+                "1": 7,
+                "total": 7,
                 "proxies": 2,
-                "accounts": 4
+                "accounts": 5
             },
             "accounts": {
                 "0": 0,
-                "1": 17923014971,
-                "total": 17923014971
+                "1": 4003886156,
+                "total": 4003886156
             },
             "proxies": {
                 "0": 0,
-                "1": 21337937268,
-                "total": 21337937268
+                "1": 21439796977,
+                "total": 21439796977
             },
             "staked": {
                 "0": 0,
-                "1": 39260952239,
-                "total": 39260952239
+                "1": 25443683133,
+                "total": 25443683133
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "mansaboscomm": {
@@ -947,20 +916,20 @@
             },
             "accounts": {
                 "0": 2101,
-                "1": 44876336843,
-                "total": 44876338944
+                "1": 32663985427,
+                "total": 32663987528
             },
             "proxies": {
                 "0": 0,
-                "1": 102766526662,
-                "total": 102766526662
+                "1": 95283980662,
+                "total": 95283980662
             },
             "staked": {
                 "0": 2101,
-                "1": 147642863505,
-                "total": 147642865606
+                "1": 127947966089,
+                "total": 127947968190
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "omegaautodex": {
@@ -974,27 +943,27 @@
         },
         "stats": {
             "votes": {
-                "1": 23,
-                "total": 23,
+                "1": 25,
+                "total": 25,
                 "proxies": 4,
-                "accounts": 19
+                "accounts": 21
             },
             "accounts": {
                 "0": 0,
-                "1": 19443786000,
-                "total": 19443786000
+                "1": 26046570429,
+                "total": 26046570429
             },
             "proxies": {
                 "0": 0,
-                "1": 29996277003,
-                "total": 29996277003
+                "1": 29993720939,
+                "total": 29993720939
             },
             "staked": {
                 "0": 0,
-                "1": 49440063003,
-                "total": 49440063003
+                "1": 56040291368,
+                "total": 56040291368
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "operations11": {
@@ -1015,21 +984,21 @@
                 "accounts": 28
             },
             "accounts": {
-                "0": 108581501,
-                "1": 44284129138,
-                "total": 44392710639
+                "0": 8805746,
+                "1": 51772804417,
+                "total": 51781610163
             },
             "proxies": {
                 "0": 0,
-                "1": 102380471120,
-                "total": 102380471120
+                "1": 94900094787,
+                "total": 94900094787
             },
             "staked": {
-                "0": 108581501,
-                "1": 146664600258,
-                "total": 146773181759
+                "0": 8805746,
+                "1": 146672899204,
+                "total": 146681704950
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "operations14": {
@@ -1062,7 +1031,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "operations15": {
@@ -1096,7 +1065,7 @@
                 "1": 28301,
                 "total": 28301
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "simpassets11": {
@@ -1117,20 +1086,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 2121753126,
-                "total": 2121753126
+                "1": 2062277371,
+                "total": 2062277371
             },
             "proxies": {
                 "0": 0,
-                "1": 3050093833,
-                "total": 3050093833
+                "1": 3152076126,
+                "total": 3152076126
             },
             "staked": {
                 "0": 0,
-                "1": 5171846959,
-                "total": 5171846959
+                "1": 5214353497,
+                "total": 5214353497
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "trainingcpcp": {
@@ -1156,15 +1125,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 1045749822,
-                "total": 1045749822
+                "1": 1146991705,
+                "total": 1146991705
             },
             "staked": {
                 "0": 0,
-                "1": 1045773822,
-                "total": 1045773822
+                "1": 1147015705,
+                "total": 1147015705
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "unicocaptain": {
@@ -1178,27 +1147,28 @@
         },
         "stats": {
             "votes": {
+                "0": 1,
                 "1": 9,
-                "total": 9,
+                "total": 10,
                 "proxies": 9,
-                "accounts": 0
+                "accounts": 1
             },
             "accounts": {
-                "0": 0,
+                "0": 2000,
                 "1": 0,
-                "total": 0
+                "total": 2000
             },
             "proxies": {
                 "0": 0,
-                "1": 34501647577,
-                "total": 34501647577
+                "1": 34507804731,
+                "total": 34507804731
             },
             "staked": {
-                "0": 0,
-                "1": 34501647577,
-                "total": 34501647577
+                "0": 2000,
+                "1": 34507804731,
+                "total": 34507806731
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "unicorntube1": {
@@ -1232,7 +1202,7 @@
                 "1": 2375577,
                 "total": 2375577
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "universal": {
@@ -1246,27 +1216,27 @@
         },
         "stats": {
             "votes": {
-                "1": 8,
-                "total": 8,
-                "proxies": 4,
-                "accounts": 4
+                "1": 11,
+                "total": 11,
+                "proxies": 6,
+                "accounts": 5
             },
             "accounts": {
                 "0": 0,
-                "1": 3649259000,
-                "total": 3649259000
+                "1": 10230207912,
+                "total": 10230207912
             },
             "proxies": {
                 "0": 0,
-                "1": 33756882088,
-                "total": 33756882088
+                "1": 63757731103,
+                "total": 63757731103
             },
             "staked": {
                 "0": 0,
-                "1": 37406141088,
-                "total": 37406141088
+                "1": 73987939015,
+                "total": 73987939015
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     },
     "wpspromotion": {
@@ -1287,20 +1257,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 43093088717,
-                "total": 43093088717
+                "1": 50481771753,
+                "total": 50481771753
             },
             "proxies": {
                 "0": 0,
-                "1": 102766526662,
-                "total": 102766526662
+                "1": 95283980662,
+                "total": 95283980662
             },
             "staked": {
                 "0": 0,
-                "1": 145859615379,
-                "total": 145859615379
+                "1": 145765752415,
+                "total": 145765752415
             },
-            "block_num": 37437599
+            "block_num": 43385214
         }
     }
 }

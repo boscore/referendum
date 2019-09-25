@@ -48,7 +48,7 @@ def auditor_base_condition_ckeck(bp_votes=0, staked_total=10, yes=0, no=0):
 
 
 # Create log default dir './quant/log/'  7days
-def init_log(log_name, path = './quant/log/', backupCount=7):
+def init_log(log_name, path = './log/', backupCount=7):
 
     # create the logger
     # create the handler，for writing logfile

@@ -9,6 +9,15 @@ from urllib.request import urlopen
 
 # init global config
 cfg = Config.select().limit(1).get()
+# init_log
+init_log('getBPs')
+init_log('json')
+init_log('auditorjson')
+init_log('getAllAuditors')
+init_log('getAllProposals')
+init_log('review')
+init_log('finish')
+
 
 # constants
 BOS_URLS = [
@@ -62,9 +71,6 @@ def bpinfos():
 @app.route('/getJson')
 def jsoninfo():
 	logger = reactive_log('json')
-	url_index = test_net_is_working(BOS_URLS)
-	logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
-	ce = Cleos(url=BOS_URLS[url_index])
 	BP_TOTAL_VOTES = cfg.BP_TOTAL_VOTES
 	# try:
 	with open("vote_total_tally.json", 'r') as f:
@@ -99,11 +105,12 @@ def jsoninfo():
 			_finish_date =  None
 			# check if the proposal exists
 			try:
-				propos = Proposal.select().where(Proposal.name == proposal).count()
-				logger.info("result"+str(propos))				
+				propos_count = Proposal.select().where(Proposal.name == proposal).count()
+				logger.info("propos_count:"+str(propos_count))
 				# the proposal exists
-				if propos > 0:
+				if propos_count > 0:
 					# check if the proposal is passed
+					propos = Proposal.get(Proposal.name == proposal)
 					if propos.approved_by_vote == 1:
 						pass
 					elif proposal_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
@@ -121,7 +128,9 @@ def jsoninfo():
 							, vote_bp_total = BP_TOTAL_VOTES
 							, vote_yes = vote_yes
 							, vote_no = vote_no
-							, meet_conditions_days = int(meet) + 1 if int(meet) < PROPOSAL_MEET_DAYS + 1 else int(meet)						, approved_by_vote = _approved_by_vote						, approved_by_vote_date = _approved_by_vote_date
+							, meet_conditions_days = int(meet) + 1 if int(meet) < PROPOSAL_MEET_DAYS + 1 else int(meet)						
+       						, approved_by_vote = _approved_by_vote						
+             				, approved_by_vote_date = _approved_by_vote_date
 							).where(Proposal.name == proposal).execute())
 					else:
 						nrow = (Proposal.update(
@@ -174,6 +183,8 @@ def jsoninfo():
 			logger.info("proposal name: " + proposal)
 			logger.info("vote total: " + str(vote_total))
 			logger.info("staked total: " + str(staked_total))
+			logger.info("bpvote total: " + str(BP_TOTAL_VOTES))
+			logger.info("ratio:" + str(int(staked_total)/int(BP_TOTAL_VOTES)))
 			logger.info("vote yes: " + str(vote_yes))
 			logger.info("vote no: " + str(vote_no))
 			logger.info("___________________")
@@ -187,9 +198,9 @@ def jsoninfo():
 @app.route('/getAuditorJson')
 def aujsoninfo():
 	logger = reactive_log('auditorjson')
-	url_index = test_net_is_working(BOS_URLS)
-	logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
-	ce = Cleos(url=BOS_URLS[url_index])
+	# url_index = test_net_is_working(BOS_URLS)
+	# logger.info('BOS Node ['+ str(url_index) + '] is working:' + BOS_URLS[url_index])
+	# ce = Cleos(url=BOS_URLS[url_index])
 	BP_TOTAL_VOTES = cfg.BP_TOTAL_VOTES
 	# try:
 	with open("vote_total_tally.json", 'r') as f:
@@ -214,10 +225,13 @@ def aujsoninfo():
 		
 		# check if the auditor exists
 		try:
-			audits = AuditorTally.select().where(AuditorTally.name == auditor).count()
-			logger.info("result"+str(audits))				
+			audits_count = AuditorTally.select().where(AuditorTally.name == auditor).count()
+			logger.info("audits_count:"+str(audits_count))
 			# the auditor exists
-			if audits > 0:
+			if audits_count > 0:
+				audits = AuditorTally.get(AuditorTally.name == auditor)
+				if audits.approved_by_vote == 1:
+					pass
 				# check if the auditor is passed
 				if auditor_base_condition_ckeck(BP_TOTAL_VOTES, staked_total, vote_yes, vote_no):
 					audits = AuditorTally.get(AuditorTally.name == auditor)
@@ -273,6 +287,8 @@ def aujsoninfo():
 		logger.info("auditor name: " + auditor)
 		logger.info("vote total: " + str(vote_total))
 		logger.info("staked total: " + str(staked_total))
+		logger.info("bpvote total: " + str(BP_TOTAL_VOTES))
+		logger.info("ratio:" + str(int(staked_total)/int(BP_TOTAL_VOTES)))
 		logger.info("vote yes: " + str(vote_yes))
 		logger.info("vote no: " + str(vote_no))
 		logger.info("___________________")
@@ -641,7 +657,7 @@ def review(proposal_name):
 
 @app.route('/finish/<proposal_name>')
 def finish(proposal_name):
-	logger = reactive_log('review')
+	logger = reactive_log('finish')
 	try:
 		propos = Proposal.select().where(Proposal.name == proposal_name).count()
 		logger.info("result"+str(propos))

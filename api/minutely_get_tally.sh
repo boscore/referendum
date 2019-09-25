@@ -6,7 +6,7 @@ find latest.json -exec mv {} /root/referendum/api/proposal_tally.json \;
 
 
 
-tmp=`wget https://api.boswps.com/eosio/stats/latest.json`
+tmp=`wget https://s3.amazonaws.com/api.boswps.com/eosio/stats/latest.json`
 find latest.json -exec mv {} /root/referendum/api/vote_total_tally.json \;
 
 

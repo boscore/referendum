@@ -4,15 +4,15 @@
         "candidate": {
             "candidate_name": "appleofmyeye",
             "locked_tokens": "100.0000 BOS",
-            "total_votes": 5001114665,
+            "total_votes": 3100,
             "is_active": 1,
             "unstaking_end_time_stamp": "1970-01-01T00:00:00"
         },
         "stats": {
             "votes": {
-                "1": 2,
-                "total": 2,
-                "proxies": 1,
+                "1": 1,
+                "total": 1,
+                "proxies": 0,
                 "accounts": 1
             },
             "accounts": {
@@ -22,15 +22,15 @@
             },
             "proxies": {
                 "0": 0,
-                "1": 5001111565,
-                "total": 5001111565
+                "1": 0,
+                "total": 0
             },
             "staked": {
                 "0": 0,
-                "1": 5001114665,
-                "total": 5001114665
+                "1": 3100,
+                "total": 3100
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "https://static.vecteezy.com/system/resources/previews/000/437/407/non_2x/vector-apple-icon.jpg",
@@ -44,7 +44,7 @@
         "candidate": {
             "candidate_name": "eoscityioeos",
             "locked_tokens": "100.0000 BOS",
-            "total_votes": 17835696967,
+            "total_votes": 20528359802,
             "is_active": 1,
             "unstaking_end_time_stamp": "1970-01-01T00:00:00"
         },
@@ -57,20 +57,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 235519190,
-                "total": 235519190
+                "1": 235554530,
+                "total": 235554530
             },
             "proxies": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 20292805272,
+                "total": 20292805272
             },
             "staked": {
                 "0": 0,
-                "1": 17835696967,
-                "total": 17835696967
+                "1": 20528359802,
+                "total": 20528359802
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "",
@@ -109,7 +109,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "https://images.pexels.com/photos/542502/pexels-photo-542502.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
@@ -148,12 +148,12 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "",
-            "bio": "I will do my best",
-            "contact": "zydiceland@gmail.com"
+            "bio": "afd",
+            "contact": "adf"
         },
         "is_auditor": false
     },
@@ -162,7 +162,7 @@
         "candidate": {
             "candidate_name": "kuqwwiqyxuxt",
             "locked_tokens": "100.0000 BOS",
-            "total_votes": 10071381631,
+            "total_votes": 11387680376,
             "is_active": 1,
             "unstaking_end_time_stamp": "1970-01-01T00:00:00"
         },
@@ -175,20 +175,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 150000,
-                "total": 150000
+                "1": 150002,
+                "total": 150002
             },
             "proxies": {
                 "0": 0,
-                "1": 10071231631,
-                "total": 10071231631
+                "1": 11387530374,
+                "total": 11387530374
             },
             "staked": {
                 "0": 0,
-                "1": 10071381631,
-                "total": 10071381631
+                "1": 11387680376,
+                "total": 11387680376
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "",
@@ -197,12 +197,52 @@
         },
         "is_auditor": false
     },
+    "myramyramyra": {
+        "id": "myramyramyra",
+        "candidate": {
+            "candidate_name": "myramyramyra",
+            "locked_tokens": "100.0000 BOS",
+            "total_votes": 13464873831,
+            "is_active": 1,
+            "unstaking_end_time_stamp": "2019-09-20T11:31:54"
+        },
+        "stats": {
+            "votes": {
+                "1": 3,
+                "total": 3,
+                "proxies": 3,
+                "accounts": 0
+            },
+            "accounts": {
+                "0": 0,
+                "1": 0,
+                "total": 0
+            },
+            "proxies": {
+                "0": 0,
+                "1": 13464873831,
+                "total": 13464873831
+            },
+            "staked": {
+                "0": 0,
+                "1": 13464873831,
+                "total": 13464873831
+            },
+            "block_num": 43254093
+        },
+        "bio": {
+            "avatar": "https://eosignite.com/wp-content/uploads/2018/08/myra-280x280.png",
+            "bio": "Myra graduated from China’s prestigious Central Judicial Police Academy and has eight years of experience in consulting and primary account management. Myra is an extraordinary female entrepreneur who has been an integral element of investment and the founding of four high-tech companies. Myra is the co-founder of international endeavors of Omnia Spot Limited and Webao.co. In 2018, she joined EOS Gravity to fully implement her technical skills to expand the community department overseas. She currently is the Deputy Executive Director of the EOS Alliance and a Custodian of EOS DAC (Decentralized Autonomous Community).",
+            "contact": "wang.khaleesi@gmail.com"
+        },
+        "is_auditor": false
+    },
     "sevenbos2345": {
         "id": "sevenbos2345",
         "candidate": {
             "candidate_name": "sevenbos2345",
             "locked_tokens": "100.0000 BOS",
-            "total_votes": 17600179777,
+            "total_votes": 20292842610,
             "is_active": 1,
             "unstaking_end_time_stamp": "1970-01-01T00:00:00"
         },
@@ -215,20 +255,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 2000,
-                "total": 2000
+                "1": 37338,
+                "total": 37338
             },
             "proxies": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 20292805272,
+                "total": 20292805272
             },
             "staked": {
                 "0": 0,
-                "1": 17600179777,
-                "total": 17600179777
+                "1": 20292842610,
+                "total": 20292842610
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "",
@@ -267,7 +307,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "https://stocksandwich.com/stock-images/thumbnails/mans-best-friend_large.jpg",
@@ -306,7 +346,7 @@
                 "1": 0,
                 "total": 0
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "https://66.media.tumblr.com/026b8fe1a1b843feff56babe49d2de51/tumblr_ppam2zwV0J1sfie3io1_1280.jpg",
@@ -320,7 +360,7 @@
         "candidate": {
             "candidate_name": "victor233333",
             "locked_tokens": "100.0000 BOS",
-            "total_votes": 17600179777,
+            "total_votes": 20292842610,
             "is_active": 1,
             "unstaking_end_time_stamp": "1970-01-01T00:00:00"
         },
@@ -333,20 +373,20 @@
             },
             "accounts": {
                 "0": 0,
-                "1": 2000,
-                "total": 2000
+                "1": 37338,
+                "total": 37338
             },
             "proxies": {
                 "0": 0,
-                "1": 17600177777,
-                "total": 17600177777
+                "1": 20292805272,
+                "total": 20292805272
             },
             "staked": {
                 "0": 0,
-                "1": 17600179777,
-                "total": 17600179777
+                "1": 20292842610,
+                "total": 20292842610
             },
-            "block_num": 32204653
+            "block_num": 43254093
         },
         "bio": {
             "avatar": "",
